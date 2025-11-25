@@ -1,0 +1,168 @@
+/* ======================================= */
+/* 💡 SUYAGYA PREMIUM THEME - CUSTOM.CSS  */
+/* ======================================= */
+
+/* 🎨 NEW COLOR PALETTE & GLOBAL STYLES */
+:root {
+    /* Deep Maroon/Burgundy for Primary Actions/Headings */
+    --primary: #A52A2A;           
+    --hov-primary: #852222;       
+    --soft-primary: rgba(165, 42, 42, 0.15);
+    
+    /* Soft Gold/Ochre for Accents/Prosperity */
+    --secondary-base: #FFCC66;    
+    --hov-secondary-base: #E6B85C;
+    --soft-secondary-base: rgba(255, 204, 102, 0.3);
+    
+    /* Creamy Beige Background */
+    --light: #F9F4E9;             
+    --soft-light: #EEE9DC;
+    
+    /* Text */
+    --dark: #333333;             
+    --secondary: #666666;
+    --soft-white: #b5b5bf;
+    --white: #FFFFFF;
+}
+
+/* 1. Global Background and Typography */
+body {
+    background-color: var(--light) !important; 
+    color: var(--dark);
+    font-family: 'Merriweather', serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--dark);
+}
+
+/* 2. Header and Navigation */
+.top-navbar, header.bg-primary {
+    background-color: var(--primary) !important;
+    border-bottom: 3px solid var(--secondary-base);
+}
+.header_menu_links {
+    color: var(--white) !important;
+    font-weight: 700 !important;
+    transition: background-color 0.3s;
+}
+.header_menu_links:hover {
+    background-color: var(--hov-primary) !important;
+}
+
+/* 3. Layout and Section Spacing */
+.container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Increase vertical space for premium feel */
+section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+.p-2rem {
+    padding: 2rem !important;
+}
+
+/* 4. Product Cards and Tags */
+.aiz-card-box {
+    background-color: var(--white) !important;
+    border: 1px solid var(--soft-light); /* Softer border */
+    border-radius: 8px !important;
+    transition: box-shadow 0.3s;
+}
+.aiz-card-box:hover {
+    box-shadow: 0 8px 20px rgba(165, 42, 42, 0.1); /* Subtle hover shadow with primary color tint */
+}
+
+/* Best Seller Flag */
+#loveyouto {
+    background-color: var(--primary); 
+}
+
+/* Discount Tag */
+#loveyoutoo, #loveyoutooo {
+    background-color: var(--primary) !important;
+    color: var(--secondary-base) !important; /* Gold on Maroon for high contrast */
+}
+
+/* Add to Cart Button */
+.aiz-p-hov-icon {
+    background-color: var(--primary) !important; 
+    border-radius: 30px !important;
+}
+
+/* Product Price Color */
+.fw-700.text-primary {
+    color: var(--primary) !important;
+    font-size: 1.1rem;
+}
+
+/* 5. Footer Styles */
+.footer-widget, footer {
+    background-color: var(--primary) !important; 
+}
+.text-soft-light {
+    color: var(--soft-light) !important;
+}
+.list-inline-item .facebook, .list-inline-item .twitter, 
+.list-inline-item .instagram, .list-inline-item .youtube {
+    background-color: var(--soft-primary);
+    color: var(--secondary-base);
+}
+
+/* 6. Lab Certification Section */
+.lab-certification-container {
+    box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+}
+.lab-text {
+    background: var(--primary) !important;
+}
+.badge-text {
+    color: var(--primary) !important;
+}
+
+/* 7. Shop By Purpose/Stones Images */
+.category-item img {
+    border: 2px solid var(--primary); /* Maroon border */
+    background-color: var(--white); /* Ensure white interior */
+}
+
+/* 8. Marquee Bar */
+.offer-bara {
+    background-color: var(--primary);
+}
+.offer-itema {
+    color: var(--secondary-base) !important;
+}
+
+/* 9. Facilities Icons */
+#font svg path {
+    fill: var(--primary) !important; /* Make facility icons maroon */
+}
+
+@media (min-width: 1024px) {
+    .mega-menu {
+        display: none !important;
+        position: absolute;
+        left: 30%;
+        transform: translateX(-50%);
+        width: 100vw !important;
+        top: 100%;
+        z-index: 999;
+    }
+
+    /* show on hover (desktop only) */
+    .mega-parent:hover .mega-menu {
+        display: block !important;
+    }
+    
+    .mega-bg {
+    background: #fff;
+    width: 100%;
+    padding: 40px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+}
