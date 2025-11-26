@@ -2,7 +2,7 @@
 
     {{-- ⭐️ Top Bar - Language, Currency, Seller Links --}}
     <div class="top-navbar d-none d-lg-block border-bottom"
-        style="background-color: var(--light) !important;">
+        style="background-color: var(--primary) !important; border-color: var(--secondary-base) !important;">
         <div class="container-fluid px-3">
             <div class="d-flex justify-content-between align-items-center py-1">
 
