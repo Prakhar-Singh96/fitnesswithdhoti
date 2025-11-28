@@ -1,59 +1,74 @@
-<header class="sticky-top z-1020 shadow-sm" style="background-color: var(--light) !important;">
+<header class="sticky-top z-1020 shadow-sm" style="background-color: var(--primary) !important;">
 
     {{-- ⭐️ Top Bar - Language, Currency, Seller Links --}}
-    {{-- Top bar background color changed to match the light tone in the example --}}
-    <div class="top-navbar d-none d-lg-block border-bottom" style="background-color: var(--light) !important;">
+    <div class="top-navbar d-none d-lg-block border-bottom"
+        style="background-color: var(--light) !important;">
         <div class="container-fluid px-3">
             <div class="d-flex justify-content-between align-items-center py-1">
 
                 <div class="d-flex align-items-center">
                     {{-- Language switcher --}}
                     <div class="dropdown me-3" id="lang-change">
-                        {{-- Text color is dark, not light --}}
-                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown" data-bs-display="static">
-                            <span style="color: var(--dark);">English</span>
+                        <a href="javascript:void(0)" class="dropdown-toggle text-soft-light small"
+                            data-bs-toggle="dropdown" data-bs-display="static">
+                            <span>English</span>
                         </a>
-                        {{-- ... (Dropdown Content) ... --}}
+                        <ul class="dropdown-menu dropdown-menu-start bg-light" style="--bs-bg-opacity: .9;">
+                            {{-- ... (Language Dropdown content) ... --}}
+                        </ul>
                     </div>
 
                     {{-- Currency Switcher --}}
                     <div class="dropdown" id="currency-change">
-                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown" data-bs-display="static">
-                            <span style="color: var(--dark);">Currency</span>
+                        <a href="javascript:void(0)" class="dropdown-toggle text-soft-light small"
+                            data-bs-toggle="dropdown" data-bs-display="static">
+                            Indian Rupee
                         </a>
-                        {{-- ... (Dropdown Content) ... --}}
+                        <ul class="dropdown-menu dropdown-menu-start bg-light" style="--bs-bg-opacity: .9;">
+                            {{-- ... (Currency Dropdown content) ... --}}
+                        </ul>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <a href="{{ url('shops/create') }}" class="text-dark small pe-3 border-end">Become a seller!</a>
-                    <a href="{{ url('seller/login') }}" class="text-dark small ps-3">Login to Seller</a>
+                    <a href="{{ url('shops/create') }}" class="text-soft-light small pe-3 border-end">Become a Seller
+                        !</a>
+                    <a href="{{ url('seller/login') }}" class="text-soft-light small ps-3">Login to Seller</a>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- 🏠 Logo and Main Nav Bar --}}
-    {{-- Golden Border is correctly placed at the bottom of the whole header, handled by CSS --}}
     <nav class="navbar navbar-expand-lg py-0">
         <div class="container-fluid px-3">
 
+            {{-- Mobile Toggle Button --}}
+            <button class="navbar-toggler p-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"
+                aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
             {{-- Logo --}}
-            <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
-                <img src="https://suyagya.com/public/uploads/all/ackLS169wFEfhj8jfhnb0SGblGIHug1XfDCg7WIs.webp" alt="Suyagya" height="50">
+            <a class="navbar-brand py-2 me-lg-4" href="{{ url('/') }}">
+                <img src="https://suyagya.com/public/uploads/all/ackLS169wFEfhj8jfhnb0SGblGIHug1XfDCg7WIs.webp"
+                    alt="Suyagya" height="50">
             </a>
 
             {{-- Collapse/Main Menu Links --}}
             <div class="collapse navbar-collapse justify-content-start" id="mainMenu">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 main-nav-list">
 
-                    {{-- 1. Products Dropdown (Keep structure for future Mega Menu) --}}
-                    <li class="nav-item dropdown mega-parent me-3">
-                        <a class="nav-link text-dark dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{-- 1. PRODUCTS (MEGA MENU ON HOVER) --}}
+                    <li class="nav-item dropdown mega-parent">
+                        <a class="nav-link fs-13 fw-bold text-white header_menu_links dropdown-toggle" href="#"
+                            id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Products
+                            {{-- <i class="las la-angle-down text-white ms-1"></i> --}}
                         </a>
-                        {{-- 🔴 Empty Dropdown: As requested, we will leave the content empty here --}}
-                        <div class="dropdown-menu mega-menu border-0 shadow" aria-labelledby="productsDropdown">
+
+                        {{-- 👇 यह Mega Menu Dropdown का HTML है --}}
+                        <div class="dropdown-menu mega-menu border-0 shadow" aria-labelledby="navbarDropdown">
                             <div class="mega-bg container-fluid p-4" style="background-color: var(--light) !important;">
                                 <div class="row g-3 text-center mega-grid">
 
@@ -135,7 +150,7 @@
                                                 'name' => 'Best Selling',
                                                 'image' => 'uNcdnWENlJ2Eu0pUxbuqkFSYmtL8lmgaRfIzjyet.webp',
                                             ],
-
+                                            
                                         ];
                                     @endphp
 
@@ -158,53 +173,56 @@
                         </div>
                     </li>
 
-                    {{-- 2. Direct Links (Copying the look from the screenshot) --}}
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Bracelet</a></li>
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Rudraksh</a></li>
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Shankh</a></li>
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Shivling</a></li>
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Jap Mala</a></li>
-                    <li class="nav-item me-3"><a href="#" class="nav-link text-dark">Karungali</a></li>
+                    {{-- 2. Direct Nav Links --}}
+                    <li class="nav-item"><a href="{{ url('category/shankh-wszyo') }}"
+                            class="nav-link fs-13 fw-bold text-white header_menu_links">Shankh</a></li>
+                    <li class="nav-item"><a href="{{ url('category/shivling-egajb') }}"
+                            class="nav-link fs-13 fw-bold text-white header_menu_links">Shivling</a></li>
+                    <li class="nav-item"><a href="{{ url('category/Karungali-jOkLt') }}"
+                            class="nav-link fs-13 fw-bold text-white header_menu_links">Karungali</a></li>
+                    <li class="nav-item"><a href="{{ url('category/jap-mala-9y6fr') }}"
+                            class="nav-link fs-13 fw-bold text-white header_menu_links">Jap Mala</a></li>
                 </ul>
             </div>
 
-            {{-- 3. ICON ACTION BLOCK (Astrotalk Style) --}}
-            <div class="d-flex align-items-center nav-action-icons ms-auto">
+            {{-- User/Cart/Login Block (Pushed to the right) --}}
+            <div class="nav-action-icons d-flex align-items-center">
 
-                {{-- 🔥 1. Search Icon --}}
-                <div class="nav-search-icon ms-2">
+                {{-- 🔥 Search Icon --}}
+                <div class="nav-search-icon me-3">
                     <a href="javascript:void(0);" onclick="toggleSearch()" title="Search">
                         <i class="las la-search"></i>
                     </a>
                 </div>
 
-                {{-- 👤 2. Account Icon --}}
-                <div class="nav-user-auth ms-4">
-                    <a href="javascript:void(0);" onclick="showLoginModal()" title="Account">
+                {{-- 🛒 Cart Icon --}}
+                <div class="nav-cart-box dropdown me-3">
+                    <a href="#" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Cart">
+                        <i class="las la-shopping-cart"></i>
+                        <span class="fw-bold">Rs 0</span>
+                        <span class="small">(<span class="cart-count">0</span>)</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end p-3 bg-light">
+                        <li class="text-muted small">Your Cart is empty</li>
+                    </ul>
+                </div>
+
+                {{-- 👤 Login Icon --}}
+                <div class="nav-user-auth">
+                    <a href="javascript:void(0);" onclick="showLoginModal()" title="Login">
                         <i class="las la-user-circle"></i>
                     </a>
                 </div>
 
-                {{-- ⭐ 3. Wishlist/Favorite Icon --}}
-                <div class="nav-wishlist-icon ms-4">
-                    <a href="{{ url('/wishlists') }}" title="Wishlist" class="position-relative">
-                        <i class="las la-heart"></i>
-                    </a>
-                </div>
-
-                {{-- 🛒 4. Cart Icon (Shopping Bag style from Astrotalk) --}}
-                <div class="nav-cart-box ms-4">
-                    <a href="#" title="Cart">
-                        <i class="las la-shopping-bag"></i>
-                    </a>
-                </div>
-
             </div>
-
-            {{-- Mobile Toggle Button (Hidden on Desktop) --}}
-            <button class="navbar-toggler p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
         </div>
     </nav>
+    <div class="header-search-bar bg-light p-3 shadow-sm" style="display: none;">
+        <div class="container">
+            <form action="{{ url('/search') }}" method="GET" class="d-flex">
+                <input type="text" name="keyword" class="form-control" placeholder="Search spiritual items...">
+                <button class="btn btn-primary ms-2">Search</button>
+            </form>
+        </div>
+    </div>
 </header>
