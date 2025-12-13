@@ -12,13 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // BigInt PK Auto Increment
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // Custom Enums according to your requirement
+            $table->enum('user_type', ['admin', 'staff', 'seller', 'customer'])->default('customer');
+            $table->enum('status', ['pending', 'active', 'inactive'])->default('active');
+
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // Created_at & Updated_at
         });
     }
 
