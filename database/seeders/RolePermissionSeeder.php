@@ -62,11 +62,11 @@ class RolePermissionSeeder extends Seeder
         // 3. Create Roles and Assign Permissions
 
         // ROLE: Super Admin (Sab kuch kar sakta hai)
-        $superAdminRole = Role::create(['name' => 'Super Admin']);
+        $superAdminRole = Role::create(['name' => 'superadmin']);
         $superAdminRole->givePermissionTo(Permission::all());
 
         // ROLE: Staff (Custom Permissions)
-        $staffRole = Role::create(['name' => 'Staff']);
+        $staffRole = Role::create(['name' => 'staff']);
         $staffRole->givePermissionTo([
             'view_dashboard',
             'approve_seller',
@@ -75,7 +75,7 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // ROLE: Seller
-        $sellerRole = Role::create(['name' => 'Seller']);
+        $sellerRole = Role::create(['name' => 'seller']);
         // Seller ko usually specific permissions di jati hain
         $sellerRole->givePermissionTo([
             'view_dashboard',
@@ -86,6 +86,7 @@ class RolePermissionSeeder extends Seeder
         // 4. Create Default SUPER ADMIN User
         $adminUser = User::create([
             'name' => 'Suyagya Admin',
+            'phone' => '9870271533',
             'email' => 'admin@suyagya.com',
             'password' => Hash::make('password'),
             'user_type' => 'admin',

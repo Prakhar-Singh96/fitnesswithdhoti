@@ -29,6 +29,16 @@
         </div>
     </div>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0 small text-start">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="container pb-5">
         <div class="row g-lg-5">
 
@@ -446,6 +456,87 @@
             </div>
         </div>
     </div>
+
+    <section class="py-5 bg-light" id="review-section">
+        <div class="container">
+
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <div class="row align-items-center">
+
+                    {{-- 📊 Left: Rating Stats --}}
+                    <div class="col-md-4 text-center border-end">
+                        <h2 class="display-3 fw-bold text-dark mb-0">{{ number_format($averageRating, 1) }}</h2>
+                        <div class="text-warning fs-4 mb-2">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= round($averageRating))
+                                    <i class="las la-star"></i>
+                                @elseif($i - 0.5 <= $averageRating)
+                                    <i class="las la-star-half-alt"></i>
+                                @else
+                                    <i class="lar la-star"></i>
+                                @endif
+                            @endfor
+                        </div>
+                        <p class="text-muted small">Based on {{ $totalReviews }} reviews</p>
+                    </div>
+
+                    {{-- 📉 Middle: Progress Bars --}}
+                    <div class="col-md-5 px-4">
+                        @foreach ([5, 4, 3, 2, 1] as $star)
+                            @php
+                                $count = $starCounts[$star] ?? 0;
+                                $percent = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                            @endphp
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="small me-2">{{ $star }} <i
+                                        class="las la-star text-warning"></i></span>
+                                <div class="progress flex-grow-1" style="height: 6px;">
+                                    <div class="progress-bar bg-dark" role="progressbar"
+                                        style="width: {{ $percent }}%"></div>
+                                </div>
+                                <span class="small ms-2 text-muted">{{ $count }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- ✍️ Right: Write Review --}}
+                    <div class="col-md-3 text-center">
+                        <div class="p-3 border rounded bg-white">
+                            <h6 class="fw-bold mb-3">Click to review</h6>
+                            <div class="review-trigger-stars fs-2 text-secondary cursor-pointer"
+                                onclick="openReviewModal()">
+                                <i class="lar la-star" data-value="1"></i>
+                                <i class="lar la-star" data-value="2"></i>
+                                <i class="lar la-star" data-value="3"></i>
+                                <i class="lar la-star" data-value="4"></i>
+                                <i class="lar la-star" data-value="5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- 🔽 Filters --}}
+            <div class="d-flex align-items-center mb-3">
+                <select class="form-select w-auto me-2" id="reviewSort" onchange="filterReviews({{ $product->id }})">
+                    <option value="recent">Recent</option>
+                    <option value="highest">Highest Rating</option>
+                    <option value="lowest">Lowest Rating</option>
+                    <option value="media">Reviews with Media</option>
+                </select>
+            </div>
+
+            {{-- 💬 Review List Container --}}
+            <div class="row g-3" id="reviewListContainer">
+                @include('frontend.includes.review_list', ['reviews' => $reviews])
+            </div>
+
+        </div>
+    </section>
+
+    {{-- ✅ Include Review Modal Here --}}
+    @include('frontend.modals.review-modal')
 
 @endsection
 

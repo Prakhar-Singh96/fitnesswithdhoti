@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Services\BigShipService;
+use App\Models\ProductReview;
 use App\Http\Controllers\Controller;
 
 class ProductListingController extends Controller
@@ -101,14 +102,37 @@ class ProductListingController extends Controller
 
     public function productDetail($slug)
     {
-        $product = Product::where('slug', $slug)->where('status', 1)->firstOrFail();
+        // $product = Product::where('slug', $slug)->where('status', 1)->firstOrFail();
+        $product = Product::with(['images', 'category', 'subCategory'])
+            ->where('slug', $slug)
+            ->where('status', 1)
+            ->firstOrFail();
+
+        // Fetch Reviews (Only approved ones)
+        $reviews = ProductReview::where('product_id', $product->id)
+            ->where('status', 1) // Assuming 1 = Approved
+            ->latest()
+            ->get();
+
+        // Calculate Stats
+        $totalReviews = $reviews->count();
+        $averageRating = $totalReviews > 0 ? $reviews->avg('rating') : 0;
+
+        // Count per star for progress bars
+        $starCounts = [
+            5 => $reviews->where('rating', 5)->count(),
+            4 => $reviews->where('rating', 4)->count(),
+            3 => $reviews->where('rating', 3)->count(),
+            2 => $reviews->where('rating', 2)->count(),
+            1 => $reviews->where('rating', 1)->count(),
+        ];
 
         // Related products logic (Optional)
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)->get();
 
-        return view('frontend.pages.product_detail', compact('product', 'relatedProducts'));
+        return view('frontend.pages.product_detail', compact('product', 'relatedProducts', 'reviews', 'totalReviews', 'averageRating', 'starCounts'));
     }
 
     public function searchListing(Request $request)

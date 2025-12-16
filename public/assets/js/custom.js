@@ -744,3 +744,56 @@ function verifyServerPayment(paymentData, localOrderId) {
     });
 }
 
+
+// Open Modal
+function openReviewModal() {
+    var myModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+    myModal.show();
+}
+
+// Handle Star Rating Click inside Modal
+function setRating(val) {
+    // Set Hidden Input Value
+    document.getElementById('rating_value').value = val;
+
+    // Update Star Icons
+    const stars = document.querySelectorAll('.rating-input i');
+    stars.forEach((star, index) => {
+        if (index < val) {
+            star.classList.remove('lar'); // Remove Empty
+            star.classList.add('las');    // Add Filled
+        } else {
+            star.classList.remove('las'); // Remove Filled
+            star.classList.add('lar');    // Add Empty
+        }
+    });
+
+    // Update Text
+    const texts = ["Terrible", "Bad", "Average", "Good", "Excellent"];
+    document.getElementById('rating-text').innerText = texts[val - 1];
+}
+
+function filterReviews(productId) {
+    let sort = document.getElementById('reviewSort').value;
+    let container = document.getElementById('reviewListContainer');
+    
+    // Show loading
+    container.style.opacity = '0.5';
+
+    $.ajax({
+        url: "/reviews/filter",
+        type: "GET",
+        data: {
+            product_id: productId,
+            sort: sort
+        },
+        success: function(response) {
+            container.innerHTML = response.html;
+            container.style.opacity = '1';
+        },
+        error: function() {
+            alert('Error loading reviews');
+            container.style.opacity = '1';
+        }
+    });
+}

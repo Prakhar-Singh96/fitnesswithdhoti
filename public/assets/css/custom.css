@@ -806,6 +806,9 @@ main {
 .product-details {
     margin-top: 12px;
 }
+.product-details .product-title {
+    font-size: 17px !important;
+}
 
 .product-title {
     font-family: 'Merriweather', serif;
@@ -2526,4 +2529,52 @@ main {
     background-color: transparent !important;
     box-shadow: none !important;
     color: #000;
+}
+
+
+/* Review Modal Stars */
+.rating-input i {
+    transition: transform 0.2s;
+}
+.rating-input i:hover {
+    transform: scale(1.2);
+}
+.rating-input .las {
+    color: #ffc107; /* Fill Color */
+}
+.rating-input .lar {
+    color: #ccc; /* Empty Color */
+}
+
+/* Modal Styling */
+#reviewModal .modal-content {
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Masonry Grid for Reviews */
+.review-masonry-grid {
+    column-count: 4; /* Desktop पर 4 कॉलम */
+    column-gap: 1.5rem; /* कॉलम के बीच गैप */
+}
+
+.review-masonry-item {
+    display: inline-block; /* कार्ड को टूटने से बचाए */
+    width: 100%;
+    margin-bottom: 1.5rem; /* नीचे वाले कार्ड से दूरी */
+    break-inside: avoid; /* कार्ड को कॉलम के बीच कटने से रोके */
+}
+
+/* Responsive: Tablet पर 2 कॉलम */
+@media (max-width: 992px) {
+    .review-masonry-grid {
+        column-count: 2;
+    }
+}
+
+/* Responsive: Mobile पर 1 कॉलम */
+@media (max-width: 576px) {
+    .review-masonry-grid {
+        column-count: 1;
+    }
 }

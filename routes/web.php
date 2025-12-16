@@ -15,6 +15,7 @@ use App\Http\Controllers\Frontend\Auth\OtpController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Frontend\ProductListingController;
+use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
 
@@ -57,6 +58,9 @@ Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])-
 // Side Cart Quantity Update
 Route::post('/cart/update-quantity-side', [CartController::class, 'updateSideCartQty']);
 Route::get('/cart/side-cart-html', [CartController::class, 'getSideCartHtml']);
+
+Route::post('/reviews/submit', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/reviews/filter', [ReviewController::class, 'filterReviews'])->name('reviews.filter');
 
 // OTP Login Routes
 Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
