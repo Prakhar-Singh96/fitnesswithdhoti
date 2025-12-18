@@ -365,7 +365,7 @@
                                             @php
                                                 $link = $video->link;
                                                 // If link doesn't start with http, wrap in url()
-if (!Str::startsWith($link, ['http://', 'https://'])) {
+                                            if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                     $link = url($link);
                                                 }
                                             @endphp
@@ -555,10 +555,9 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
     {{-- ✨ 6. DYNAMIC SUB-CATEGORY SHOWCASE SECTIONS ✨ --}}
     {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS (Ring, Earring, Pendant) ✨ --}}
     {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS ✨ --}}
-    @if(isset($showcaseSections) && $showcaseSections->count() > 0)
-        @foreach($showcaseSections as $section)
-
-            @if($section->products->count() > 0)
+    @if (isset($showcaseSections) && $showcaseSections->count() > 0)
+        @foreach ($showcaseSections as $section)
+            @if ($section->products->count() > 0)
                 <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
                     <div class="container-fluid px-4">
 
@@ -568,7 +567,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 {{ $section->category->name }} {{ $section->name }}
                             </h2>
                             <a href="{{ route('products.subcategory', ['cat_slug' => $section->category->slug, 'sub_slug' => $section->slug]) }}"
-                               class="btn btn-outline-dark rounded-pill px-4">
+                                class="btn btn-outline-dark rounded-pill px-4">
                                 View all
                             </a>
                         </div>
@@ -578,19 +577,21 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                             {{-- 2. LEFT SIDE: CATEGORY BANNER --}}
                             <div class="col-lg-2 d-none d-lg-block">
                                 <div class="category-banner-card h-100 position-relative overflow-hidden rounded-3"
-                                     style="min-height: 300px; background-color: #e0d4c3;"> {{-- Added min-height & bg-color --}}
+                                    style="min-height: 300px; background-color: #e0d4c3;"> {{-- Added min-height & bg-color --}}
 
                                     {{-- Image Logic: Check if image exists, else show placeholder --}}
                                     @php
-                                        $bannerImage = $section->image ? asset($section->image) : 'https://placehold.co/300x500/e0d4c3/555?text=' . urlencode($section->name);
+                                        $bannerImage = $section->image
+                                            ? asset($section->image)
+                                            : 'https://placehold.co/300x500/e0d4c3/555?text=' .
+                                                urlencode($section->name);
                                     @endphp
 
-                                    <img src="{{ $bannerImage }}"
-                                         alt="{{ $section->name }}"
-                                         class="img-fluid w-100 h-100 object-fit-cover banner-img">
+                                    <img src="{{ $bannerImage }}" alt="{{ $section->name }}"
+                                        class="img-fluid w-100 h-100 object-fit-cover banner-img">
 
                                     <div class="banner-content position-absolute bottom-0 start-0 p-3 w-100 text-white"
-                                         style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
+                                        style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
                                         <h3 class="h4 fw-bold mb-0">{{ $section->name }}<br>Collection</h3>
                                     </div>
                                 </div>
@@ -603,47 +604,58 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
 
                                     @foreach ($section->products as $product)
                                         <div class="col"> {{-- Auto column width based on row-cols classes above --}}
-                                            <div class="product-card-standard h-100 border rounded-3 overflow-hidden bg-white shadow-sm">
+                                            <div
+                                                class="product-card-standard h-100 border rounded-3 overflow-hidden bg-white shadow-sm">
 
                                                 {{-- Image --}}
-                                                <div class="card-img-wrapper position-relative bg-light" style="aspect-ratio: 1/1;">
+                                                <div class="card-img-wrapper position-relative bg-light"
+                                                    style="aspect-ratio: 1/1;">
                                                     @if ($product->discount > 0)
-                                                        <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold" style="z-index: 2;">
+                                                        <span
+                                                            class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                                            style="z-index: 2;">
                                                             {{ $product->discount }}% OFF
                                                         </span>
                                                     @endif
 
-                                                    <a href="{{ route('product.detail', $product->slug) }}" class="d-block w-100 h-100">
-                                                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}"
+                                                    <a href="{{ route('product.detail', $product->slug) }}"
+                                                        class="d-block w-100 h-100">
+                                                        <img src="{{ asset($product->main_image) }}"
+                                                            alt="{{ $product->name }}"
                                                             class="w-100 h-100 object-fit-cover">
                                                     </a>
                                                 </div>
 
                                                 {{-- Info --}}
                                                 <div class="p-3 text-start">
-                                                    <h6 class="product-title mb-1 text-truncate fw-bold" style="font-size: 14px;">
-                                                        <a href="{{ route('product.detail', $product->slug) }}" class="text-dark text-decoration-none">
+                                                    <h6 class="product-title mb-1 text-truncate fw-bold"
+                                                        style="font-size: 14px;">
+                                                        <a href="{{ route('product.detail', $product->slug) }}"
+                                                            class="text-dark text-decoration-none">
                                                             {{ $product->name }}
                                                         </a>
                                                     </h6>
 
                                                     <div class="mb-2 text-warning small">
-                                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                                                        <i class="las la-star"></i><i class="las la-star"></i><i
+                                                            class="las la-star"></i>
                                                         <i class="las la-star"></i><i class="las la-star"></i>
                                                         <span class="text-muted ms-1">(24)</span>
                                                     </div>
 
                                                     <div class="mb-2">
-                                                        <span class="fw-bold text-dark">₹{{ number_format($product->price) }}</span>
+                                                        <span
+                                                            class="fw-bold text-dark">₹{{ number_format($product->price) }}</span>
                                                         @if ($product->mrp_price > $product->price)
-                                                            <span class="text-muted text-decoration-line-through small ms-2">
+                                                            <span
+                                                                class="text-muted text-decoration-line-through small ms-2">
                                                                 ₹{{ number_format($product->mrp_price) }}
                                                             </span>
                                                         @endif
                                                     </div>
 
                                                     <button class="btn btn-earthy w-100 btn-sm"
-                                                            onclick="addToCart({{ $product->id }}, 1, 0, this)">
+                                                        onclick="addToCart({{ $product->id }}, 1, 0, this)">
                                                         Add to cart
                                                     </button>
                                                 </div>
@@ -705,19 +717,20 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
             <div class="testimonial-slider-container">
                 <div class="testimonial-slider">
 
-                    @if(isset($reviews) && $reviews->count() > 0)
+                    @if (isset($reviews) && $reviews->count() > 0)
                         @foreach ($reviews as $review)
                             <div class="px-3"> {{-- Spacing between cards --}}
                                 <div class="testimonial-card">
                                     <div class="row g-0 h-100">
 
                                         {{-- Left: Text Content --}}
-                                        <div class="col-md-7 col-12 d-flex flex-column justify-content-center p-4 text-content">
+                                        <div
+                                            class="col-md-7 col-12 d-flex flex-column justify-content-center p-4 text-content">
 
                                             {{-- Stars Dynamic Loop --}}
                                             <div class="mb-3 text-warning">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    @if($i <= $review->rating)
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $review->rating)
                                                         <i class="las la-star"></i>
                                                     @else
                                                         <i class="lar la-star"></i>
@@ -731,7 +744,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                             </p>
 
                                             {{-- Title & Name --}}
-                                            @if($review->title)
+                                            @if ($review->title)
                                                 <h6 class="fw-bold text-dark mb-1">{{ $review->title }}</h6>
                                             @endif
 
@@ -743,21 +756,25 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                             <div class="review-img-wrapper h-100">
                                                 @php
                                                     // Check if media exists (it's an array)
-                                                    // If yes, take the first image. If no, use a placeholder.
-                                                    $reviewImage = 'https://placehold.co/400x400/e0d4c3/555?text=Happy+Customer';
+// If yes, take the first image. If no, use a placeholder.
+$reviewImage =
+    'https://placehold.co/400x400/e0d4c3/555?text=Happy+Customer';
 
-                                                    if (!empty($review->media) && is_array($review->media) && count($review->media) > 0) {
-                                                        // Check if file is image (simple check)
-                                                        $firstFile = $review->media[0];
-                                                        if (!Str::endsWith($firstFile, '.mp4')) {
+if (
+    !empty($review->media) &&
+    is_array($review->media) &&
+    count($review->media) > 0
+) {
+    // Check if file is image (simple check)
+    $firstFile = $review->media[0];
+    if (!Str::endsWith($firstFile, '.mp4')) {
                                                             $reviewImage = asset($firstFile);
                                                         }
                                                     }
                                                 @endphp
 
-                                                <img src="{{ $reviewImage }}"
-                                                     alt="{{ $review->display_name }}"
-                                                     class="img-fluid w-100 h-100 object-fit-cover">
+                                                <img src="{{ $reviewImage }}" alt="{{ $review->display_name }}"
+                                                    class="img-fluid w-100 h-100 object-fit-cover">
                                             </div>
                                         </div>
 

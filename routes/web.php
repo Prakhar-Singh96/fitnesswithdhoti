@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\FilterController;
@@ -151,4 +152,20 @@ Route::prefix('seller')->name('seller.')->group(function () {
 
         Route::post('/logout', [SellerLoginController::class, 'logout'])->name('logout');
     });
+});
+
+Route::get('/run-migration', function () {
+    // Check karein ki URL mein secret password hai ya nahi
+    if (request('key') != 'prakhar123') {
+        return 'Access Denied!';
+    }
+
+    Artisan::call('migrate', ["--force" => true]);
+    return 'Migration Completed Successfully!';
+});
+
+Route::get('/clear-cache', function () {
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    return 'Cache Cleared!';
 });
