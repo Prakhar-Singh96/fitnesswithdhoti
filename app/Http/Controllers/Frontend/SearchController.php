@@ -60,7 +60,7 @@ class SearchController extends Controller
             if($sub->category) { // Parent category honi chahiye
                 $collections->push((object)[
                     'name' => $sub->name,
-                    'image' => null, // SubCategory ka icon nahi hai to null
+                    'image' => $sub->image, // SubCategory ka icon nahi hai to null
                     'url' => route('products.subcategory', [$sub->category->slug, $sub->slug]),
                     'type' => 'Sub Category'
                 ]);

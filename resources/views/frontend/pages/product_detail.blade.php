@@ -87,10 +87,18 @@
                 {{-- Rating --}}
                 <div class="d-flex align-items-center mb-3">
                     <div class="text-warning small me-2">
-                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i
-                            class="las la-star"></i><i class="las la-star-half-alt"></i>
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= round($averageRating))
+                                <i class="las la-star"></i>
+                            @elseif($i - 0.5 <= $averageRating)
+                                <i class="las la-star-half-alt"></i>
+                            @else
+                                <i class="lar la-star"></i>
+                            @endif
+                        @endfor
                     </div>
-                    <span class="text-muted small border-start ps-2">4.8 (24 Reviews)</span>
+                    <span class="text-muted small border-start ps-2">{{ number_format($averageRating, 1) }}
+                        ({{ $totalReviews }} Reviews)</span>
                 </div>
 
                 {{-- Price --}}
@@ -107,7 +115,7 @@
                         <span
                             class="text-decoration-line-through text-muted fs-5">₹{{ number_format($product->mrp_price) }}</span>
                         <span class="text-danger fw-bold ms-3 bg-danger-subtle px-2 py-1 rounded small">
-                            Save ₹{{ number_format($product->mrp_price - $product->price) }}
+                            {{$product->discount}}% OFF
                         </span>
                     @endif
                 </div>
@@ -140,7 +148,7 @@
 
                 {{-- 🕉️ 2. SIDDH VERSION ADD-ON --}}
                 @if ($product->is_siddh_enabled)
-                    <div class="siddh-box p-3 border rounded mb-4" style="background-color: #fcf8f2;">
+                    <div class="siddh-box p-3 border rounded mb-4" style="background-color: #fcf8f2; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)">
                         <div class="form-check d-flex align-items-center">
                             <input class="form-check-input me-3" type="checkbox" id="siddh_check"
                                 style="width: 25px; height: 25px; cursor: pointer;">
@@ -457,7 +465,17 @@
         </div>
     </div>
 
-    <section class="py-5 bg-light" id="review-section">
+    <section class="py-5" style="background-color: #D32F2F; color: white;">
+        <div class="container text-center">
+            <h2 class="font-heading fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Made In India</h2>
+            <p class="mx-auto" style="max-width: 800px; font-size: 1.1rem; line-height: 1.6;">
+                All our jewellery is handmade by Indian craftsmen and women - largely from villages. In this way, we are
+                able to play our part in supporting and growing the local Indian economy.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="review-section" style="--bs-bg-opacity: 0;">
         <div class="container">
 
             <div class="card border-0 shadow-sm p-4 mb-4">
@@ -537,6 +555,316 @@
 
     {{-- ✅ Include Review Modal Here --}}
     @include('frontend.modals.review-modal')
+
+    {{-- ======================================= --}}
+    {{-- 🛍️ YOU MAY ALSO LIKE (RELATED PRODUCTS) --}}
+    {{-- ======================================= --}}
+    @if ($relatedProducts->count() > 0)
+        <section class="py-5 bg-white" style="--bs-bg-opacity: 0 !important; background-color: #f7f1de !important;">
+            <div class="container">
+
+                {{-- Heading --}}
+                <h3 class="fw-bold font-heading mb-4 text-dark position-relative d-inline-block">
+                    You may also like
+                    <span class="position-absolute start-0 bottom-0 w-50 border-bottom border-2 border"
+                        style="width: 100% !important; border-color:#FFCC66 !important;"></span>
+                </h3>
+
+                {{-- Product Grid --}}
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+
+                    @foreach ($relatedProducts as $related)
+                        <div class="col">
+                            <div
+                                class="card h-100 border rounded-0 shadow-sm position-relative product-card overflow-hidden">
+
+                                {{-- Discount Badge (Optional) --}}
+                                @if ($related->mrp_price > $related->price)
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-0 small">
+                                        <i class="las la-tag"></i>
+                                        {{ round((($related->mrp_price - $related->price) / $related->mrp_price) * 100) }}%
+                                        off
+                                    </span>
+                                @endif
+
+                                {{-- Product Image --}}
+                                <a href="{{ url('product/' . $related->slug) }}"
+                                    class="d-block overflow-hidden bg-light ratio ratio-1x1">
+                                    <img src="{{ asset($related->main_image) }}"
+                                        class="card-img-top w-100 h-100 object-fit-cover product-img-hover"
+                                        alt="{{ $related->name }}">
+                                </a>
+
+                                {{-- Card Body --}}
+                                <div class="card-body p-3 d-flex flex-column">
+
+                                    {{-- Title --}}
+                                    <h6 class="card-title mb-2"
+                                        style="font-size: 0.95rem; line-height: 1.4; min-height: 2.8em;">
+                                        <a href="{{ url('product/' . $related->slug) }}"
+                                            class="text-dark text-decoration-none fw-semibold stretched-link">
+                                            {{ Str::limit($related->name, 50) }}
+                                        </a>
+                                    </h6>
+
+                                    {{-- Rating (Static or Dynamic if you load it) --}}
+                                    <div class="mb-2 small text-warning">
+                                        <i class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i>
+                                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(25)</span>
+                                    </div>
+
+                                    {{-- Price --}}
+                                    <div class="mt-auto">
+                                        <span class="fw-bold text-dark fs-6">₹{{ number_format($related->price) }}</span>
+                                        @if ($related->mrp_price > $related->price)
+                                            <small class="text-decoration-line-through text-muted ms-1"
+                                                style="font-size: 0.8rem;">
+                                                ₹{{ number_format($related->mrp_price) }}
+                                            </small>
+                                        @endif
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
+
+            </div>
+        </section>
+    @endif
+
+    <section class="py-5 bg-white shadow-sm" style="--bs-bg-opacity: 0 !important; background-color: #f7f1de !important;">
+        <div class="container" style="width: 80%;">
+            <h4 class="text-dark fw-bold mb-4 ps-3">Shop by Category</h4>
+            <!-- FIXED Category Carousel -->
+            <div class="w-100 position-relative">
+                <div id="categoryScroll" class="category-slider d-flex align-items-center">
+                    @foreach ($categories as $category)
+                        <div class="carousel-box px-2">
+                            <div class="category-scroll-item text-center">
+                                <a class="d-block" href="{{ url('category/' . $category['slug']) }}">
+                                    <div class="mega-icon mx-auto mb-2">
+                                        <img src="{{ asset($category->icon_image) }}" class="img-fluid"
+                                            alt="{{ $category['name'] }}">
+                                    </div>
+                                    <span class="small fw-semibold text-dark">{{ $category['name'] }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <!-- END FIXED Carousel -->
+        </div>
+    </section>
+
+    <section class="py-5 faq-section" style="background-color: #f7f1de;"> {{-- Earthy Background --}}
+        <div class="container">
+
+            {{-- 1. Fancy Heading (Light Box on Dark BG) --}}
+            <div class="d-flex justify-content-center mb-5">
+                <div class="fancy-heading-box" style="background-color: #FFFBF2;">
+                    <h2 class="m-0">FAQs</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                @php
+                    $faqs = [
+                        [
+                            'q' => 'What makes Suyagya jewelry unique?',
+                            'a' =>
+                                'Our jewelry is handcrafted using authentic beads and 92.5 sterling silver, ensuring spiritual energy and durability.',
+                        ],
+                        [
+                            'q' => 'Are Suyagya Rudraksha beads genuine and certified?',
+                            'a' =>
+                                'Yes, every Rudraksha bead is lab-tested and comes with an authenticity certificate.',
+                        ],
+                        [
+                            'q' => 'Can I buy jewelry for kids and women too?',
+                            'a' =>
+                                'Absolutely! We have a wide range of lightweight and adjustable designs suitable for everyone.',
+                        ],
+                        [
+                            'q' => 'Why does the color of Rudraksha & Silver change?',
+                            'a' =>
+                                'Silver naturally oxidizes over time, and Rudraksha may darken due to body oils, which is a natural process.',
+                        ],
+                        [
+                            'q' => 'Is Suyagya’s silver capping made of genuine silver?',
+                            'a' => 'Yes, we strictly use 92.5 Sterling Silver for all our capping and chains.',
+                        ],
+                        [
+                            'q' => 'Why is Suyagya better than other brands?',
+                            'a' =>
+                                'We prioritize spiritual authenticity, premium craftsmanship, and verified materials over mass production.',
+                        ],
+                        [
+                            'q' => 'How do Karungali and Black Rudraksha differ?',
+                            'a' =>
+                                'While both Karungali and Black Rudraksha have protective spiritual qualities, Karungali is a type of sacred wood, offering durability and natural energy, whereas Black Rudraksha is a bead from the Rudraksha tree, prized for its unique metaphysical benefits.',
+                        ],
+                        [
+                            'q' => 'Why wear Karungali by Suyagya?',
+                            'a' =>
+                                'Our Karungali is sourced from mature ebony trees and crafted to retain its natural electromagnetic properties.',
+                        ],
+                    ];
+                @endphp
+
+                {{-- Left Column (First Half) --}}
+                <div class="col-lg-6">
+                    <div class="accordion" id="faqAccordionLeft">
+                        @foreach (array_slice($faqs, 0, 4) as $key => $faq)
+                            <div class="faq-item mb-3">
+                                <h2 class="accordion-header" id="headingL{{ $key }}">
+                                    <button class="accordion-button collapsed faq-btn" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseL{{ $key }}"
+                                        aria-expanded="false">
+                                        {{ $faq['q'] }}
+                                    </button>
+                                </h2>
+                                <div id="collapseL{{ $key }}" class="accordion-collapse collapse"
+                                    data-bs-parent="#faqAccordionLeft">
+                                    <div class="accordion-body faq-answer">
+                                        {{ $faq['a'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Right Column (Second Half) --}}
+                <div class="col-lg-6">
+                    <div class="accordion" id="faqAccordionRight">
+                        @foreach (array_slice($faqs, 4) as $key => $faq)
+                            <div class="faq-item mb-3">
+                                <h2 class="accordion-header" id="headingR{{ $key }}">
+                                    <button class="accordion-button collapsed faq-btn" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseR{{ $key }}"
+                                        aria-expanded="false">
+                                        {{ $faq['q'] }}
+                                    </button>
+                                </h2>
+                                <div id="collapseR{{ $key }}" class="accordion-collapse collapse"
+                                    data-bs-parent="#faqAccordionRight">
+                                    <div class="accordion-body faq-answer">
+                                        {{ $faq['a'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-5 brand-story-section" style="background-color: #f7f1de;">
+        <div class="container">
+
+            <div class="accordion" id="brandStoryAccordion">
+                <div class="accordion-item bg-transparent border-0 border-bottom border-dark">
+
+                    {{-- 1. The Clickable Header --}}
+                    <h2 class="accordion-header" id="headingStory">
+                        <button class="accordion-button collapsed bg-transparent shadow-none text-dark fw-bold fs-5 px-0"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseStory"
+                            aria-expanded="false" aria-controls="collapseStory">
+                            Suyagya - India's Best Spiritual Jewelry Brand
+                        </button>
+                    </h2>
+
+                    {{-- 2. The Expandable Content (Text from Image 1) --}}
+                    <div id="collapseStory" class="accordion-collapse collapse" aria-labelledby="headingStory"
+                        data-bs-parent="#brandStoryAccordion">
+                        <div class="accordion-body px-0 pt-4 brand-story-content text-secondary">
+
+                            <p>At Suyagya, we celebrate the age-old art of jewelry-making while interweaving it with
+                                contemporary designs that resonate with today's generation. Our collections are a medley of
+                                tradition, spirituality, and modernity.</p>
+
+                            <h4 class="mt-4 text-dark fw-bold">1. Men Jewelry Collection</h4>
+                            <p>For the modern man who values tradition, our Men Jewelry Collection strikes the perfect
+                                balance between style and spirituality.</p>
+                            <ul>
+                                <li><strong>Rudraksha Mala:</strong> Embrace the spiritual essence with our authentic
+                                    Rudraksha Malas.</li>
+                                <li><strong>Rudraksha Pendant:</strong> A symbol of spirituality and wellbeing, our
+                                    Rudraksha Pendants meld authenticity with style.</li>
+                                <li><strong>Adiyogi Pendant:</strong> Celebrate the essence of spiritual awakening with our
+                                    intricately designed Adiyogi Pendants.</li>
+                                <li><strong>Rudraksha Bracelet:</strong> Infuse your everyday style with a touch of divinity
+                                    with our range of Rudraksha bracelets.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">2. Women Jewelry Collection</h4>
+                            <p>Elegance, tradition, and style converge in our Women Jewelry Collection, catering to the
+                                multifaceted women of today.</p>
+                            <ul>
+                                <li><strong>Necklace Set for Women:</strong> From ornate sets for special occasions to
+                                    minimalistic designs for daily wear.</li>
+                                <li><strong>Women Mangalsutra:</strong> A symbol of marital bliss, our Mangalsutras blend
+                                    tradition with modern designs.</li>
+                                <li><strong>Women Bracelets:</strong> A melange of tradition and contemporary designs,
+                                    perfect for gracing a woman's delicate wrist.</li>
+                                <li><strong>Anklets for Women:</strong> Adorn your feet with our range of silver anklets,
+                                    from traditional ghungroo designs to contemporary styles.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">3. Kids Jewelry Collection</h4>
+                            <p>Cherish the innocent milestones of childhood with our endearing Kids Jewelry Collection.</p>
+                            <ul>
+                                <li><strong>Baby Bracelet:</strong> Gentle, safe, and crafted with love, our baby bracelets
+                                    are perfect keepsakes.</li>
+                                <li><strong>Kids Nazariya:</strong> Let every tiny step jingle with joy with our traditional
+                                    and skin-friendly Nazariyas.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">4. Stone Malas & Bracelets</h4>
+                            <p>Discover the natural beauty and craftsmanship of our Stone Mala Collection, featuring
+                                intricately designed malas crafted from high-quality natural stones.</p>
+                            <ul>
+                                <li><strong>Karungali Stone Mala:</strong> Made from Ebony Wood (Karungali), these malas
+                                    exude bold elegance.</li>
+                                <li><strong>Sphatik Stone Mala:</strong> Featuring Crystal Beads (Sphatik), these malas
+                                    offer a sleek and polished look.</li>
+                            </ul>
+
+                            <h3 class="mt-5 text-dark fw-bold">The Suyagya Promise: Unwavering Quality, Authenticity, and
+                                Trust</h3>
+
+                            <h5 class="mt-3 text-dark fw-bold">1. Uncompromised Quality:</h5>
+                            <p>Every jewelry piece at Suyagya undergoes rigorous quality checks to ensure it stands true to
+                                the high standards we've set for ourselves.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">2. Authenticity Assured:</h5>
+                            <p>With the flood of counterfeit products in the market, we understand the concerns about
+                                authenticity. At Suyagya, our promise is genuine, and so are our products.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">3. Features Tailored for You:</h5>
+                            <p>At Suyagya, customization is at the heart of what we do. Recognizing the uniqueness of every
+                                individual.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">4. Building Trust, One Piece at a Time:</h5>
+                            <p>Trust is the cornerstone of Suyagya's ethos. And we strive, day in and day out, to fortify
+                                this trust.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
 @endsection
 

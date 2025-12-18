@@ -13,93 +13,13 @@
             <!-- FIXED Category Carousel -->
             <div class="w-100 position-relative">
                 <div id="categoryScroll" class="category-slider d-flex align-items-center">
-                    @php
-                        $categories = [
-                            [
-                                'slug' => 'bracelet-ye8hk',
-                                'name' => 'Bracelet',
-                                'image' => 'ffsSJvJ3mMxG1ZALWyFjioFM5Wde66p91GnBcKYa.webp',
-                            ],
-                            [
-                                'slug' => 'rudraksh-fdfhq',
-                                'name' => 'Rudraksh',
-                                'image' => 'Ndy2huteC3obeeQi5d25FrrRzRBPsFZsEjMmOlVd.webp',
-                            ],
-                            [
-                                'slug' => 'shankh-wszyo',
-                                'name' => 'Shankh',
-                                'image' => 'aw7qmny1N9MCZJTmkHZEMqiyVVAKDLyJIGRfyr5d.webp',
-                            ],
-                            [
-                                'slug' => 'shivling-egajb',
-                                'name' => 'Shivling',
-                                'image' => 'nXeS978jtHPfIhRviyTwGTOBmG18Hmvis7mxMX3X.webp',
-                            ],
-                            [
-                                'slug' => 'jap-mala-9y6fr',
-                                'name' => 'Jap Mala',
-                                'image' => 'xMTDcif2LKDtwUmSq51DNbJzCz6DdY270fxdOTI8.webp',
-                            ],
-                            [
-                                'slug' => 'locket-onhxb',
-                                'name' => 'Locket',
-                                'image' => '27qYrkUA00xhmKkgOaEeTkaGY55NhmcSLRbBINsX.webp',
-                            ],
-                            [
-                                'slug' => 'shri-yantra-gtc8a',
-                                'name' => 'Shri Yantra',
-                                'image' => 'IdWIF4SLMU1dXDg6UsG4xcZZaaPmFM4rQr5IqCry.webp',
-                            ],
-                            [
-                                'slug' => 'ghode-ki-naal-xlntt',
-                                'name' => 'Ghode ki naal',
-                                'image' => 'rFaHG50n8fGdKWCWN59oRf8IIWIV4hP8gCwb4FRx.webp',
-                            ],
-                            [
-                                'slug' => 'mala-verbp',
-                                'name' => 'Mala',
-                                'image' => 'EE6mOpKPCJoQEhFSNLNJb3LQXzrJuZh8sDSz7Grp.webp',
-                            ],
-                            [
-                                'slug' => 'ganesh-murti-dvi86',
-                                'name' => 'Ganesh Murti',
-                                'image' => 'v1ElnysR53OkrAwJ39ukSjAupymEiSEFYNt0XcvD.webp',
-                            ],
-                            [
-                                'slug' => 'combos-buqpk',
-                                'name' => 'Combos',
-                                'image' => 'APJc1cSKcRKSQT4Vtq6sreUk58ZiJqYTTrmHGKyI.webp',
-                            ],
-                            [
-                                'slug' => 'karungali-joklt',
-                                'name' => 'Karungali',
-                                'image' => 'dREBkpFHOVw6qL7uHp4MAEgjg6m6IGYZl6W87HE7.webp',
-                            ],
-                            [
-                                'slug' => 'stone-uenmt',
-                                'name' => 'Stone',
-                                'image' => 'PfR4fHfvONlbBL1nmGyFbR55XNZiQOgR5EFHIcl7.webp',
-                            ],
-                            [
-                                'slug' => 'purpose-0i83s',
-                                'name' => 'Purpose',
-                                'image' => 'afI4d3gXsFY5yNNVTLtUZenp9n4s0Ya6P94PIfBQ.webp',
-                            ],
-                            [
-                                'slug' => 'best-selling-dbeyi',
-                                'name' => 'Best Selling',
-                                'image' => 'uNcdnWENlJ2Eu0pUxbuqkFSYmtL8lmgaRfIzjyet.webp',
-                            ],
-                        ];
-                    @endphp
-
                     @foreach ($categories as $category)
                         <div class="carousel-box px-2">
                             <div class="category-scroll-item text-center">
                                 <a class="d-block" href="{{ url('category/' . $category['slug']) }}">
                                     <div class="mega-icon mx-auto mb-2">
-                                        <img src="https://suyagya.com/public/uploads/all/{{ $category['image'] }}"
-                                            class="img-fluid" alt="{{ $category['name'] }}">
+                                        <img src="{{ asset($category->icon_image) }}" class="img-fluid"
+                                            alt="{{ $category['name'] }}">
                                     </div>
                                     <span class="small fw-semibold text-dark">{{ $category['name'] }}</span>
                                 </a>
@@ -165,9 +85,8 @@
     </section>
 
 
-    {{-- 🛒 3. BEST SELLING PRODUCTS (Placeholder for next section) --}}
+    {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
     <section class="py-5 featured-products-section" style="background-color: var(--light)">
-        {{-- Container now uses max-width: 1400px from CSS --}}
         <div class="container">
 
             {{-- Heading --}}
@@ -180,64 +99,226 @@
             {{-- Product Grid --}}
             <div class="row g-4">
 
-                @for ($i = 1; $i <= 8; $i++)
+                @foreach ($featuredProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product-card-minimal">
 
-                            {{-- Image Area (Full Width & Height via CSS) --}}
+                            {{-- Image Area --}}
                             <div class="img-box">
-                                <span class="badge-sale">Sale</span>
+                                @if ($product->mrp_price > $product->price)
+                                    <span class="badge-sale">Sale</span>
+                                @endif
                                 <button class="btn-wishlist">
                                     <i class="las la-heart"></i>
                                 </button>
-                                <a href="#">
-                                    {{-- Image is now set to object-fit: cover in CSS to fill the box --}}
-                                    <img src="https://prinjal.com/cdn/shop/files/02_Detail_copy.jpg?v=1711632938&width=550"
-                                        alt="Product Name">
+                                <a href="{{ route('product.detail', $product->slug) }}">
+                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">
                                 </a>
                             </div>
 
                             {{-- Details Area --}}
                             <div class="product-details text-start">
-                                <a href="#" class="product-title">Rudraksha Capping Silver Mala...</a>
+                                <a href="{{ route('product.detail', $product->slug) }}" class="product-title">
+                                    {{ Str::limit($product->name, 40) }}
+                                </a>
 
                                 <div class="d-flex align-items-center rating-row">
-                                    <span class="stars">
-                                        <i class="las la-star"></i>
-                                        <i class="las la-star"></i>
-                                        <i class="las la-star"></i>
-                                        <i class="las la-star"></i>
-                                        <i class="las la-star-half-alt"></i>
+                                    <span class="stars text-warning">
+                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i><i class="las la-star"></i>
                                     </span>
-                                    <span class="review-count">(178 reviews)</span>
+                                    <span class="review-count">(25)</span>
                                 </div>
 
                                 <div class="price-row">
-                                    <span class="price-current">Rs. 11,600</span>
-                                    <span class="price-old">Rs. 15,400</span>
+                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
+                                    @if ($product->mrp_price > $product->price)
+                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
+                                    @endif
                                 </div>
 
-                                <button class="btn btn-earthy">
-                                    {{ $i % 2 == 0 ? 'Add to cart' : 'Choose' }}
+                                {{-- Add to Cart --}}
+                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                    data-id="{{ $product->id }}">
+                                    Add to Cart
                                 </button>
                             </div>
 
                         </div>
                     </div>
-                @endfor
+                @endforeach
+
+                @if ($featuredProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
+                @endif
 
             </div>
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="#" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
+            </div>
+
+        </div>
+    </section>
+
+    {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
+    <section class="py-5 featured-products-section" style="background-color: var(--light)">
+        <div class="container">
+
+            {{-- Heading --}}
+            <div class="d-flex justify-content-center mb-5">
+                <div class="fancy-heading-box">
+                    <h2 class="m-0">Best Selling Products</h2>
+                </div>
+            </div>
+
+            {{-- Product Grid --}}
+            <div class="row g-4">
+
+                @foreach ($bestSellingProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card-minimal">
+
+                            {{-- Image Area --}}
+                            <div class="img-box">
+                                @if ($product->mrp_price > $product->price)
+                                    <span class="badge-sale">Sale</span>
+                                @endif
+                                <button class="btn-wishlist">
+                                    <i class="las la-heart"></i>
+                                </button>
+                                <a href="{{ route('product.detail', $product->slug) }}">
+                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">
+                                </a>
+                            </div>
+
+                            {{-- Details Area --}}
+                            <div class="product-details text-start">
+                                <a href="{{ route('product.detail', $product->slug) }}" class="product-title">
+                                    {{ Str::limit($product->name, 40) }}
+                                </a>
+
+                                <div class="d-flex align-items-center rating-row">
+                                    <span class="stars text-warning">
+                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i><i class="las la-star"></i>
+                                    </span>
+                                    <span class="review-count">(25)</span>
+                                </div>
+
+                                <div class="price-row">
+                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
+                                    @if ($product->mrp_price > $product->price)
+                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
+                                    @endif
+                                </div>
+
+                                {{-- Add to Cart --}}
+                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                    data-id="{{ $product->id }}">
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+
+                @if ($featuredProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
+                @endif
+
+            </div>
+
+            {{-- View All --}}
+            <div class="text-center mt-5">
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
+            </div>
+
+        </div>
+    </section>
+
+    {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
+    <section class="py-5 featured-products-section" style="background-color: var(--light)">
+        <div class="container">
+
+            {{-- Heading --}}
+            <div class="d-flex justify-content-center mb-5">
+                <div class="fancy-heading-box">
+                    <h2 class="m-0">our Products</h2>
+                </div>
+            </div>
+
+            {{-- Product Grid --}}
+            <div class="row g-4">
+
+                @foreach ($products as $product)
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card-minimal">
+
+                            {{-- Image Area --}}
+                            <div class="img-box">
+                                @if ($product->mrp_price > $product->price)
+                                    <span class="badge-sale">Sale</span>
+                                @endif
+                                <button class="btn-wishlist">
+                                    <i class="las la-heart"></i>
+                                </button>
+                                <a href="{{ route('product.detail', $product->slug) }}">
+                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">
+                                </a>
+                            </div>
+
+                            {{-- Details Area --}}
+                            <div class="product-details text-start">
+                                <a href="{{ route('product.detail', $product->slug) }}" class="product-title">
+                                    {{ Str::limit($product->name, 40) }}
+                                </a>
+
+                                <div class="d-flex align-items-center rating-row">
+                                    <span class="stars text-warning">
+                                        <i class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i><i class="las la-star"></i><i
+                                            class="las la-star"></i>
+                                    </span>
+                                    <span class="review-count">(25)</span>
+                                </div>
+
+                                <div class="price-row">
+                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
+                                    @if ($product->mrp_price > $product->price)
+                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
+                                    @endif
+                                </div>
+
+                                {{-- Add to Cart --}}
+                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                    data-id="{{ $product->id }}">
+                                    Add to Cart
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+
+                @if ($featuredProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
+                @endif
+
+            </div>
+
+            {{-- View All --}}
+            <div class="text-center mt-5">
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
             </div>
 
         </div>
     </section>
 
     {{-- 🛒 4. video-feed-section (Placeholder for next section) --}}
-    <section class="py-5 video-feed-section" style="background-color: #f7f1de;;">
+    <section class="py-5 video-feed-section" style="background-color: #f7f1de;">
         <div class="container-fluid px-4">
 
             <div class="d-flex justify-content-center mb-4">
@@ -249,92 +330,61 @@
             <div class="video-slider-container">
                 <div class="video-carousel">
 
-                    @php
-                        $videos = [
-                            [
-                                'title' => 'Only Rudraksha',
-                                'link' => url('category/rudraksh'),
-                                'src' => 'https://www.w3schools.com/html/mov_bbb.mp4',
-                                // 👇 पोस्टर (Image) जो वीडियो चलने से पहले दिखेगी
-                                'image' =>
-                                    'https://prinjal.com/cdn/shop/files/02_Detail_copy.jpg?v=1711632938&width=550',
-                            ],
-                            [
-                                'title' => 'All Products',
-                                'link' => url('products'),
-                                'src' => 'https://www.w3schools.com/html/movie.mp4',
-                                'image' =>
-                                    'https://prinjal.com/cdn/shop/files/Karungali_Beads_Silver_Mala.jpg?v=1750912937&width=550',
-                            ],
-                            [
-                                'title' => 'Karungali Mala',
-                                'link' => '#',
-                                'src' => 'https://www.w3schools.com/html/mov_bbb.mp4',
-                                'image' => 'https://prinjal.com/cdn/shop/files/SNA69347-min.jpg?v=1752742164&width=550',
-                            ],
-                            [
-                                'title' => 'Rudraksha Bracelets',
-                                'link' => '#',
-                                'src' => 'https://www.w3schools.com/html/movie.mp4',
-                                'image' => 'https://prinjal.com/cdn/shop/files/SNA69239-min.jpg?v=1745405791&width=550',
-                            ],
-                            [
-                                'title' => 'Rudraksha Mala',
-                                'link' => '#',
-                                'src' => 'https://www.w3schools.com/html/mov_bbb.mp4',
-                                'image' => 'https://prinjal.com/cdn/shop/files/SNA69051-min.jpg?v=1744891596&width=550',
-                            ],
-                            [
-                                'title' => 'Murti Collection',
-                                'link' => '#',
-                                'src' => 'https://www.w3schools.com/html/movie.mp4',
-                                'image' =>
-                                    'https://prinjal.com/cdn/shop/files/HanumanSilverIdol.png?v=1744016339&width=550',
-                            ],
-                            [
-                                'title' => 'New Arrivals',
-                                'link' => '#',
-                                'src' => 'https://www.w3schools.com/html/mov_bbb.mp4',
-                                'image' => 'https://prinjal.com/cdn/shop/files/SNA68975-min.jpg?v=1744880852&width=550',
-                            ],
-                        ];
-                    @endphp
+                    {{-- 🟢 Check if videos exist --}}
+                    @if (isset($videos) && $videos->count() > 0)
 
-                    @foreach ($videos as $video)
-                        <div class="px-2">
-                            <div class="video-card">
-                                <div class="video-wrapper">
+                        @foreach ($videos as $video)
+                            <div class="px-2">
+                                <div class="video-card">
+                                    <div class="video-wrapper">
 
-                                    {{-- ✅ VIDEO TAG: 'poster' attribute shows the image first --}}
-                                    <video loop playsinline preload="none" muted class="the-video"
-                                        poster="{{ $video['image'] }}">
-                                        <source src="{{ $video['src'] }}" type="video/mp4">
-                                    </video>
+                                        {{-- ✅ VIDEO TAG --}}
+                                        <video loop playsinline preload="none" muted class="the-video"
+                                            poster="{{ asset($video->image) }}"> {{-- 🟢 Dynamic Poster --}}
 
-                                    {{-- Sound Toggle --}}
-                                    <button class="btn-sound-toggle" type="button" title="Unmute">
-                                        <i class="las la-volume-mute"></i>
-                                    </button>
+                                            <source src="{{ asset($video->video) }}" type="video/mp4">
+                                            {{-- 🟢 Dynamic Video --}}
+                                        </video>
 
-                                    {{-- Default Overlay --}}
-                                    <div class="video-overlay-default">
-                                        <div class="play-icon-circle">
-                                            <i class="las la-play"></i>
+                                        {{-- Sound Toggle --}}
+                                        <button class="btn-sound-toggle" type="button" title="Unmute">
+                                            <i class="las la-volume-mute"></i>
+                                        </button>
+
+                                        {{-- Default Overlay --}}
+                                        <div class="video-overlay-default">
+                                            <div class="play-icon-circle">
+                                                <i class="las la-play"></i>
+                                            </div>
+                                            <h5 class="video-title">{{ $video->title }}</h5> {{-- 🟢 Dynamic Title --}}
                                         </div>
-                                        <h5 class="video-title">{{ $video['title'] }}</h5>
-                                    </div>
 
-                                    {{-- Buy Now Overlay --}}
-                                    <div class="video-overlay-hover">
-                                        <a href="{{ $video['link'] }}" class="btn btn-buy-now-video w-100">
-                                            Buy Now <i class="las la-arrow-right ms-1"></i>
-                                        </a>
-                                    </div>
+                                        {{-- Buy Now Overlay --}}
+                                        <div class="video-overlay-hover">
+                                            {{-- 🟢 Dynamic Link (Handling Relative vs Absolute) --}}
+                                            @php
+                                                $link = $video->link;
+                                                // If link doesn't start with http, wrap in url()
+if (!Str::startsWith($link, ['http://', 'https://'])) {
+                                                    $link = url($link);
+                                                }
+                                            @endphp
 
+                                            <a href="{{ $link }}" class="btn btn-buy-now-video w-100">
+                                                Buy Now <i class="las la-arrow-right ms-1"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
+                        @endforeach
+                    @else
+                        {{-- Optional: Show nothing or a message if no videos --}}
+                        <div class="text-center w-100">
+                            <p class="text-muted">No videos available at the moment.</p>
                         </div>
-                    @endforeach
+                    @endif
 
                 </div>
             </div>
@@ -461,38 +511,39 @@
             </div>
 
             {{-- 2. Energy Icons Grid --}}
-            {{-- 'justify-content-center' keeps them centered if less than 8 on smaller screens --}}
             <div class="row g-4 justify-content-center">
                 @php
-                    $energies = [
-                        // Wealth का आइकन आपने नहीं भेजा, इसलिए मैंने एक प्लेसहोल्डर लगा दिया है।
-                        // कृपया इसे अपने Wealth आइकन के पाथ से बदलें।
-                        ['name' => 'Wealth', 'icon' => asset('assets/img/icons/wealth.png')],
-
-                        // बाकी आइकन आपके द्वारा भेजे गए हैं। कृपया इनका सही पाथ जाँच लें।
-                        ['name' => 'Love', 'icon' => asset('assets/img/icons/love.png')],
-                        ['name' => 'Health', 'icon' => asset('assets/img/icons/health.png')],
-                        ['name' => 'Luck', 'icon' => asset('assets/img/icons/luck.png')],
-                        ['name' => 'Protection', 'icon' => asset('assets/img/icons/protection.png')],
-                        ['name' => 'Peace', 'icon' => asset('assets/img/icons/peace.png')],
-                        ['name' => 'Courage', 'icon' => asset('assets/img/icons/courage.png')],
-                        ['name' => 'Balance', 'icon' => asset('assets/img/icons/balance.png')],
+                    // Helper array to map DB names to Icons
+                    // Ensure keys match your DB values exactly (case-insensitive usually preferred)
+                    $iconMap = [
+                        'Wealth' => asset('assets/img/icons/wealth.png'),
+                        'Love' => asset('assets/img/icons/love.png'),
+                        'Health' => asset('assets/img/icons/health.png'),
+                        'Luck' => asset('assets/img/icons/luck.png'),
+                        'Protection' => asset('assets/img/icons/protection.png'),
+                        'Peace' => asset('assets/img/icons/peace.png'),
+                        'Courage' => asset('assets/img/icons/courage.png'),
+                        'Balance' => asset('assets/img/icons/balance.png'),
+                        // Add default fallback if needed
                     ];
                 @endphp
 
-                @foreach ($energies as $energy)
-                    {{-- Custom class 'col-lg-custom-8' for 8 items in a row on large screens --}}
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-custom-8">
-                        <a href="#" class="energy-card text-decoration-none d-block text-center">
+                @foreach ($purposes as $purpose)
+                    @php
+                        // Get icon or default placeholder
+                        $icon = $iconMap[$purpose->value] ?? asset('assets/img/icons/default.png');
+                    @endphp
 
-                            {{-- Icon Circle Wrapper --}}
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-custom-8">
+                        {{-- 🔗 Dynamic Link: Sends to Product Listing with ?purpose=Health --}}
+                        <a href="{{ route('products.all_collection') }}?purpose={{ $purpose->value }}&sort_by=created-descending"
+                            class="energy-card text-decoration-none d-block text-center">
+
                             <div class="icon-wrapper mb-3 mx-auto">
-                                {{-- The Icon Image --}}
-                                <img src="{{ $energy['icon'] }}" alt="{{ $energy['name'] }}" class="img-fluid">
+                                <img src="{{ $icon }}" alt="{{ $purpose->value }}" class="img-fluid">
                             </div>
 
-                            {{-- Title --}}
-                            <h5 class="energy-title">{{ $energy['name'] }}</h5>
+                            <h5 class="energy-title">{{ $purpose->value }}</h5>
                         </a>
                     </div>
                 @endforeach
@@ -501,126 +552,115 @@
         </div>
     </section>
 
-    <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
-        <div class="container-fluid px-4">
+    {{-- ✨ 6. DYNAMIC SUB-CATEGORY SHOWCASE SECTIONS ✨ --}}
+    {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS (Ring, Earring, Pendant) ✨ --}}
+    {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS ✨ --}}
+    @if(isset($showcaseSections) && $showcaseSections->count() > 0)
+        @foreach($showcaseSections as $section)
 
-            {{-- 1. Heading --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h3 fw-bold text-dark m-0">Original Karungali Beads Jewellery</h2>
-                <a href="{{ url('category/karungali-joklt') }}" class="btn btn-outline-dark rounded-pill px-4">View
-                    all</a>
-            </div>
+            @if($section->products->count() > 0)
+                <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
+                    <div class="container-fluid px-4">
 
-            <div class="row g-3">
-
-                {{-- 2. LEFT SIDE: CATEGORY BANNER (Fixed) --}}
-                <div class="col-lg-2 d-none d-lg-block">
-                    {{-- Note: Changed to col-lg-2 to give more space to products --}}
-                    <div class="category-banner-card h-100">
-                        <img src="https://prinjal.com/cdn/shop/files/Karungali_Beads_Silver_Mala.jpg?v=1750912937"
-                            alt="Karungali Jewellery" class="img-fluid banner-img">
-                        <div class="banner-content">
-                            <h3>Karungali<br>Jewellery</h3>
+                        {{-- 1. Heading --}}
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h3 fw-bold text-dark m-0">
+                                {{ $section->category->name }} {{ $section->name }}
+                            </h2>
+                            <a href="{{ route('products.subcategory', ['cat_slug' => $section->category->slug, 'sub_slug' => $section->slug]) }}"
+                               class="btn btn-outline-dark rounded-pill px-4">
+                                View all
+                            </a>
                         </div>
-                    </div>
-                </div>
 
-                {{-- 3. RIGHT SIDE: 5 PRODUCTS ROW --}}
-                <div class="col-lg-10 col-12">
+                        <div class="row g-3">
 
-                    {{-- Slider Wrapper --}}
-                    <div class="category-product-slider">
+                            {{-- 2. LEFT SIDE: CATEGORY BANNER --}}
+                            <div class="col-lg-2 d-none d-lg-block">
+                                <div class="category-banner-card h-100 position-relative overflow-hidden rounded-3"
+                                     style="min-height: 300px; background-color: #e0d4c3;"> {{-- Added min-height & bg-color --}}
 
-                        @php
-                            $products = [
-                                [
-                                    'name' => 'Karungali Silver Mala',
-                                    'price' => '7,150',
-                                    'old' => '8,150',
-                                    'img' =>
-                                        'https://prinjal.com/cdn/shop/files/Karungali_Beads_Silver_Mala.jpg?v=1750912937',
-                                ],
-                                [
-                                    'name' => 'Karungali Om Beads',
-                                    'price' => '12,350',
-                                    'old' => '13,400',
-                                    'img' => 'https://prinjal.com/cdn/shop/files/02_Detail_copy.jpg?v=1711632938',
-                                ],
-                                [
-                                    'name' => 'Om Namah Shivaya',
-                                    'price' => '10,550',
-                                    'old' => '11,700',
-                                    'img' => 'https://prinjal.com/cdn/shop/files/SNA69239-min.jpg?v=1745405791',
-                                ],
-                                [
-                                    'name' => 'Damru Mala',
-                                    'price' => '13,000',
-                                    'old' => '15,200',
-                                    'img' => 'https://prinjal.com/cdn/shop/files/SNA69051-min.jpg?v=1744891596',
-                                ],
-                                [
-                                    'name' => 'Jay Shree Ram',
-                                    'price' => '10,400',
-                                    'old' => '11,400',
-                                    'img' => 'https://prinjal.com/cdn/shop/files/HanumanSilverIdol.png?v=1744016339',
-                                ],
-                                [
-                                    'name' => 'Simple Mala',
-                                    'price' => '5,000',
-                                    'old' => '6,500',
-                                    'img' => 'https://prinjal.com/cdn/shop/files/SNA68975-min.jpg?v=1744880852',
-                                ],
-                            ];
-                        @endphp
+                                    {{-- Image Logic: Check if image exists, else show placeholder --}}
+                                    @php
+                                        $bannerImage = $section->image ? asset($section->image) : 'https://placehold.co/300x500/e0d4c3/555?text=' . urlencode($section->name);
+                                    @endphp
 
-                        @foreach ($products as $product)
-                            <div class="px-2">
-                                <div class="product-card-standard h-100 border rounded-3 overflow-hidden">
+                                    <img src="{{ $bannerImage }}"
+                                         alt="{{ $section->name }}"
+                                         class="img-fluid w-100 h-100 object-fit-cover banner-img">
 
-                                    {{-- Image --}}
-                                    <div class="card-img-wrapper position-relative bg-light" style="aspect-ratio: 1/1;">
-                                        <span
-                                            class="badge bg-light text-dark position-absolute top-0 start-0 m-2 fw-bold border">Sale</span>
-                                        <button class="btn-wishlist-small position-absolute top-0 end-0 m-2"><i
-                                                class="las la-heart"></i></button>
-                                        <a href="#" class="d-block w-100 h-100">
-                                            <img src="{{ $product['img'] }}" alt="{{ $product['name'] }}"
-                                                class="w-100 h-100 object-fit-cover">
-                                        </a>
+                                    <div class="banner-content position-absolute bottom-0 start-0 p-3 w-100 text-white"
+                                         style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
+                                        <h3 class="h4 fw-bold mb-0">{{ $section->name }}<br>Collection</h3>
                                     </div>
+                                </div>
+                            </div>
 
-                                    {{-- Info --}}
-                                    <div class="p-3 text-start">
-                                        <h6 class="product-title mb-1 text-truncate"
-                                            style="font-size: 14px; font-weight: 600;">{{ $product['name'] }}</h6>
+                            {{-- 3. RIGHT SIDE: PRODUCTS GRID --}}
+                            <div class="col-lg-10 col-12">
+                                {{-- Use 'row' for proper grid alignment of products --}}
+                                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
 
-                                        <div class="mb-2 text-warning" style="font-size: 12px;">
-                                            <i class="las la-star"></i><i class="las la-star"></i><i
-                                                class="las la-star"></i><i class="las la-star"></i><i
-                                                class="las la-star"></i>
-                                            <span class="text-muted ms-1">88 reviews</span>
+                                    @foreach ($section->products as $product)
+                                        <div class="col"> {{-- Auto column width based on row-cols classes above --}}
+                                            <div class="product-card-standard h-100 border rounded-3 overflow-hidden bg-white shadow-sm">
+
+                                                {{-- Image --}}
+                                                <div class="card-img-wrapper position-relative bg-light" style="aspect-ratio: 1/1;">
+                                                    @if ($product->discount > 0)
+                                                        <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold" style="z-index: 2;">
+                                                            {{ $product->discount }}% OFF
+                                                        </span>
+                                                    @endif
+
+                                                    <a href="{{ route('product.detail', $product->slug) }}" class="d-block w-100 h-100">
+                                                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}"
+                                                            class="w-100 h-100 object-fit-cover">
+                                                    </a>
+                                                </div>
+
+                                                {{-- Info --}}
+                                                <div class="p-3 text-start">
+                                                    <h6 class="product-title mb-1 text-truncate fw-bold" style="font-size: 14px;">
+                                                        <a href="{{ route('product.detail', $product->slug) }}" class="text-dark text-decoration-none">
+                                                            {{ $product->name }}
+                                                        </a>
+                                                    </h6>
+
+                                                    <div class="mb-2 text-warning small">
+                                                        <i class="las la-star"></i><i class="las la-star"></i><i class="las la-star"></i>
+                                                        <i class="las la-star"></i><i class="las la-star"></i>
+                                                        <span class="text-muted ms-1">(24)</span>
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <span class="fw-bold text-dark">₹{{ number_format($product->price) }}</span>
+                                                        @if ($product->mrp_price > $product->price)
+                                                            <span class="text-muted text-decoration-line-through small ms-2">
+                                                                ₹{{ number_format($product->mrp_price) }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+
+                                                    <button class="btn btn-earthy w-100 btn-sm"
+                                                            onclick="addToCart({{ $product->id }}, 1, 0, this)">
+                                                        Add to cart
+                                                    </button>
+                                                </div>
+
+                                            </div>
                                         </div>
-
-                                        <div class="mb-3">
-                                            <span class="fw-bold text-dark">Rs. {{ $product['price'] }}</span>
-                                            <span class="text-muted text-decoration-line-through small ms-2">Rs.
-                                                {{ $product['old'] }}</span>
-                                        </div>
-
-                                        <button class="btn btn-add-cart w-100 text-white"
-                                            style="background-color: #C19A6B;">Add to cart</button>
-                                    </div>
+                                    @endforeach
 
                                 </div>
                             </div>
-                        @endforeach
 
+                        </div>
                     </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
+                </section>
+            @endif
+        @endforeach
+    @endif
 
     <section class="ratings-bar-section">
         <div class="container">
@@ -650,6 +690,7 @@
         </div>
     </section>
 
+    {{-- 🌟 CUSTOMER LOVE / REVIEWS SECTION --}}
     <section class="py-5 testimonial-section" style="background-color: #f7f1de;">
         <div class="container">
 
@@ -664,92 +705,71 @@
             <div class="testimonial-slider-container">
                 <div class="testimonial-slider">
 
-                    @php
-                        // Demo Data for 6-7 Testimonials
-                        $reviews = [
-                            [
-                                'name' => 'Archita',
-                                'review' =>
-                                    'I got the rose quartz pendant and bracelet set from a friend as a gift. Wore them solely because they look pretty, but I actually started to feel more positive and calm after a few days.',
-                                'tagline' => 'Great product!',
-                                'img' => 'https://prinjal.com/cdn/shop/files/02_Detail_copy.jpg?v=1711632938', // Replace with review image
-                            ],
-                            [
-                                'name' => 'Rahul Sharma',
-                                'review' =>
-                                    'The Rudraksha Mala is absolutely authentic. I can feel the energy. The silver capping is done very neatly. Highly recommended for anyone looking for genuine products.',
-                                'tagline' => 'Authentic & Powerful',
-                                'img' => 'https://prinjal.com/cdn/shop/files/SNA69239-min.jpg?v=1745405791',
-                            ],
-                            [
-                                'name' => 'Sneha Kapoor',
-                                'review' =>
-                                    'Ordered the Karungali bracelet. The quality is top-notch and the delivery was super fast. It looks very stylish with western wear too!',
-                                'tagline' => 'Stylish & Spiritual',
-                                'img' =>
-                                    'https://prinjal.com/cdn/shop/files/Karungali_Beads_Silver_Mala.jpg?v=1750912937',
-                            ],
-                            [
-                                'name' => 'Vikram Singh',
-                                'review' =>
-                                    'I bought the Hanuman Idol for my car dashboard. The detailing is intricate and beautiful. It gives me a sense of protection while driving.',
-                                'tagline' => 'Beautiful Craftsmanship',
-                                'img' => 'https://prinjal.com/cdn/shop/files/HanumanSilverIdol.png?v=1744016339',
-                            ],
-                            [
-                                'name' => 'Priya Desai',
-                                'review' =>
-                                    'The Rose Quartz bracelet helped me find balance. I love the packaging and the little note that came with it. Will order again!',
-                                'tagline' => 'Amazing Packaging',
-                                'img' => 'https://prinjal.com/cdn/shop/files/SNA69051-min.jpg?v=1744891596',
-                            ],
-                            [
-                                'name' => 'Amit Verma',
-                                'review' =>
-                                    'Genuine products at a reasonable price. The customer support team helped me choose the right Mukhi Rudraksha for my needs.',
-                                'tagline' => 'Excellent Support',
-                                'img' =>
-                                    'https://prinjal.com/cdn/shop/files/02_Detail_3172df1f-7ec7-447a-8345-581cdee4798f.jpg?v=1711690744',
-                            ],
-                        ];
-                    @endphp
+                    @if(isset($reviews) && $reviews->count() > 0)
+                        @foreach ($reviews as $review)
+                            <div class="px-3"> {{-- Spacing between cards --}}
+                                <div class="testimonial-card">
+                                    <div class="row g-0 h-100">
 
-                    @foreach ($reviews as $review)
-                        <div class="px-3"> {{-- Spacing between cards --}}
-                            <div class="testimonial-card">
-                                <div class="row g-0 h-100">
+                                        {{-- Left: Text Content --}}
+                                        <div class="col-md-7 col-12 d-flex flex-column justify-content-center p-4 text-content">
 
-                                    {{-- Left: Text Content --}}
-                                    <div
-                                        class="col-md-7 col-12 d-flex flex-column justify-content-center p-4 text-content">
-                                        {{-- Stars --}}
-                                        <div class="mb-3 text-warning">
-                                            <i class="las la-star"></i><i class="las la-star"></i><i
-                                                class="las la-star"></i><i class="las la-star"></i><i
-                                                class="las la-star"></i>
+                                            {{-- Stars Dynamic Loop --}}
+                                            <div class="mb-3 text-warning">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= $review->rating)
+                                                        <i class="las la-star"></i>
+                                                    @else
+                                                        <i class="lar la-star"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+
+                                            {{-- Review Text --}}
+                                            <p class="review-text mb-3">
+                                                "{{ Str::limit($review->review, 150) }}"
+                                            </p>
+
+                                            {{-- Title & Name --}}
+                                            @if($review->title)
+                                                <h6 class="fw-bold text-dark mb-1">{{ $review->title }}</h6>
+                                            @endif
+
+                                            <p class="text-muted small m-0 fw-600">- {{ $review->display_name }}</p>
                                         </div>
 
-                                        {{-- Review Text --}}
-                                        <p class="review-text mb-3">
-                                            "{{ $review['review'] }}"
-                                        </p>
+                                        {{-- Right: Image (Media) --}}
+                                        <div class="col-md-5 col-12">
+                                            <div class="review-img-wrapper h-100">
+                                                @php
+                                                    // Check if media exists (it's an array)
+                                                    // If yes, take the first image. If no, use a placeholder.
+                                                    $reviewImage = 'https://placehold.co/400x400/e0d4c3/555?text=Happy+Customer';
 
-                                        {{-- Tagline & Name --}}
-                                        <h6 class="fw-bold text-dark mb-1">{{ $review['tagline'] }}</h6>
-                                        <p class="text-muted small m-0 fw-600">- {{ $review['name'] }}</p>
-                                    </div>
+                                                    if (!empty($review->media) && is_array($review->media) && count($review->media) > 0) {
+                                                        // Check if file is image (simple check)
+                                                        $firstFile = $review->media[0];
+                                                        if (!Str::endsWith($firstFile, '.mp4')) {
+                                                            $reviewImage = asset($firstFile);
+                                                        }
+                                                    }
+                                                @endphp
 
-                                    {{-- Right: Image --}}
-                                    <div class="col-md-5 col-12">
-                                        <div class="review-img-wrapper h-100">
-                                            <img src="{{ $review['img'] }}" alt="Customer Review" class="img-fluid">
+                                                <img src="{{ $reviewImage }}"
+                                                     alt="{{ $review->display_name }}"
+                                                     class="img-fluid w-100 h-100 object-fit-cover">
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="col-12 text-center text-muted">
+                            <p>No reviews yet. Be the first to share your experience!</p>
                         </div>
-                    @endforeach
+                    @endif
 
                 </div>
             </div>
@@ -937,7 +957,7 @@
         </div>
     </section>
 
-    <section class="py-5 brand-story-section" style="background-color: #FFFBF2;">
+    <section class="py-5 brand-story-section" style="background-color: #f7f1de;">
         <div class="container">
 
             <div class="accordion" id="brandStoryAccordion">
@@ -1036,58 +1056,4 @@
     </section>
 
 
-@endsection
-
-@section('scripts')
-    {{-- Initialization script for the carousel --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Initialize Category Scroll Carousel
-            $('#categoryScroll').slick({
-                slidesToShow: 8,
-                slidesToScroll: 2,
-                infinite: false,
-                arrows: true,
-                dots: false,
-                speed: 500,
-                variableWidth: false,
-                responsive: [{
-                        breakpoint: 1200,
-                        settings: {
-                            slidesToShow: 7
-                        }
-                    },
-                    {
-                        breakpoint: 992,
-                        settings: {
-                            slidesToShow: 5
-                        }
-                    },
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            slidesToShow: 4
-                        }
-                    },
-                    {
-                        breakpoint: 576,
-                        settings: {
-                            slidesToShow: 3
-                        }
-                    },
-                ]
-            });
-
-            $('#heroSlider').slick({
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                autoplay: true,
-                autoplaySpeed: 1500,
-                infinite: true,
-                arrows: false, // Hide Previous & Next buttons
-                dots: false
-            });
-        });
-    </script>
 @endsection

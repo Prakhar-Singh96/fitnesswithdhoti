@@ -145,5 +145,36 @@
             </a>
         </li>
 
+        {{-- video feed --}}
+        <li class="menu-item {{ request()->is('admin/videos*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                {{-- Video Icon --}}
+                <i class="menu-icon tf-icons bx bx-video"></i>
+                <div>Video Feed</div>
+            </a>
+            <ul class="menu-sub">
+                {{-- Video List --}}
+                <li class="menu-item {{ request()->routeIs('admin.videos.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.videos.index') }}" class="menu-link">
+                        <div>Video List</div>
+                    </a>
+                </li>
+
+                {{-- Add Video --}}
+                <li class="menu-item {{ request()->routeIs('admin.videos.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.videos.create') }}" class="menu-link">
+                        <div>Add Video</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/reviews*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reviews.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-star"></i>
+                <div>Reviews</div>
+            </a>
+        </li>
+
     </ul>
 </aside>

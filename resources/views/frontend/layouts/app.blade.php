@@ -84,6 +84,7 @@
 
     {{-- 5. Custom JS (Main Logic) --}}
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+
 </body>
 
 </html>

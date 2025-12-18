@@ -5,47 +5,57 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Filter;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\FilterValue;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use App\Services\BigShipService;
 use App\Models\ProductReview;
+use App\Services\BigShipService;
 use App\Http\Controllers\Controller;
 
 class ProductListingController extends Controller
 {
-    // 🟢 HELPER: Get Dynamic Filters & Counts based on context
-    private function getDynamicFilters($categoryId = null, $subCategoryId = null)
+    // // 🟢 HELPER: Get Dynamic Filters & Counts based on context
+    // 🟢 1. COMMON QUERY BUILDER (The Engine)
+    private function getProductsQuery(Request $request, $context = [])
     {
-        return Filter::whereHas('filterValues.products', function ($q) use ($categoryId, $subCategoryId) {
-            // Sirf wo Filters laayein jo Active Products se jude hain
-            $q->where('status', 1);
-            if ($categoryId) $q->where('category_id', $categoryId);
-            if ($subCategoryId) $q->where('sub_category_id', $subCategoryId);
-        })
-            ->with(['filterValues' => function ($q) use ($categoryId, $subCategoryId) {
-                // Filter Values ko bhi filter karein (Jo is category me available hain)
-                $q->whereHas('products', function ($sq) use ($categoryId, $subCategoryId) {
-                    $sq->where('status', 1);
-                    if ($categoryId) $sq->where('category_id', $categoryId);
-                    if ($subCategoryId) $sq->where('sub_category_id', $subCategoryId);
-                })
-                    // Har Value ka Product Count nikalein
-                    ->withCount(['products' => function ($sq) use ($categoryId, $subCategoryId) {
-                        $sq->where('status', 1);
-                        if ($categoryId) $sq->where('category_id', $categoryId);
-                        if ($subCategoryId) $sq->where('sub_category_id', $subCategoryId);
-                    }]);
-            }])
-            ->get();
-    }
+        $query = Product::where('status', 1);
 
-    // 🟢 HELPER: Apply User Selected Filters (Logic same as before)
-    private function applyFilters($query, $request)
-    {
-        if ($request->filled('min_price') && $request->filled('max_price')) {
-            $query->whereBetween('price', [$request->min_price, $request->max_price]);
+        // A. Context: Category
+        if (isset($context['category_id'])) {
+            $query->where('category_id', $context['category_id']);
         }
 
+        // B. Context: SubCategory
+        if (isset($context['sub_category_id'])) {
+            $query->where('sub_category_id', $context['sub_category_id']);
+        }
+
+        // C. Context: Collection/Purpose (FilterValue)
+        if (isset($context['filter_value_id'])) {
+            $query->whereHas('filterValues', function($q) use ($context) {
+                $q->where('filter_values.id', $context['filter_value_id']);
+            });
+        }
+
+        // D. Apply Sidebar Filters (Price, Attributes)
+        return $this->applyFilters($query, $request);
+    }
+
+    // 🟢 2. APPLY FILTERS (Helper)
+    private function applyFilters($query, $request)
+    {
+        // 1. ✅ NEW: Handle Simple 'purpose' Parameter
+        // (Ye Home Page ke 'Shop By Purpose' links ke liye hai)
+        if ($request->filled('purpose')) {
+            $purpose = $request->input('purpose');
+
+            // Check in FilterValues table
+            $query->whereHas('filterValues', function($q) use ($purpose) {
+                $q->where('value', 'like', $purpose);
+            });
+        }
+
+        // 2. Standard Filters (Sidebar - jo array bhejta hai)
         if ($request->filled('filter')) {
             foreach ($request->filter as $filterId => $valueIds) {
                 if (!empty($valueIds)) {
@@ -56,10 +66,38 @@ class ProductListingController extends Controller
             }
         }
 
-        if ($request->filled('sort')) {
-            if ($request->sort == 'price_asc') $query->orderBy('price', 'asc');
-            elseif ($request->sort == 'price_desc') $query->orderBy('price', 'desc');
-            else $query->latest();
+        // 3. Price Filter
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('price', [$request->min_price, $request->max_price]);
+        }
+
+        // 4. Sorting
+        if ($request->filled('sort') || $request->filled('sort_by')) {
+            // Support both 'sort' and 'sort_by'
+            $sort = $request->input('sort') ?? $request->input('sort_by');
+
+            switch ($sort) {
+                case 'best-selling':
+                    $query->where('is_best_seller', 1);
+                    break;
+                case 'created-descending': // Newest
+                case 'newest':
+                    $query->latest();
+                    break;
+                case 'created-ascending': // Oldest
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'price-ascending': // Low to High
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price-descending': // High to Low
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                default:
+                    $query->latest();
+            }
         } else {
             $query->latest();
         }
@@ -67,18 +105,42 @@ class ProductListingController extends Controller
         return $query;
     }
 
+    // 🟢 3. GET DYNAMIC SIDEBAR FILTERS (Helper)
+    private function getDynamicFilters($context = [])
+    {
+        return Filter::whereHas('filterValues.products', function ($q) use ($context) {
+            $q->where('status', 1);
+            if (isset($context['category_id'])) $q->where('category_id', $context['category_id']);
+            if (isset($context['sub_category_id'])) $q->where('sub_category_id', $context['sub_category_id']);
+            // Note: For 'Purpose' pages, we might want to show other filters, logic handles it naturally.
+        })
+        ->with(['filterValues' => function ($q) use ($context) {
+            $q->whereHas('products', function ($sq) use ($context) {
+                $sq->where('status', 1);
+                if (isset($context['category_id'])) $sq->where('category_id', $context['category_id']);
+                if (isset($context['sub_category_id'])) $sq->where('sub_category_id', $context['sub_category_id']);
+            })
+            ->withCount(['products' => function ($sq) use ($context) {
+                $sq->where('status', 1);
+                if (isset($context['category_id'])) $sq->where('category_id', $context['category_id']);
+                if (isset($context['sub_category_id'])) $sq->where('sub_category_id', $context['sub_category_id']);
+            }]);
+        }])
+        ->get();
+    }
+
+    // =========================================================
+    // 🚀 PUBLIC METHODS (PAGE ROUTES)
+    // =========================================================
+
     // 1. Category Page
     public function categoryProducts(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
 
-        // Products Query
-        $query = Product::where('category_id', $category->id)->where('status', 1);
-        $this->applyFilters($query, $request);
+        $query = $this->getProductsQuery($request, ['category_id' => $category->id]);
         $products = $query->paginate(12)->withQueryString();
-
-        // ⚡ Get Dynamic Filters for this Category
-        $filters = $this->getDynamicFilters($category->id, null);
+        $filters = $this->getDynamicFilters(['category_id' => $category->id]);
 
         return view('frontend.pages.product_listing', compact('category', 'products', 'filters'));
     }
@@ -89,16 +151,184 @@ class ProductListingController extends Controller
         $category = Category::where('slug', $cat_slug)->firstOrFail();
         $subCategory = SubCategory::where('slug', $sub_slug)->where('category_id', $category->id)->firstOrFail();
 
-        // Products Query
-        $query = Product::where('sub_category_id', $subCategory->id)->where('status', 1);
-        $this->applyFilters($query, $request);
+        $query = $this->getProductsQuery($request, ['sub_category_id' => $subCategory->id]);
         $products = $query->paginate(12)->withQueryString();
-
-        // ⚡ Get Dynamic Filters for this SubCategory
-        $filters = $this->getDynamicFilters(null, $subCategory->id);
+        $filters = $this->getDynamicFilters(['sub_category_id' => $subCategory->id]);
 
         return view('frontend.pages.product_listing', compact('category', 'subCategory', 'products', 'filters'));
     }
+
+    // 🟢 3. NEW: Handle 'collections/all' for Shop By Purpose
+    public function showAllCollection(Request $request)
+    {
+        $query = Product::where('status', 1);
+        $pageTitle = "All Products";
+        $pageDesc = "Explore our complete collection of spiritual products.";
+
+        // 2. Apply Other Filters (Sort, Price, etc.)
+        $this->applyFilters($query, $request);
+
+        $products = $query->paginate(12)->withQueryString();
+
+        // Dynamic Filters (Without Context)
+        $filters = $this->getDynamicFilters();
+
+        // Fake Category Object for View
+        $category = (object) [
+            'name' => $pageTitle,
+            'description' => $pageDesc
+        ];
+
+        // View wahi purana use karenge
+        return view('frontend.pages.product_listing', compact('category', 'products', 'filters'));
+    }
+
+    // 🟢 MASTER METHOD: HANDLES ALL /collections/{slug} REQUESTS
+    // public function showCollection(Request $request, $slug)
+    // {
+    //     $query = Product::where('status', 1);
+    //     $context = []; // View ko batane ke liye ki hum kahan hain
+    //     $pageTitle = "";
+    //     $pageDesc = "";
+
+    //     // 1. CASE: 'all' (For Purpose Filters like Wealth, etc.)
+    //     if ($slug === 'all') {
+    //         $pageTitle = "All Products";
+    //         // Agar purpose filter URL me hai, to title change kar sakte hain
+    //         // PHP dots (.) ko underscore (_) me badal deta hai request me
+    //         if ($request->has('filter_p_m_custom_purpose')) {
+    //             $purpose = $request->input('filter_p_m_custom_purpose');
+    //             $pageTitle = "$purpose Collection";
+    //         }
+    //     }
+    //     // 2. CASE: Check if it's a CATEGORY
+    //     elseif ($category = Category::where('slug', $slug)->where('status', 1)->first()) {
+    //         $query->where('category_id', $category->id);
+    //         $context['category_id'] = $category->id;
+    //         $pageTitle = $category->name;
+    //         $pageDesc = $category->description;
+    //     }
+    //     // 3. CASE: Check if it's a SUBCATEGORY
+    //     elseif ($subCategory = SubCategory::where('slug', $slug)->where('status', 1)->first()) {
+    //         $query->where('sub_category_id', $subCategory->id);
+    //         $context['sub_category_id'] = $subCategory->id;
+    //         $pageTitle = $subCategory->name;
+    //         $pageDesc = $subCategory->description;
+    //     }
+    //     // 4. FAIL: 404 Not Found
+    //     else {
+    //         abort(404);
+    //     }
+
+    //     // Apply Filters & Sort
+    //     $this->applyFilters($query, $request);
+
+    //     $products = $query->paginate(12)->withQueryString();
+
+    //     // Dynamic Sidebar Filters
+    //     $filters = $this->getDynamicFilters($context);
+
+    //     // Fake Category Object for View Compatibility
+    //     $categoryObj = (object) [
+    //         'name' => $pageTitle,
+    //         'description' => $pageDesc
+    //     ];
+
+    //     return view('frontend.pages.product_listing', [
+    //         'category' => $categoryObj,
+    //         'products' => $products,
+    //         'filters' => $filters
+    //     ]);
+    // }
+
+    // // 🟢 HELPER: FILTER & SORT LOGIC (Updated for Shopify Style URLs)
+    // private function applyFilters($query, $request)
+    // {
+    //     // 1. Japam Style Purpose Filter: ?filter.p.m.custom.purpose=Protection
+    //     // PHP converts dots to underscores: filter_p_m_custom_purpose
+    //     if ($request->filled('filter_p_m_custom_purpose')) {
+    //         $purpose = $request->input('filter_p_m_custom_purpose');
+    //         // FilterValue relation check
+    //         $query->whereHas('filterValues', function($q) use ($purpose) {
+    //             $q->where('value', 'like', $purpose);
+    //         });
+    //     }
+
+    //     // 2. Standard Filters (Sidebar)
+    //     if ($request->filled('filter')) {
+    //         foreach ($request->filter as $filterId => $valueIds) {
+    //             if (!empty($valueIds)) {
+    //                 $query->whereHas('filterValues', function ($q) use ($valueIds) {
+    //                     $q->whereIn('filter_values.id', $valueIds);
+    //                 });
+    //             }
+    //         }
+    //     }
+
+    //     // 3. Price Filter
+    //     if ($request->filled('min_price') && $request->filled('max_price')) {
+    //         $query->whereBetween('price', [$request->min_price, $request->max_price]);
+    //     }
+
+    //     // 4. SORTING (Updated for Japam Style)
+    //     if ($request->filled('sort_by')) {
+    //         $sort = $request->sort_by;
+
+    //         switch ($sort) {
+    //             case 'best-selling':
+    //                 // Option A: Using is_best_seller flag (Admin controlled)
+    //                 $query->where('is_best_seller', 1);
+    //                 // Option B: If you want real sales count: $query->orderBy('sales_count', 'desc');
+    //                 break;
+
+    //             case 'created-descending': // Newest
+    //                 $query->latest();
+    //                 break;
+
+    //             case 'created-ascending': // Oldest
+    //                 $query->orderBy('created_at', 'asc');
+    //                 break;
+
+    //             case 'price-ascending': // Low to High
+    //                 $query->orderBy('price', 'asc');
+    //                 break;
+
+    //             case 'price-descending': // High to Low
+    //                 $query->orderBy('price', 'desc');
+    //                 break;
+
+    //             default:
+    //                 $query->latest();
+    //         }
+    //     } else {
+    //         $query->latest();
+    //     }
+
+    //     return $query;
+    // }
+
+    // // 🟢 HELPER: DYNAMIC SIDEBAR FILTERS
+    // private function getDynamicFilters($context = [])
+    // {
+    //     return Filter::whereHas('filterValues.products', function ($q) use ($context) {
+    //         $q->where('status', 1);
+    //         if (isset($context['category_id'])) $q->where('category_id', $context['category_id']);
+    //         if (isset($context['sub_category_id'])) $q->where('sub_category_id', $context['sub_category_id']);
+    //     })
+    //     ->with(['filterValues' => function ($q) use ($context) {
+    //         $q->whereHas('products', function ($sq) use ($context) {
+    //             $sq->where('status', 1);
+    //             if (isset($context['category_id'])) $sq->where('category_id', $context['category_id']);
+    //             if (isset($context['sub_category_id'])) $sq->where('sub_category_id', $context['sub_category_id']);
+    //         })
+    //         ->withCount(['products' => function ($sq) use ($context) {
+    //             $sq->where('status', 1);
+    //             if (isset($context['category_id'])) $sq->where('category_id', $context['category_id']);
+    //             if (isset($context['sub_category_id'])) $sq->where('sub_category_id', $context['sub_category_id']);
+    //         }]);
+    //     }])
+    //     ->get();
+    // }
 
     public function productDetail($slug)
     {
@@ -107,6 +337,8 @@ class ProductListingController extends Controller
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
+
+        $categories = Category::where('status', 1)->get();
 
         // Fetch Reviews (Only approved ones)
         $reviews = ProductReview::where('product_id', $product->id)
@@ -130,9 +362,9 @@ class ProductListingController extends Controller
         // Related products logic (Optional)
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->take(4)->get();
+            ->take(8)->get();
 
-        return view('frontend.pages.product_detail', compact('product', 'relatedProducts', 'reviews', 'totalReviews', 'averageRating', 'starCounts'));
+        return view('frontend.pages.product_detail', compact('product', 'relatedProducts', 'categories', 'reviews', 'totalReviews', 'averageRating', 'starCounts'));
     }
 
     public function searchListing(Request $request)

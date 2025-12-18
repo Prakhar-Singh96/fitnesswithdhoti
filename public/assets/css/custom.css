@@ -1619,9 +1619,9 @@ main {
 
 /* 5. The Answer Body (The Red Box in your image) */
 .faq-answer {
-    background-color: #D97846;
+    background-color: #f58e5b;
     /* Dark Orange/Reddish Color */
-    color: #fff;
+    color: #000000;
     /* White text */
     font-size: 0.9rem;
     line-height: 1.6;

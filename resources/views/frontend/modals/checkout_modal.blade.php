@@ -7,7 +7,8 @@
                 <div class="d-flex align-items-center">
                     <h6 class="modal-title fw-bold" id="modalTitle" style="font-size: 16px;">Secure Checkout</h6>
                 </div>
-                <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
 
             <div class="modal-body px-4 pb-4 pt-2">
@@ -21,23 +22,27 @@
                         <p class="text-muted small mb-4">Enter your mobile number to verify details</p>
 
                         <div class="form-floating mb-3">
-                            <input type="tel" id="chk_mobile" class="form-control rounded-3" placeholder="Mobile Number" maxlength="10">
+                            <input type="tel" id="chk_mobile" class="form-control rounded-3"
+                                placeholder="Mobile Number" maxlength="10">
                             <label for="chk_mobile" class="text-muted">Enter Mobile Number</label>
                         </div>
 
                         {{-- OTP Section --}}
                         <div id="chk_otp_box" style="display: none;">
                             <div class="form-floating mb-3">
-                                <input type="text" id="chk_otp" class="form-control rounded-3 letter-spacing-2" placeholder="OTP">
+                                <input type="text" id="chk_otp" class="form-control rounded-3 letter-spacing-2"
+                                    placeholder="OTP">
                                 <label for="chk_otp">Enter OTP</label>
                             </div>
-                            <button type="button" class="btn btn-dark w-100 py-3 rounded-3 fw-bold mb-3" onclick="verifyCheckoutOtp()">
+                            <button type="button" class="btn btn-dark w-100 py-3 rounded-3 fw-bold mb-3"
+                                onclick="verifyCheckoutOtp()">
                                 VERIFY OTP
                             </button>
                         </div>
 
-                        <button type="button" id="btn_send_otp" class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white"
-                                style="background-color: #ff6f00; border: none;" onclick="sendCheckoutOtp()">
+                        <button type="button" id="btn_send_otp"
+                            class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white"
+                            style="background-color: #ff6f00; border: none;" onclick="sendCheckoutOtp()">
                             CONTINUE
                         </button>
                     </div>
@@ -64,56 +69,28 @@
                         <i class="las la-check-circle text-success fs-4"></i>
                     </div>
 
-                    {{-- 🔥 LOGIC: SAVED ADDRESSES EXIST? --}}
-                    @if(Auth::check() && Auth::user()->addresses && Auth::user()->addresses->count() > 0)
+                    {{-- A. Saved Address List --}}
+                    <div id="saved_address_list"
+                        style="{{ Auth::check() && Auth::user()->addresses->count() > 0 ? '' : 'display:none;' }}">
 
-                        {{-- A. Saved Address List --}}
-                        <div id="saved_address_list">
-                            <h6 class="fw-bold mb-3">Select Delivery Address</h6>
+                        {{-- ✅ Yahan Include karein taaki Page Load par bhi dikhe --}}
+                        @if (Auth::check())
+                            @include('frontend.includes.checkout_address_list', [
+                                'addresses' => Auth::user()->addresses,
+                            ])
+                        @endif
 
-                            <div class="address-scroll mb-3" style="max-height: 250px; overflow-y: auto;">
-                                @foreach(Auth::user()->addresses as $addr)
-                                    <label class="card p-3 mb-2 border cursor-pointer shadow-sm position-relative"
-                                           onclick="$('.saved-addr-radio').prop('checked', false); $(this).find('input').prop('checked', true);">
-                                        <div class="d-flex">
-                                            <div class="me-3 mt-1">
-                                                <input class="form-check-input saved-addr-radio" type="radio" name="selected_address"
-                                                       value="{{ $addr->id }}" {{ $loop->first ? 'checked' : '' }}>
-                                            </div>
-                                            <div>
-                                                <span class="fw-bold text-dark">{{ $addr->name }}</span>
-                                                <span class="badge bg-light text-dark border ms-2" style="font-size: 10px;">{{ strtoupper($addr->type) }}</span>
-                                                <p class="text-muted small mb-1 mt-1 text-wrap" style="line-height: 1.4;">
-                                                    {{ $addr->address_line1 }}, {{ $addr->city }} - <strong>{{ $addr->pincode }}</strong>
-                                                </p>
-                                                <small class="text-dark fw-bold">📱 {{ $addr->phone }}</small>
-                                            </div>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-
-                            <button type="button" class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white mb-3"
-                                    style="background-color: #ff6f00; border: none;" onclick="useSavedAddress()">
-                                DELIVER HERE
-                            </button>
-
-                            <button type="button" class="btn btn-outline-dark w-100 py-2 border-dashed text-uppercase x-small fw-bold"
-                                    onclick="$('#saved_address_list').slideUp(); $('#new_address_form').slideDown();">
-                                + Add New Address
-                            </button>
-                        </div>
-
-                    @endif
+                    </div>
 
                     {{-- B. New Address Form (Agar koi address nahi hai to ye by default dikhega) --}}
-                    <div id="new_address_form" style="{{ (Auth::check() && Auth::user()->addresses->count() > 0) ? 'display:none;' : '' }}">
+                    <div id="new_address_form"
+                        style="{{ Auth::check() && Auth::user()->addresses->count() > 0 ? 'display:none;' : '' }}">
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h6 class="fw-bold mb-0">Add New Address</h6>
-                            @if(Auth::check() && Auth::user()->addresses->count() > 0)
+                            @if (Auth::check() && Auth::user()->addresses->count() > 0)
                                 <button type="button" class="btn btn-sm btn-link text-decoration-none"
-                                        onclick="$('#new_address_form').slideUp(); $('#saved_address_list').slideDown();">
+                                    onclick="$('#new_address_form').slideUp(); $('#saved_address_list').slideDown();">
                                     Cancel
                                 </button>
                             @endif
@@ -121,24 +98,29 @@
 
                         {{-- Pincode --}}
                         <div class="form-floating mb-3">
-                            <input type="tel" id="chk_pincode" class="form-control rounded-3 fw-bold" placeholder="Pincode" maxlength="6" onkeyup="fetchCheckoutCityState()">
+                            <input type="tel" id="chk_pincode" class="form-control rounded-3 fw-bold"
+                                placeholder="Pincode" maxlength="6" onkeyup="fetchCheckoutCityState()">
                             <label for="chk_pincode">Pincode *</label>
-                            <small id="chk_pincode_msg" class="position-absolute top-50 end-0 translate-middle-y me-3 fw-bold x-small"></small>
+                            <small id="chk_pincode_msg"
+                                class="position-absolute top-50 end-0 translate-middle-y me-3 fw-bold x-small"></small>
                         </div>
 
                         {{-- Expanded Fields --}}
                         <div id="address_expanded" style="display: none;">
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <input type="text" id="chk_city" class="form-control bg-light border-0 small" placeholder="City" readonly>
+                                    <input type="text" id="chk_city" class="form-control bg-light border-0 small"
+                                        placeholder="City" readonly>
                                 </div>
                                 <div class="col-6">
-                                    <input type="text" id="chk_state" class="form-control bg-light border-0 small" placeholder="State" readonly>
+                                    <input type="text" id="chk_state" class="form-control bg-light border-0 small"
+                                        placeholder="State" readonly>
                                 </div>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" id="chk_house" class="form-control rounded-3" placeholder="House No">
+                                <input type="text" id="chk_house" class="form-control rounded-3"
+                                    placeholder="House No">
                                 <label>Flat, House no., Building *</label>
                             </div>
 
@@ -148,23 +130,28 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" id="chk_name" class="form-control rounded-3" placeholder="Name" value="{{ Auth::user()->name ?? '' }}">
+                                <input type="text" id="chk_name" class="form-control rounded-3"
+                                    placeholder="Name" value="{{ Auth::user()->name ?? '' }}">
                                 <label>Full Name *</label>
                             </div>
 
                             <div class="mb-4">
                                 <label class="d-block x-small fw-bold text-muted text-uppercase mb-2">Save As</label>
                                 <div class="d-flex gap-2">
-                                    <input type="radio" class="btn-check" name="addr_type" id="home" value="home" checked>
-                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill" for="home">Home</label>
+                                    <input type="radio" class="btn-check" name="addr_type" id="home"
+                                        value="home" checked>
+                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill"
+                                        for="home">Home</label>
 
-                                    <input type="radio" class="btn-check" name="addr_type" id="work" value="work">
-                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill" for="work">Work</label>
+                                    <input type="radio" class="btn-check" name="addr_type" id="work"
+                                        value="work">
+                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill"
+                                        for="work">Work</label>
                                 </div>
                             </div>
 
                             <button type="button" class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white"
-                                    style="background-color: #ff6f00; border: none;" onclick="saveAndContinue()">
+                                style="background-color: #ff6f00; border: none;" onclick="saveAndContinue()">
                                 SAVE & CONTINUE
                             </button>
                         </div>
@@ -179,9 +166,11 @@
 
                     {{-- Product Snippet --}}
                     <div class="d-flex align-items-center bg-light p-2 rounded border mb-4">
-                        <img id="summ_img" src="" width="45" height="45" class="rounded border me-3">
+                        <img id="summ_img" src="" width="45" height="45"
+                            class="rounded border me-3">
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 fw-bold small text-truncate" style="max-width: 180px;" id="summ_name">...</h6>
+                            <h6 class="mb-0 fw-bold small text-truncate" style="max-width: 180px;" id="summ_name">...
+                            </h6>
                             <small class="text-muted x-small" id="summ_qty">Qty: 1</small>
                         </div>
                         <div class="text-end">
@@ -203,8 +192,9 @@
 
                         {{-- Razorpay --}}
                         <label class="d-flex align-items-center p-3 mb-2 border rounded-3 cursor-pointer bg-white"
-                               onclick="$('.pay-radio').prop('checked', false); $('#rzp').prop('checked', true);">
-                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method" id="rzp" value="RAZORPAY" checked>
+                            onclick="$('.pay-radio').prop('checked', false); $('#rzp').prop('checked', true);">
+                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method"
+                                id="rzp" value="RAZORPAY" checked>
                             <div class="flex-grow-1">
                                 <span class="fw-bold d-block small">UPI / Cards / Netbanking</span>
                                 <small class="text-success x-small fw-bold">Extra 10% OFF</small>
@@ -214,8 +204,9 @@
 
                         {{-- COD --}}
                         <label class="d-flex align-items-center p-3 mb-4 border rounded-3 cursor-pointer bg-white"
-                               onclick="$('.pay-radio').prop('checked', false); $('#cod').prop('checked', true);">
-                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method" id="cod" value="COD">
+                            onclick="$('.pay-radio').prop('checked', false); $('#cod').prop('checked', true);">
+                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method"
+                                id="cod" value="COD">
                             <div class="flex-grow-1">
                                 <span class="fw-bold d-block small">Cash on Delivery</span>
                                 <small class="text-muted x-small">Pay using Cash/UPI</small>
@@ -223,7 +214,8 @@
                         </label>
 
                         {{-- 👇 ID Add kiya button me taaki JS ise control kare --}}
-                        <button type="submit" id="btn_place_order" class="btn btn-dark w-100 py-3 rounded-3 fw-bold text-uppercase fs-6">
+                        <button type="submit" id="btn_place_order"
+                            class="btn btn-dark w-100 py-3 rounded-3 fw-bold text-uppercase fs-6">
                             Place Order
                         </button>
                     </form>

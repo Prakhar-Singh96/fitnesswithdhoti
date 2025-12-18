@@ -261,6 +261,103 @@
 
         </div>
     </div>
+    <section class="py-5 brand-story-section" style="background-color: #f7f1de;">
+        <div class="container">
+
+            <div class="accordion" id="brandStoryAccordion">
+                <div class="accordion-item bg-transparent border-0 border-bottom border-dark">
+
+                    {{-- 1. The Clickable Header --}}
+                    <h2 class="accordion-header" id="headingStory">
+                        <button class="accordion-button collapsed bg-transparent shadow-none text-dark fw-bold fs-5 px-0"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseStory"
+                            aria-expanded="false" aria-controls="collapseStory">
+                            Suyagya - India's Best Spiritual Jewelry Brand
+                        </button>
+                    </h2>
+
+                    {{-- 2. The Expandable Content (Text from Image 1) --}}
+                    <div id="collapseStory" class="accordion-collapse collapse" aria-labelledby="headingStory"
+                        data-bs-parent="#brandStoryAccordion">
+                        <div class="accordion-body px-0 pt-4 brand-story-content text-secondary">
+
+                            <p>At Suyagya, we celebrate the age-old art of jewelry-making while interweaving it with
+                                contemporary designs that resonate with today's generation. Our collections are a medley of
+                                tradition, spirituality, and modernity.</p>
+
+                            <h4 class="mt-4 text-dark fw-bold">1. Men Jewelry Collection</h4>
+                            <p>For the modern man who values tradition, our Men Jewelry Collection strikes the perfect
+                                balance between style and spirituality.</p>
+                            <ul>
+                                <li><strong>Rudraksha Mala:</strong> Embrace the spiritual essence with our authentic
+                                    Rudraksha Malas.</li>
+                                <li><strong>Rudraksha Pendant:</strong> A symbol of spirituality and wellbeing, our
+                                    Rudraksha Pendants meld authenticity with style.</li>
+                                <li><strong>Adiyogi Pendant:</strong> Celebrate the essence of spiritual awakening with our
+                                    intricately designed Adiyogi Pendants.</li>
+                                <li><strong>Rudraksha Bracelet:</strong> Infuse your everyday style with a touch of divinity
+                                    with our range of Rudraksha bracelets.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">2. Women Jewelry Collection</h4>
+                            <p>Elegance, tradition, and style converge in our Women Jewelry Collection, catering to the
+                                multifaceted women of today.</p>
+                            <ul>
+                                <li><strong>Necklace Set for Women:</strong> From ornate sets for special occasions to
+                                    minimalistic designs for daily wear.</li>
+                                <li><strong>Women Mangalsutra:</strong> A symbol of marital bliss, our Mangalsutras blend
+                                    tradition with modern designs.</li>
+                                <li><strong>Women Bracelets:</strong> A melange of tradition and contemporary designs,
+                                    perfect for gracing a woman's delicate wrist.</li>
+                                <li><strong>Anklets for Women:</strong> Adorn your feet with our range of silver anklets,
+                                    from traditional ghungroo designs to contemporary styles.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">3. Kids Jewelry Collection</h4>
+                            <p>Cherish the innocent milestones of childhood with our endearing Kids Jewelry Collection.</p>
+                            <ul>
+                                <li><strong>Baby Bracelet:</strong> Gentle, safe, and crafted with love, our baby bracelets
+                                    are perfect keepsakes.</li>
+                                <li><strong>Kids Nazariya:</strong> Let every tiny step jingle with joy with our traditional
+                                    and skin-friendly Nazariyas.</li>
+                            </ul>
+
+                            <h4 class="mt-4 text-dark fw-bold">4. Stone Malas & Bracelets</h4>
+                            <p>Discover the natural beauty and craftsmanship of our Stone Mala Collection, featuring
+                                intricately designed malas crafted from high-quality natural stones.</p>
+                            <ul>
+                                <li><strong>Karungali Stone Mala:</strong> Made from Ebony Wood (Karungali), these malas
+                                    exude bold elegance.</li>
+                                <li><strong>Sphatik Stone Mala:</strong> Featuring Crystal Beads (Sphatik), these malas
+                                    offer a sleek and polished look.</li>
+                            </ul>
+
+                            <h3 class="mt-5 text-dark fw-bold">The Suyagya Promise: Unwavering Quality, Authenticity, and
+                                Trust</h3>
+
+                            <h5 class="mt-3 text-dark fw-bold">1. Uncompromised Quality:</h5>
+                            <p>Every jewelry piece at Suyagya undergoes rigorous quality checks to ensure it stands true to
+                                the high standards we've set for ourselves.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">2. Authenticity Assured:</h5>
+                            <p>With the flood of counterfeit products in the market, we understand the concerns about
+                                authenticity. At Suyagya, our promise is genuine, and so are our products.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">3. Features Tailored for You:</h5>
+                            <p>At Suyagya, customization is at the heart of what we do. Recognizing the uniqueness of every
+                                individual.</p>
+
+                            <h5 class="mt-3 text-dark fw-bold">4. Building Trust, One Piece at a Time:</h5>
+                            <p>Trust is the cornerstone of Suyagya's ethos. And we strive, day in and day out, to fortify
+                                this trust.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 @endsection
 
 @section('scripts')

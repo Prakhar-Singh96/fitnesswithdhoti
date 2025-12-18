@@ -16,7 +16,8 @@ class SubCategory extends Model
         'name',
         'slug',
         'description',
-
+        'image',
+        'image_alt',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -39,4 +40,3 @@ class SubCategory extends Model
         return $this->hasMany(Product::class);
     }
 }
-

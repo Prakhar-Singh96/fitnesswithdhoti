@@ -2,20 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\FilterController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\SearchController;
+use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\FilterValueController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Frontend\Auth\OtpController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Frontend\ProductListingController;
-use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
 
@@ -30,9 +34,7 @@ use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('frontend.pages.home');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 // Product Listing Pages
 // 1. Category Page (e.g. /category/rudraksha)
@@ -40,6 +42,10 @@ Route::get('/category/{slug}', [ProductListingController::class, 'categoryProduc
 
 // 2. SubCategory Page (e.g. /category/rudraksha/mala)
 Route::get('/category/{cat_slug}/{sub_slug}', [ProductListingController::class, 'subCategoryProducts'])->name('products.subcategory');
+
+// 3. Shop by Purpose/Collection (e.g. /collection/wealth)
+Route::get('/collections/all', [ProductListingController::class, 'showAllCollection'])->name('products.all_collection');
+// Route::get('/collections/{slug}', [ProductListingController::class, 'showCollection'])->name('collections.show');
 
 Route::get('/product/{slug}', [ProductListingController::class, 'productDetail'])->name('product.detail');
 
@@ -84,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
     // Check if user already has address with this pincode
     Route::get('/checkout/check-address/{pincode}', [CheckoutController::class, 'checkAddressByPincode']);
     Route::post('/checkout/verify-payment', [CheckoutController::class, 'verifyPayment'])->name('checkout.verify_payment');
+    Route::get('/checkout/get-user-data', [CheckoutController::class, 'getUserCheckoutData'])->name('checkout.user_data');
 });
 
 // --- ADMIN ROUTES ---
@@ -113,6 +120,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // 💳 Payment Settings Routes
         Route::get('/payment-settings', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payment.settings');
         Route::post('/payment-settings/update', [App\Http\Controllers\Admin\PaymentController::class, 'update'])->name('payment.update');
+        Route::resource('/videos', VideoController::class);
+
+        Route::resource('reviews', AdminReviewController::class);
+
+        // Quick Status Toggle Route
+        Route::get('reviews/status/{id}', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');
+
 
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
     });

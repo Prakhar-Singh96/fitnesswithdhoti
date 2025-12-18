@@ -46,6 +46,8 @@ class Product extends Model
         'weight',
 
         'status',
+        'is_featured',    // ✅ New
+        'is_best_seller', // ✅ New
 
         'delivery_days',
         'emi_available'

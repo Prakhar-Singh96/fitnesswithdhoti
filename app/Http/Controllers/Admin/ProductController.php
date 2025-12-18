@@ -101,6 +101,10 @@ class ProductController extends Controller
             $data['is_siddh_enabled'] = $request->has('is_siddh_enabled') ? 1 : 0;
             $data['siddh_price'] = $request->siddh_price ?? 0;
 
+            // ✅ Checkbox Handling (Agar check nahi hai to 0 set karo)
+            $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
+            $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
+
             // Inside store() and update() methods
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
             // $data['delivery_days'] = $request->input('delivery_days', 7);
@@ -219,6 +223,10 @@ class ProductController extends Controller
             // 🕉️ 2. Siddh Logic
             $data['is_siddh_enabled'] = $request->has('is_siddh_enabled') ? 1 : 0;
             $data['siddh_price'] = $request->siddh_price ?? 0;
+
+            // ✅ Checkbox Handling Update
+            $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
+            $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
 
             // Inside store() and update() methods
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;

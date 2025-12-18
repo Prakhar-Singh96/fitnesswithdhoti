@@ -33,6 +33,26 @@ class CartController extends Controller
     // 2. Add to Cart Logic
     public function addToCart(Request $request)
     {
+
+        // 🛑 1. ADMIN/STAFF/SELLER CHECK
+       if (Auth::check()) {
+            $user = Auth::user();
+
+            // Blocked Roles ki list banayein
+            $blockedRoles = ['superadmin', 'admin', 'seller', 'staff'];
+
+            if (in_array($user->role, $blockedRoles) || in_array($user->user_type, $blockedRoles)) {
+
+                return response()->json([
+                    'status' => false,
+                    'html' => '<div class="text-center p-5"><i class="las la-user-lock fs-1 text-danger"></i><p class="mt-3">Admins/Sellers cannot use the Cart.</p></div>',
+                    'count' => 0,
+                    'subtotal' => 0,
+                    'savings' => 0,
+                    'message' => 'Cart access denied for ' . ucfirst($user->role ?? $user->user_type)
+                ]);
+            }
+        }
         $productId = $request->product_id;
         $quantity = $request->quantity;
         $isSiddh = $request->is_siddh;

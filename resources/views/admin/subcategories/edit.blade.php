@@ -58,6 +58,29 @@
                     </div>
                 </div>
 
+                {{-- 🟢 Main Image Section --}}
+                <div class="card mb-4">
+                    <h5 class="card-header">Sub-Category Image</h5>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" class="form-control mb-2 @error('image') is-invalid @enderror" name="image" accept="image/*">
+
+                            {{-- Show Existing Image --}}
+                            @if($subCategory->image)
+                                <div class="p-2 border rounded d-inline-block">
+                                    <img src="{{ asset($subCategory->image) }}" alt="{{ $subCategory->image_alt }}" width="100" class="d-block rounded">
+                                </div>
+                            @endif
+                            @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Image Alt Text (For SEO)</label>
+                            <input type="text" class="form-control" name="image_alt" value="{{ old('image_alt', $subCategory->image_alt) }}" placeholder="Describe the image">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- SEO Configuration --}}
                 <div class="card mb-4">
                     <h5 class="card-header">SEO Configuration</h5>

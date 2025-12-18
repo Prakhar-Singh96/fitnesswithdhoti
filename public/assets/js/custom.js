@@ -5,7 +5,59 @@ function showLoginModal() {
 
 $(document).ready(function () {
     // 👇 Ye line Modal ko Header se nikaal kar Body me move kar degi
-    $('#login_modal').appendTo("body");
+    if ($('#login_modal').length) {
+        $('#login_modal').appendTo("body");
+    }
+
+    // Initialize Category Scroll Carousel
+    if ($('#categoryScroll').length) {
+        $('#categoryScroll').slick({
+            slidesToShow: 8,
+            slidesToScroll: 2,
+            infinite: false,
+            arrows: true,
+            dots: false,
+            speed: 500,
+            variableWidth: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 7
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 5
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 4
+                }
+            },
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 3
+                }
+            },
+            ]
+        });
+    }
+
+    if ($('#heroSlider').length) {
+        $('#heroSlider').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 1500,
+        infinite: true,
+        arrows: false, // Hide Previous & Next buttons
+        dots: false
+    });
+    }
 });
 
 // 1. SEND OTP
@@ -295,7 +347,7 @@ function getSideCartInstance() {
 // 🔄 2. REFRESH CART DATA (WITHOUT OPENING DRAWER)
 // ---------------------------------------------------
 function refreshSideCartData() {
-    $.get("/cart/side-cart-html", function(res) {
+    $.get("/cart/side-cart-html", function (res) {
         // HTML Update
         $('#side_cart_body').html(res.html);
         $('#side_cart_count').text(res.count);
@@ -303,7 +355,7 @@ function refreshSideCartData() {
         $('#cart_savings').text('₹' + res.savings);
 
         // Header Badge Update
-        if(res.count > 0) {
+        if (res.count > 0) {
             $('#cart-badge').text(res.count).show();
             $('#side_cart_footer').fadeIn();
         } else {
@@ -329,7 +381,7 @@ function addToCart(productId, quantity, isSiddh, btnElement) {
     var btn = $(btnElement);
     var originalText = btn.html();
 
-    if(!productId) {
+    if (!productId) {
         productId = $(btn).data('id');
         quantity = $('#qty_input').val();
         isSiddh = $('#input_is_siddh').val();
@@ -346,17 +398,21 @@ function addToCart(productId, quantity, isSiddh, btnElement) {
             is_siddh: isSiddh,
             _token: $('meta[name="csrf-token"]').attr('content')
         },
-        success: function(res) {
-            if(res.status) {
-                openSideCart(); // Add hone par drawer kholo
-
+        success: function (res) {
+            if (res.status) {
+                // ✅ Success
+                openSideCart();
                 btn.html('Added ✔').removeClass('btn-outline-dark').addClass('btn-success');
                 setTimeout(() => {
                     btn.html(originalText).prop('disabled', false).removeClass('btn-success').addClass('btn-outline-dark');
                 }, 2000);
+            } else {
+                // ❌ Access Denied or Error
+                alert(res.message); // Yahan Admin wala error msg dikhega
+                btn.html(originalText).prop('disabled', false);
             }
         },
-        error: function() {
+        error: function () {
             alert('Error adding to cart');
             btn.html(originalText).prop('disabled', false);
         }
@@ -374,8 +430,8 @@ function updateSideCartQty(cartId, action) {
         _token: $('meta[name="csrf-token"]').attr('content'),
         cart_id: cartId,
         action: action
-    }, function(res) {
-        if(res.status) {
+    }, function (res) {
+        if (res.status) {
             refreshSideCartData(); // ✅ Sirf Content Update Hoga
         } else {
             alert(res.message);
@@ -387,7 +443,7 @@ function updateSideCartQty(cartId, action) {
 // 🗑️ 6. REMOVE ITEM
 // ---------------------------------------------------
 function removeFromSideCart(id) {
-    $.get("/cart/remove/" + id, function() {
+    $.get("/cart/remove/" + id, function () {
         refreshSideCartData(); // ✅ Sirf Content Update Hoga
     });
 }
@@ -432,7 +488,6 @@ function addToCartFromDetail(btn) {
 
 // 🟢 GLOBAL AUTH STATUS (Meta tag se value lenge)
 // Layout file ke <head> me ye zaroor ho: <meta name="is-logged-in" content="{{ Auth::check() ? '1' : '0' }}">
-const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
 
 // 🛒 1. OPEN CHECKOUT MODAL
 function openDirectCheckout(btn) {
@@ -461,28 +516,46 @@ function openDirectCheckout(btn) {
     // Show Modal
     $('#checkoutModal').modal('show');
 
-    // 🔥 DECIDE STEP BASED ON AUTH
-    if (isLoggedIn) {
-        showStep('address'); // Logged in? Address dikhao
-    } else {
-        showStep('login');   // Guest? Login dikhao
-    }
+   // Auth Check Logic
+    const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
+    if (isLoggedIn) showStep('address');
+    else showStep('login');
 }
 
 // Helper: Switch Steps
 function showStep(step) {
     $('#step_login, #step_address, #step_payment').hide();
-    $('#step_' + step).fadeIn();
+    if (step === 'address') {
+        $('#step_address').fadeIn();
+
+        // Check if saved address list exists and has items
+        // We check if the radio buttons for addresses exist
+        if ($('.saved-addr-radio').length > 0) {
+            $('#saved_address_list').show();
+            $('#new_address_form').hide();
+
+            // Auto-select the first address if none is selected
+            if (!$('input[name="selected_address"]:checked').val()) {
+                $('.saved-addr-radio').first().prop('checked', true);
+            }
+        } else {
+            // No saved addresses, show new form
+            $('#saved_address_list').hide();
+            $('#new_address_form').show();
+        }
+    } else {
+        $('#step_' + step).fadeIn();
+    }
 }
 
 // 🔐 2. LOGIN LOGIC
 function sendCheckoutOtp() {
     var phone = $('#chk_mobile').val();
-    if(phone.length != 10) { alert('Valid number enter karein'); return; }
+    if (phone.length != 10) { alert('Valid number enter karein'); return; }
 
     $('#btn_send_otp').text('Sending...').prop('disabled', true);
 
-    $.post("/send-otp", { phone: phone, _token: $('meta[name="csrf-token"]').attr('content') }, function(res) {
+    $.post("/send-otp", { phone: phone, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
         $('#chk_otp_box').slideDown();
         $('#btn_send_otp').hide();
     });
@@ -492,9 +565,10 @@ function verifyCheckoutOtp() {
     var phone = $('#chk_mobile').val();
     var otp = $('#chk_otp').val();
 
-    $.post("/login-with-otp", { phone: phone, otp: otp, _token: $('meta[name="csrf-token"]').attr('content') }, function(res) {
-        if(res.status) {
+    $.post("/login-with-otp", { phone: phone, otp: otp, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
+        if (res.status) {
             // Login Success -> Step 2 (Address) par jao
+            window.location.reload();
             $('#user_phone_display').text(phone); // Number update karo
             showStep('address');
         } else {
@@ -506,11 +580,11 @@ function verifyCheckoutOtp() {
 // ⚡ 3. ADDRESS LOGIC (Pincode Fetch)
 function fetchCheckoutCityState() {
     let pincode = $('#chk_pincode').val();
-    if(pincode.length === 6) {
+    if (pincode.length === 6) {
         $('#chk_pincode_msg').text('Checking...');
 
-        $.get("https://api.postalpincode.in/pincode/" + pincode, function(data) {
-            if(data[0].Status === 'Success') {
+        $.get("https://api.postalpincode.in/pincode/" + pincode, function (data) {
+            if (data[0].Status === 'Success') {
                 let details = data[0].PostOffice[0];
                 $('#chk_city').val(details.District);
                 $('#chk_state').val(details.State);
@@ -525,9 +599,61 @@ function fetchCheckoutCityState() {
     }
 }
 
+function verifyCheckoutOtp() {
+    var phone = $('#chk_mobile').val();
+    var otp = $('#chk_otp').val();
+    var btn = $('#btn-verify'); // Ensure button has this ID or pass 'event.target'
+
+    // Button loading state
+    $(btn).text('Verifying...').prop('disabled', true);
+
+    $.post("/login-with-otp", {
+        phone: phone,
+        otp: otp,
+        _token: $('meta[name="csrf-token"]').attr('content')
+    }, function (res) {
+        if (res.status) {
+
+            // ✅ LOGIN SUCCESS: AB PAGE RELOAD NAHI KARENGE
+            // Seedha User Data aur Address mangwayenge
+
+            $.get("/checkout/get-user-data", function(data) {
+
+                // 1. Update User Phone on UI
+                $('#user_phone_display').text(data.user_phone);
+                $('#chk_name').val(data.user_name); // Auto fill name in new form
+
+                // 2. Decide: Show List or New Form?
+                if (data.has_address) {
+                    // Address hai -> List dikhao
+                    $('#saved_address_list').html(data.html).show();
+                    $('#new_address_form').hide();
+                } else {
+                    // Address nahi hai -> Form dikhao
+                    $('#saved_address_list').hide();
+                    $('#new_address_form').show();
+                }
+
+                // 3. Move to Step 2 (Address)
+                showStep('address');
+
+                // 4. Update Auth Meta Tag (Optional but good)
+                $('meta[name="is-logged-in"]').attr('content', '1');
+            });
+
+        } else {
+            alert('Invalid OTP');
+            $(btn).text('VERIFY OTP').prop('disabled', false);
+        }
+    }).fail(function () {
+        alert('Server Error');
+        $(btn).text('VERIFY OTP').prop('disabled', false);
+    });
+}
+
 // 💾 4. SAVE & CONTINUE
 function saveAndContinue() {
-    if(!$('#chk_name').val() || !$('#chk_house').val()) { alert('Fill all fields'); return; }
+    if (!$('#chk_name').val() || !$('#chk_house').val()) { alert('Fill all fields'); return; }
 
     var btn = event.target;
     $(btn).text('Saving...').prop('disabled', true);
@@ -541,12 +667,12 @@ function saveAndContinue() {
         state: $('#chk_state').val(),
         address_line1: $('#chk_house').val() + ', ' + $('#chk_area').val(),
         type: $('input[name="addr_type"]:checked').val()
-    }, function(res) {
-        if(res.status) {
+    }, function (res) {
+        if (res.status) {
             $('#final_address_id').val(res.address_id);
             showStep('payment'); // Go to Payment
         }
-    }).fail(function() {
+    }).fail(function () {
         alert('Error saving address');
         $(btn).text('CONTINUE').prop('disabled', false);
     });
@@ -557,7 +683,7 @@ function useSavedAddress() {
     // Check which radio is selected
     var selectedId = $('input[name="selected_address"]:checked').val();
 
-    if(!selectedId) {
+    if (!selectedId) {
         alert("Please select an address or add a new one.");
         return;
     }
@@ -566,7 +692,7 @@ function useSavedAddress() {
     $('#final_address_id').val(selectedId);
 
     // Switch to Payment
-    $('#step_address').fadeOut(200, function() {
+    $('#step_address').fadeOut(200, function () {
         $('#modalTitle').text('Make Payment');
         $('#step_payment').fadeIn(200).removeClass('d-none');
     });
@@ -577,7 +703,7 @@ function fetchCheckoutCityState() {
     let pincode = $('#chk_pincode').val();
 
     // Sirf tab chalega jab 6 digit ho
-    if(pincode.length === 6) {
+    if (pincode.length === 6) {
 
         $('#chk_pincode_msg').text('Checking records...').removeClass('text-danger text-success').addClass('text-muted');
 
@@ -585,9 +711,9 @@ function fetchCheckoutCityState() {
         $.ajax({
             url: "/checkout/check-address/" + pincode,
             type: "GET",
-            success: function(response) {
+            success: function (response) {
 
-                if(response.found) {
+                if (response.found) {
                     // ✅ ADDRESS MIL GAYA -> Auto Fill Karo
                     let addr = response.data;
 
@@ -614,7 +740,7 @@ function fetchCheckoutCityState() {
                     fetchFromPostalApi(pincode);
                 }
             },
-            error: function() {
+            error: function () {
                 // Agar error aaye to bhi External API try karo fallback ke liye
                 fetchFromPostalApi(pincode);
             }
@@ -626,8 +752,8 @@ function fetchCheckoutCityState() {
 function fetchFromPostalApi(pincode) {
     $('#chk_pincode_msg').text('Fetching City/State...');
 
-    $.get("https://api.postalpincode.in/pincode/" + pincode, function(data) {
-        if(data[0].Status === 'Success') {
+    $.get("https://api.postalpincode.in/pincode/" + pincode, function (data) {
+        if (data[0].Status === 'Success') {
             let details = data[0].PostOffice[0];
 
             // Fill City State
@@ -650,11 +776,11 @@ function fetchFromPostalApi(pincode) {
 
 // Helper to extract House/Area (Optional - Simple splitting)
 function getHousePart(fullAddr) {
-    if(!fullAddr) return '';
+    if (!fullAddr) return '';
     return fullAddr.split(',')[0]; // Comma se pehle wala House
 }
 function getAreaPart(fullAddr) {
-    if(!fullAddr) return '';
+    if (!fullAddr) return '';
     let parts = fullAddr.split(',');
     parts.shift(); // Pehla hissa hata do
     return parts.join(',').trim(); // Baaki sab Area
@@ -676,7 +802,7 @@ function processPayment() {
         address_id: $('#final_address_id').val()
     };
 
-    $.post("/checkout/place-order", formData, function(res) {
+    $.post("/checkout/place-order", formData, function (res) {
 
         if (res.status === 'razorpay') {
             // 🟣 OPEN RAZORPAY MODAL
@@ -688,14 +814,14 @@ function processPayment() {
                 "description": res.description,
                 "image": res.image,
                 "order_id": res.rzp_order_id,
-                "handler": function (response){
+                "handler": function (response) {
                     // Payment Success -> Verify on Server
                     verifyServerPayment(response, res.order_id);
                 },
                 "prefill": res.prefill,
                 "theme": { "color": "#ff6f00" },
                 "modal": {
-                    "ondismiss": function(){
+                    "ondismiss": function () {
                         btn.prop('disabled', false).text('Place Order');
                         alert('Payment Cancelled');
                     }
@@ -712,7 +838,7 @@ function processPayment() {
             btn.prop('disabled', false).text('Place Order');
         }
 
-    }).fail(function() {
+    }).fail(function () {
         alert('Server Error');
         btn.prop('disabled', false).text('Place Order');
     });
@@ -730,8 +856,8 @@ function verifyServerPayment(paymentData, localOrderId) {
         razorpay_order_id: paymentData.razorpay_order_id,
         razorpay_signature: paymentData.razorpay_signature,
         order_id: localOrderId
-    }, function(res) {
-        if(res.status) {
+    }, function (res) {
+        if (res.status) {
             alert('Payment Successful!'); // Optional
             window.location.href = "/my-orders";
         } else {
@@ -739,7 +865,7 @@ function verifyServerPayment(paymentData, localOrderId) {
             alert(res.message);
             console.error(res.message);
         }
-    }).fail(function(xhr) {
+    }).fail(function (xhr) {
         alert('Verification Server Error: ' + xhr.responseText);
     });
 }
@@ -776,7 +902,7 @@ function setRating(val) {
 function filterReviews(productId) {
     let sort = document.getElementById('reviewSort').value;
     let container = document.getElementById('reviewListContainer');
-    
+
     // Show loading
     container.style.opacity = '0.5';
 
@@ -787,11 +913,11 @@ function filterReviews(productId) {
             product_id: productId,
             sort: sort
         },
-        success: function(response) {
+        success: function (response) {
             container.innerHTML = response.html;
             container.style.opacity = '1';
         },
-        error: function() {
+        error: function () {
             alert('Error loading reviews');
             container.style.opacity = '1';
         }

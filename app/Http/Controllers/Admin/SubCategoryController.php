@@ -34,6 +34,10 @@ class SubCategoryController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|boolean',
 
+            // 🟢 Main Image Validation
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_alt' => 'nullable|string|max:255',
+
             // SEO Meta
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
@@ -46,7 +50,10 @@ class SubCategoryController extends Controller
         ]);
 
         // Prepare data (exclude file initially)
-        $data = $request->except(['og_image']);
+        $data = $request->except(['image', 'og_image']);
+
+        // 🟢 Handle Main Image Upload
+        $data['image'] = uploadImage($request, 'image', 'uploads/subcategories');
 
         // Handle OG Image Upload (using global helper)
         $data['og_image'] = uploadImage($request, 'og_image', 'uploads/subcategories/og_images');
@@ -76,12 +83,22 @@ class SubCategoryController extends Controller
             'slug' => 'required|string|max:255|unique:sub_categories,slug,' . $subCategory->id,
             'status' => 'required|boolean',
 
+            // 🟢 Main Image Validation
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_alt' => 'nullable|string|max:255',
+
             // SEO Validation
             'meta_title' => 'nullable|string|max:255',
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $data = $request->except(['og_image']);
+        $data = $request->except(['image', 'og_image']);
+
+        // 🟢 Handle Main Image Update
+        if ($request->hasFile('image')) {
+            deleteImage($subCategory->image); // Purani image delete
+            $data['image'] = uploadImage($request, 'image', 'uploads/subcategories');
+        }
 
         // Handle OG Image Update
         if ($request->hasFile('og_image')) {
@@ -103,6 +120,7 @@ class SubCategoryController extends Controller
         $subCategory = SubCategory::findOrFail($id);
 
         // Image delete karein
+        deleteImage($subCategory->image);
         deleteImage($subCategory->og_image);
 
         $subCategory->delete();

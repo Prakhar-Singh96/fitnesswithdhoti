@@ -62,6 +62,23 @@
                     </div>
                 </div>
 
+                {{-- 🟢 Main Image Section --}}
+                <div class="card mb-4">
+                    <h5 class="card-header">Sub-Category Image</h5>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" accept="image/*">
+                            <div class="form-text">Allowed formats: jpg, png, webp. Max size: 2MB.</div>
+                            @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Image Alt Text (For SEO)</label>
+                            <input type="text" class="form-control" name="image_alt" value="{{ old('image_alt') }}" placeholder="Describe the image">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- 2. SEO Configuration --}}
                 <div class="card mb-4">
                     <h5 class="card-header">SEO Configuration</h5>

@@ -14,6 +14,7 @@ class OtpController extends Controller
     // 1. Send OTP
     public function sendOtp(Request $request)
     {
+
         $request->validate([
             'phone' => 'required|numeric|digits:10'
         ]);

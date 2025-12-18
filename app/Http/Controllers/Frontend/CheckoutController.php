@@ -319,4 +319,22 @@ class CheckoutController extends Controller
             ]);
         }
     }
+
+    // 🔄 AJAX: Fetch User Data & Addresses after Login
+    public function getUserCheckoutData()
+    {
+        $user = Auth::user();
+        $addresses = $user->addresses;
+
+        // Render HTML from the new partial file
+        $html = view('frontend.includes.checkout_address_list', compact('addresses'))->render();
+
+        return response()->json([
+            'status' => true,
+            'user_name' => $user->name,
+            'user_phone' => $user->phone,
+            'has_address' => $addresses->count() > 0,
+            'html' => $html
+        ]);
+    }
 }

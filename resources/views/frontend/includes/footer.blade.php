@@ -153,7 +153,52 @@
 
 
 {{-- Note: CSS style block should be placed in public/assets/css/custom.css --}}
+<section class="py-4" style="background-color: #f7f1de;"> {{-- Matches your theme BG --}}
+    <div class="container">
+        <div class="row text-center g-4">
 
+            {{-- 1. Free Shipping --}}
+            <div class="col-6 col-md-3">
+                <div class="mb-2">
+                    {{-- Use LasIcon or SVG/Image --}}
+                    <i class="las la-shipping-fast text-dark" style="font-size: 2.5rem;"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-1">Free Shipping</h6>
+                <small class="text-muted">Free Shipping all over India.</small>
+            </div>
+
+            {{-- 2. 24/7 Support --}}
+            <div class="col-6 col-md-3">
+                <div class="mb-2">
+                    <i class="las la-clock text-dark" style="font-size: 2.5rem;"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-1">24/7 Support</h6>
+                <small class="text-muted">Available 24 x 7</small>
+            </div>
+
+            {{-- 3. Secure Payments --}}
+            <div class="col-6 col-md-3">
+                <div class="mb-2">
+                    <i class="las la-credit-card text-dark" style="font-size: 2.5rem;"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-1">100% Secure payments</h6>
+                <small class="text-muted">COD/UPI/CARDS</small>
+            </div>
+
+            {{-- 4. Made In India --}}
+            <div class="col-6 col-md-3">
+                <div class="mb-2">
+                    {{-- Flag Image (Replace URL if needed) --}}
+                    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg"
+                         alt="India" style="width: 40px; height: auto; border: 1px solid #eee;">
+                </div>
+                <h6 class="fw-bold text-dark mb-1">MADE IN INDIA</h6>
+                <small class="text-muted">Proudly Made in India</small>
+            </div>
+
+        </div>
+    </div>
+</section>
 <footer class="footer-main-section">
     <div class="container">
         <div class="row">

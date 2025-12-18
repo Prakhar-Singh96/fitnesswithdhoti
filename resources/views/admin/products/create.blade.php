@@ -111,6 +111,21 @@
                                 </div>
                             @endforeach
                         </div>
+                        <div class="mb-3 mt-4">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
+                                    value="1"
+                                    {{ old('is_featured', isset($product) ? $product->is_featured : 0) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold" for="is_featured">Mark as Featured Product</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_best_seller" name="is_best_seller"
+                                    value="1"
+                                    {{ old('is_best_seller', isset($product) ? $product->is_best_seller : 0) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold" for="is_best_seller">Mark as Best Selling</label>
+                            </div>
+                        </div>
                     </div>
 
                     {{-- SEO --}}
