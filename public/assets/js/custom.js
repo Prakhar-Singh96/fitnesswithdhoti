@@ -9,40 +9,44 @@ $(document).ready(function () {
         $('#login_modal').appendTo("body");
     }
 
-    // Initialize Category Scroll Carousel
-    if ($('#categoryScroll').length) {
-        $('#categoryScroll').slick({
-            slidesToShow: 8,
-            slidesToScroll: 2,
-            infinite: false,
-            arrows: true,
+    var $catSlider = $('#categoryScroll');
+
+    if ($catSlider.length) {
+        $catSlider.on('init', function(event, slick){
+            // Show the slider once initialized to prevent the 1px glitch
+            $(this).css({'visibility': 'visible', 'opacity': '1'});
+        });
+
+        $catSlider.slick({
             dots: false,
-            speed: 500,
-            variableWidth: false,
-            responsive: [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 7
+            infinite: true,
+            speed: 300,
+            slidesToShow: 7, // Default for large screens
+            slidesToScroll: 1,
+            autoplay: false,
+            arrows: true, // Show arrows
+            prevArrow: '<button type="button" class="slick-prev text-dark"><i class="las la-angle-left"></i></button>',
+            nextArrow: '<button type="button" class="slick-next text-dark"><i class="las la-angle-right"></i></button>',
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: { slidesToShow: 6 }
+                },
+                {
+                    breakpoint: 992,
+                    settings: { slidesToShow: 5 }
+                },
+                {
+                    breakpoint: 768,
+                    settings: { slidesToShow: 4 }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        arrows: false // Hide arrows on mobile if preferred
+                    }
                 }
-            },
-            {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 5
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 4
-                }
-            },
-            {
-                breakpoint: 576,
-                settings: {
-                    slidesToShow: 3
-                }
-            },
             ]
         });
     }

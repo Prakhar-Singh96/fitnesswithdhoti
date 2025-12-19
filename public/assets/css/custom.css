@@ -2578,3 +2578,86 @@ main {
         column-count: 1;
     }
 }
+
+/* Fix for Slick Slider 1px Width Issue */
+.category-slider .slick-slide {
+    height: auto; /* Prevent collapse */
+}
+
+/* Category Image Hover Effect */
+.category-item:hover .img-circle {
+    transform: scale(1.05);
+    border-color: #C19A6B !important; /* Gold/Earth color */
+}
+
+/* Custom Arrow Styling */
+.category-scroll-wrapper .slick-prev,
+.category-scroll-wrapper .slick-next {
+    position: absolute;
+    top: 40%;
+    z-index: 10;
+    width: 35px;
+    height: 35px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.category-scroll-wrapper .slick-prev { left: -10px; }
+.category-scroll-wrapper .slick-next { right: -10px; }
+
+.category-scroll-wrapper .slick-prev:hover,
+.category-scroll-wrapper .slick-next:hover {
+    background: #C19A6B;
+    color: white !important;
+    border-color: #C19A6B;
+}
+
+/* Ensure Icons are centered inside buttons */
+.category-scroll-wrapper .slick-arrow i {
+    font-size: 18px;
+    line-height: 1;
+}
+
+
+/* 1. "Showing 1 to 12..." Text ko Chhupane (Hide) ke liye */
+nav .d-none.flex-sm-fill.d-sm-flex .small.text-muted {
+    display: none !important;
+}
+
+/* 2. Pagination ko Center me lane ke liye (Optional, agar center chahiye) */
+nav .d-none.flex-sm-fill.d-sm-flex {
+    justify-content: center !important;
+}
+/* 1. Active Page (Jo select hai) */
+.pagination .page-item.active .page-link {
+    background-color: #ffcc66 !important;
+    border-color: #ffcc66 !important; /* Border ka color bhi same karna padega */
+    color: #000000 !important;       /* Text Green */
+    font-weight: bold;
+}
+
+/* 2. Active Page Hover (Jab mouse le jayein) */
+.pagination .page-item.active .page-link:hover {
+    background-color: #ffcc66 !important;
+    border-color: #ffcc66 !important;
+    color: #000000 !important;
+}
+
+/* 3. Normal Pages (Jo select nahi hain) */
+.pagination .page-item .page-link {
+    color: #333 !important; /* Dark Grey Text */
+}
+
+/* 4. Normal Pages Hover */
+.pagination .page-item .page-link:hover {
+    background-color: #f7f1de !important;
+    color: #000000 !important;
+    border-color: #ddd;
+}

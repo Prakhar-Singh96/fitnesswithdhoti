@@ -62,11 +62,16 @@
                                 <label class="form-label fw-bold">Existing Gallery Images</label>
                                 <div class="row g-2 mb-3">
                                     @foreach ($product->images as $img)
-                                        <div class="col-3 position-relative">
+                                        {{-- Har image ke div ko ek unique ID de rahe hain taaki delete hone par gayab kar sakein --}}
+                                        <div class="col-3 position-relative" id="db_gallery_img_{{ $img->id }}">
                                             <img src="{{ asset($img->image) }}" class="w-100 rounded border">
-                                            <a href="{{ url('admin/delete-gallery-image/' . $img->id) }}"
+
+                                            {{-- 👇 Yahan humne <a> tag hata diya aur button laga diya --}}
+                                            <button type="button"
                                                 class="btn btn-danger btn-xs position-absolute top-0 end-0 m-1 p-0 px-1"
-                                                onclick="return confirm('Delete this image?')">×</a>
+                                                onclick="deleteExistingImage({{ $img->id }})">
+                                                ×
+                                            </button>
                                         </div>
                                     @endforeach
                                 </div>

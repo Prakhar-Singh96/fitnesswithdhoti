@@ -176,5 +176,25 @@
             </a>
         </li>
 
+        {{-- Home Banners --}}
+        <li class="menu-item {{ request()->is('admin/banners*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-images"></i>
+                <div>Home Banners</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.banners.index') }}" class="menu-link">
+                        <div>Banner List</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->routeIs('admin.banners.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.banners.create') }}" class="menu-link">
+                        <div>Add Banner</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 </aside>

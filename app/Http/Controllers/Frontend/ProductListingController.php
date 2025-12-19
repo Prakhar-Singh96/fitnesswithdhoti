@@ -71,7 +71,6 @@ class ProductListingController extends Controller
             $query->whereBetween('price', [$request->min_price, $request->max_price]);
         }
 
-        // 4. Sorting
         if ($request->filled('sort') || $request->filled('sort_by')) {
             // Support both 'sort' and 'sort_by'
             $sort = $request->input('sort') ?? $request->input('sort_by');
@@ -82,9 +81,10 @@ class ProductListingController extends Controller
                     break;
                 case 'created-descending': // Newest
                 case 'newest':
-                    $query->latest();
+                    $query->orderBy('created_at', 'desc'); // Ensure created_at is used
                     break;
                 case 'created-ascending': // Oldest
+                case 'oldest':
                     $query->orderBy('created_at', 'asc');
                     break;
                 case 'price-ascending': // Low to High
@@ -96,10 +96,11 @@ class ProductListingController extends Controller
                     $query->orderBy('price', 'desc');
                     break;
                 default:
-                    $query->latest();
+                    $query->orderBy('created_at', 'desc'); // Default fallback
             }
         } else {
-            $query->latest();
+            // 🟢 DEFAULT BEHAVIOR: NEWEST FIRST
+            $query->orderBy('created_at', 'desc');
         }
 
         return $query;

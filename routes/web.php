@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\FilterController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
@@ -123,6 +124,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('/videos', VideoController::class);
 
         Route::resource('reviews', AdminReviewController::class);
+
+        Route::resource('banners', BannerController::class);
 
         // Quick Status Toggle Route
         Route::get('reviews/status/{id}', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Banner;
 use App\Models\Filter;
 use App\Models\Product;
 use App\Models\Category;
@@ -64,8 +65,8 @@ class HomeController extends Controller
             $showcaseSections = SubCategory::where('category_id', $spiritualCat->id)
                 ->whereIn('slug', $targetSubSlugs)
                 ->where('status', 1)
-                ->with(['products' => function($q) {
-                    $q->where('status', 1)->latest()->take(10); // Take top 10 products per sub-category
+                ->with(['products' => function ($q) {
+                    $q->where('status', 1)->latest()->take(15); // Take top 10 products per sub-category
                 }])
                 ->get();
         }
@@ -76,8 +77,11 @@ class HomeController extends Controller
             ->take(10) // Show latest 10
             ->get();
 
+        // 🟢 Fetch Active Banners
+        $banners = Banner::where('status', 1)->orderBy('sort_order', 'asc')->get();
 
         return view('frontend.pages.home', compact(
+            'banners',
             'featuredProducts',
             'bestSellingProducts',
             'categories',

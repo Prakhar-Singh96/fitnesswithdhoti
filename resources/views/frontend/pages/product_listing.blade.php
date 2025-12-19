@@ -136,7 +136,9 @@
                     <div class="d-flex align-items-center">
                         @php
                             $sortOptions = [
-                                'newest' => 'Newest',
+                                'newest' => 'Newest', // (Default)
+                                'oldest' => 'Oldest', // 🟢 Added
+                                'best-selling' => 'Best Selling', // 🟢 Added
                                 'price_asc' => 'Price: Low to High',
                                 'price_desc' => 'Price: High to Low',
                             ];
@@ -154,18 +156,39 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-1" style="min-width: 160px;">
+                                {{-- 1. Newest --}}
                                 <li>
                                     <a class="dropdown-item small {{ $currentSort == 'newest' ? 'active bg-light text-dark fw-bold' : '' }}"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">
                                         Newest
                                     </a>
                                 </li>
+
+                                {{-- 2. Oldest (🟢 Added) --}}
+                                <li>
+                                    <a class="dropdown-item small {{ $currentSort == 'oldest' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}">
+                                        Oldest
+                                    </a>
+                                </li>
+
+                                {{-- 3. Best Selling (🟢 Added) --}}
+                                <li>
+                                    <a class="dropdown-item small {{ $currentSort == 'best-selling' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'best-selling']) }}">
+                                        Best Selling
+                                    </a>
+                                </li>
+
+                                {{-- 4. Price: Low to High --}}
                                 <li>
                                     <a class="dropdown-item small {{ $currentSort == 'price_asc' ? 'active bg-light text-dark fw-bold' : '' }}"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">
                                         Price: Low to High
                                     </a>
                                 </li>
+
+                                {{-- 5. Price: High to Low --}}
                                 <li>
                                     <a class="dropdown-item small {{ $currentSort == 'price_desc' ? 'active bg-light text-dark fw-bold' : '' }}"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">
@@ -201,7 +224,7 @@
                                     </div>
 
                                     {{-- Details --}}
-                                    <div class="product-info text-center">
+                                    <div class="product-info text-left">
                                         <h3 class="h6 mb-1">
                                             {{-- 👇 LINK UPDATE KIYA --}}
                                             <a href="{{ route('product.detail', $product->slug) }}"
@@ -233,7 +256,7 @@
 
                                         {{-- Add to Cart --}}
                                         {{-- Add to Cart Button (Listing Page) --}}
-                                        <button class="btn btn-sm btn-outline-dark rounded-0 w-100 mt-1"
+                                        <button class="btn btn-earthy"
                                             onclick="addToCart({{ $product->id }}, 1, 0, this)">
                                             Add to Cart
                                         </button>
