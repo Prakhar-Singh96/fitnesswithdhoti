@@ -361,7 +361,7 @@
                                             @php
                                                 $link = $video->link;
                                                 // If link doesn't start with http, wrap in url()
-if (!Str::startsWith($link, ['http://', 'https://'])) {
+                                            if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                     $link = url($link);
                                                 }
                                             @endphp
