@@ -192,7 +192,7 @@
                                     <span class="fw-bold text-dark">{{ Auth::user()->name ?? 'User' }}</span>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item py-2" href="{{ url('/my-orders') }}">
+                                    <a class="dropdown-item py-2" href="{{ url('/orders') }}">
                                         <i class="las la-box me-2"></i> Order History
                                     </a>
                                 </li>

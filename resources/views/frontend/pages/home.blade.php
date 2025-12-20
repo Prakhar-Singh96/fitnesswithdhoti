@@ -101,8 +101,11 @@
 
                             {{-- Image Area --}}
                             <div class="img-box">
-                                @if ($product->mrp_price > $product->price)
-                                    <span class="badge-sale">Sale</span>
+                                @if ($product->discount > 0)
+                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                        style="z-index: 2;">
+                                        {{ $product->discount }}% OFF
+                                    </span>
                                 @endif
                                 <button class="btn-wishlist">
                                     <i class="las la-heart"></i>
@@ -178,8 +181,11 @@
 
                             {{-- Image Area --}}
                             <div class="img-box">
-                                @if ($product->mrp_price > $product->price)
-                                    <span class="badge-sale">Sale</span>
+                                @if ($product->discount > 0)
+                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                        style="z-index: 2;">
+                                        {{ $product->discount }}% OFF
+                                    </span>
                                 @endif
                                 <button class="btn-wishlist">
                                     <i class="las la-heart"></i>
@@ -255,8 +261,11 @@
 
                             {{-- Image Area --}}
                             <div class="img-box">
-                                @if ($product->mrp_price > $product->price)
-                                    <span class="badge-sale">Sale</span>
+                                @if ($product->discount > 0)
+                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                        style="z-index: 2;">
+                                        {{ $product->discount }}% OFF
+                                    </span>
                                 @endif
                                 <button class="btn-wishlist">
                                     <i class="las la-heart"></i>
@@ -361,7 +370,7 @@
                                             @php
                                                 $link = $video->link;
                                                 // If link doesn't start with http, wrap in url()
-                                            if (!Str::startsWith($link, ['http://', 'https://'])) {
+if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                     $link = url($link);
                                                 }
                                             @endphp

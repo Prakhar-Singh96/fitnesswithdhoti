@@ -18,11 +18,26 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Header ke liye categories globally available
         View::composer('frontend.includes.header', function ($view) {
-            $headerCategories = Category::with(['subCategories', 'products' => function ($q) {
-                $q->latest()->take(4); // Load only 4 latest products for the menu
-            }])
-                ->where('status', 1)
+
+            // 1. Pehle Categories aur SubCategories load karein
+            $headerCategories = Category::where('status', 1)
+                ->with(['subCategories' => function($q) {
+                    $q->where('status', 1);
+                }])
+                ->orderBy('id', 'asc') // Ya 'id' 'asc'
                 ->get();
+
+            // 2. 🟢 FIX: Har Category ke liye manually 4 latest products load karein
+            foreach ($headerCategories as $category) {
+                $latestProducts = $category->products()
+                                           ->where('status', 1)
+                                           ->latest() // Newest first
+                                           ->take(4)  // Sirf 4 chahiye
+                                           ->get();
+
+                // Blade file ke liye relation set kar rahe hain
+                $category->setRelation('products', $latestProducts);
+            }
 
             $view->with('headerCategories', $headerCategories);
         });

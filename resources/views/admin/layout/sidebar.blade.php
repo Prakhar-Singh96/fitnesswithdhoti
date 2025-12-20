@@ -122,12 +122,28 @@
                 <div>Orders</div>
             </a>
             <ul class="menu-sub">
+                {{-- List Page is enough --}}
                 <li class="menu-item">
                     <a href="{{ route('admin.orders.index') }}" class="menu-link">
                         Order List
                     </a>
                 </li>
+
+                {{-- ❌ Remove this block 👇 --}}
+                {{-- <li class="menu-item">
+                    <a href="{{ route('admin.orders.show') }}" class="menu-link">
+                        Order show
+                    </a>
+                </li> --}}
             </ul>
+        </li>
+
+        {{-- ✨ NEW LOGISTIC MODULE HERE ✨ --}}
+        <li class="menu-item {{ request()->is('admin/logistic*') ? 'active' : '' }}">
+            <a href="{{ route('admin.logistic.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-package"></i>
+                <div>Logistics (Ship)</div>
+            </a>
         </li>
 
         {{-- Customers --}}

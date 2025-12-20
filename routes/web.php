@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\BannerController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\LogisticController;
 use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Admin\AdminReviewController;
@@ -74,6 +76,9 @@ Route::get('/reviews/filter', [ReviewController::class, 'filterReviews'])->name(
 Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
 Route::post('/login-with-otp', [OtpController::class, 'loginWithOtp'])->name('login.otp');
 
+Route::get('/track-order', [TrackingController::class, 'index'])->name('track.order');
+Route::post('/track-order', [TrackingController::class, 'track'])->name('track.order.submit');
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
@@ -81,8 +86,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [OtpController::class, 'logout'])->name('logout');
 
     // 2. User Profile & Orders
-    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
-    Route::get('/my-orders', [UserController::class, 'orders'])->name('user.orders');
+    Route::get('/orders', [App\Http\Controllers\Frontend\UserController::class, 'orders'])->name('user.orders');
+
+    // 🟢 New Route for Order Details
+    Route::get('/orders/{id}', [App\Http\Controllers\Frontend\UserController::class, 'orderDetails'])->name('user.order_details');
+
+    Route::get('/profile', [App\Http\Controllers\Frontend\UserController::class, 'profile'])->name('user.profile');
 
     // 3. Checkout Actions
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -130,6 +139,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Quick Status Toggle Route
         Route::get('reviews/status/{id}', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');
+
+        // Admin Middleware Group ke andar
+        Route::group(['prefix' => 'logistic', 'as' => 'logistic.'], function () {
+
+            // Dashboard (Orders ready to ship)
+            Route::get('/', [LogisticController::class, 'index'])->name('index');
+
+            // Step 1: Weight Form
+            Route::get('/ship/{id}', [LogisticController::class, 'prepareShipment'])->name('ship');
+
+            // Step 2: Create Order & Show Rates
+            Route::post('/create-order/{id}', [LogisticController::class, 'createAndFetchRates'])->name('create_order');
+
+            // Step 3: Final Manifest
+            Route::post('/manifest/{id}', [LogisticController::class, 'manifest'])->name('manifest');
+
+            // Cancel
+            Route::post('/cancel/{id}', [LogisticController::class, 'cancelShipment'])->name('cancel');
+        });
 
 
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
@@ -181,6 +209,6 @@ Route::get('/run-seeder', function () {
 
     // Command run karein (force flag zaroori hai production ke liye)
     Artisan::call('db:seed', ["--force" => true]);
-    
+
     return 'Seeder Run Successfully! Admin created.';
 });

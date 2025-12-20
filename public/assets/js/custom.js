@@ -836,7 +836,7 @@ function processPayment() {
 
         } else if (res.status === 'success') {
             // 🟢 COD Success
-            window.location.href = "/my-orders"; // Redirect to Orders Page
+            window.location.href = "/orders"; // Redirect to Orders Page
         } else {
             alert(res.message);
             btn.prop('disabled', false).text('Place Order');
@@ -863,7 +863,7 @@ function verifyServerPayment(paymentData, localOrderId) {
     }, function (res) {
         if (res.status) {
             alert('Payment Successful!'); // Optional
-            window.location.href = "/my-orders";
+            window.location.href = "/orders";
         } else {
             // Yahan server ka asli error dikhayein
             alert(res.message);

@@ -14,6 +14,17 @@ class UserController extends Controller
         return view('frontend.pages.user.orders', compact('orders'));
     }
 
+    // 2. ORDER DETAILS PAGE (Single Order)
+    // Yahan bracket ($id) aayega kyunki hame ek specific order dekhna hai
+    public function orderDetails($id)
+    {
+        $order = Order::with('items.product')
+                      ->where('user_id', Auth::id())
+                      ->findOrFail($id);
+
+        return view('frontend.pages.user.order_details', compact('order'));
+    }
+
     public function profile()
     {
         $user = Auth::user();
