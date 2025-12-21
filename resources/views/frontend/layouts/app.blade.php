@@ -84,7 +84,130 @@
 
     {{-- 5. Custom JS (Main Logic) --}}
     <script src="{{ asset('assets/js/custom.js') }}"></script>
+    
+    <script>
+init__megaMenu();
 
+function init__megaMenu() {
+    const mm = document.querySelector('aside#mega-menu--mobile');
+    if (mm) {
+
+        const mm_container      = mm.querySelector('.mega__container');
+        const mm_screens        = mm.querySelectorAll('.mega__screen');
+        const mm_subIcons       = mm.querySelectorAll('a.btn .btn__icon');
+        const mm_subLinks       = mm.querySelectorAll('a.btn[aria-label]');
+        const mm_subLinks_icon  = `<svg width="4" height="7" viewBox="0 0 4 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.88255 3.2234C4.03915 3.37573 4.03915 3.62204 3.88255 3.77275L0.683882 6.88575C0.52728 7.03808 0.274052 7.03808 0.119117 6.88575C-0.0358184 6.73343 -0.0374844 6.48711 0.119117 6.3364L3.03457 3.50051L0.117451 0.662992C-0.0391504 0.510664 -0.0391504 0.264347 0.117451 0.113639C0.274052 -0.0370684 0.52728 -0.0386889 0.682216 0.113639L3.88255 3.2234Z" fill="#221F20"/></svg>`;
+
+        let mm_active_depth = parseInt(mm_container.dataset.activeDepth);
+
+        mm_screens[0].dataset.activeMenu = true;
+
+        // Insert SVG Icon in each btn
+        mm_subLinks.forEach(item => {
+            const iconSpan = item.querySelector('.btn__icon');
+            if (iconSpan) iconSpan.insertAdjacentHTML("afterbegin", mm_subLinks_icon);
+        });
+
+        // Handle all back buttons in slides
+        const screenBackBtns = mm.querySelectorAll('.screen-back-btn');
+        screenBackBtns.forEach(backBtn => {
+            backBtn.addEventListener('click', (e) => {
+                if (mm_active_depth > 1) sub__handleActiveDepth(mm_screens, e, mm_container);
+            });
+        });
+
+        // Handle submenu icon click
+        mm_subIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
+        });
+
+        // Handle entire a.btn click
+        mm_subLinks.forEach(link => {
+            link.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
+        });
+
+        // Main navigation handler
+        function sub__handleActiveDepth(screens, event, container) {
+            const target = event.currentTarget || event.target;
+
+            // Back button clicked
+            if (target.classList.contains('screen-back-btn') || target.id == "menu-back") {
+                mm_active_depth -= 1;
+                mm_container.dataset.activeDepth = mm_active_depth;
+
+                mm_screens.forEach(screen => {
+                    let dft_screen_depth = parseInt(screen.dataset.menuDepth);
+                    screen.dataset.activeMenu = false;
+                    dft_screen_depth >= mm_active_depth ? screen.classList.remove('stacked') : null;
+                    dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                });
+
+            } else {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Forward navigation
+                mm_active_depth += 1;
+                mm_container.dataset.activeDepth = mm_active_depth;
+
+                mm_screens.forEach(screen => {
+                    let dft_screen_depth = parseInt(screen.dataset.menuDepth);
+                    screen.dataset.activeMenu = false;
+                    dft_screen_depth < mm_active_depth ? screen.classList.add('stacked') : null;
+                    dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                });
+
+                // Handle Sub Menus
+                let link = target.closest('a.btn') || target;
+                let link_menu = link.getAttribute('aria-label');
+                container.dataset.activeNav = link_menu;
+
+                let dft_active_screen = container.querySelector('.mega__screen[data-active-menu="true"]');
+                let dft_active_screen__navs = dft_active_screen.querySelectorAll('nav');
+                dft_active_screen__navs.forEach(nav => { nav.classList.add('hidden'); });
+
+                let dft_active_nav = dft_active_screen.querySelector(`nav[aria-labelledby="${link_menu}"]`);
+                if (dft_active_nav) dft_active_nav.classList.remove('hidden');
+            }
+        }
+    }
+}
+
+
+
+</script>
+<script>
+const menuButton = document.getElementById('menuButton');
+const megaMenu = document.getElementById('mega-menu--mobile');
+
+menuButton.addEventListener('click', () => {
+  megaMenu.classList.toggle('active'); // menu open/close
+  menuButton.classList.toggle('active'); // toggle button icon
+});
+</script>
+<script>
+function initFooterAccordion() {
+  const headings = document.querySelectorAll('h4.footer-heading');
+
+  headings.forEach(heading => {
+    heading.addEventListener('click', () => {
+
+      // Only for mobile screens
+      if (window.innerWidth > 767) return;
+
+      const list = heading.nextElementSibling;
+
+      if (!list || !list.classList.contains('footer-list')) return;
+
+      // Toggle active class
+      heading.classList.toggle('active');
+      list.classList.toggle('active');
+    });
+  });
+}
+
+initFooterAccordion();
+</script>
 </body>
 
 </html>

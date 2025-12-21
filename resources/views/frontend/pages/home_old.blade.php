@@ -155,16 +155,14 @@
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}?type=featured" class="btn btn-view-all rounded-pill px-4 py-2">
-                    View all Featured
-                </a>
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
             </div>
 
         </div>
     </section>
 
     {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 featured-products-section" style="background-color: #f7f1de;">
+    <section class="py-5 featured-products-section" style="background-color: var(--light)">
         <div class="container">
 
             {{-- Heading --}}
@@ -229,17 +227,15 @@
                     </div>
                 @endforeach
 
-                @if ($bestSellingProducts->count() == 0)
-                    <div class="col-12 text-center text-muted">No bestSelling products found.</div>
+                @if ($featuredProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
                 @endif
 
             </div>
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}?type=best-selling" class="btn btn-view-all rounded-pill px-4 py-2">
-                    View all Best Selling
-                </a>
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
             </div>
 
         </div>
@@ -312,17 +308,15 @@
                     </div>
                 @endforeach
 
-                @if ($products->count() == 0)
-                    <div class="col-12 text-center text-muted">No products found.</div>
+                @if ($featuredProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
                 @endif
 
             </div>
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}" class="btn btn-view-all rounded-pill px-4 py-2">
-                    View all Products
-                </a>
+                <a href="{{ url('products') }}" class="btn btn-view-all rounded-pill px-4 py-2">View all products</a>
             </div>
 
         </div>
@@ -562,128 +556,129 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
 
         </div>
     </section>
-    <div class="all-catagorys">
-        {{-- ✨ 6. DYNAMIC SUB-CATEGORY SHOWCASE SECTIONS ✨ --}}
-        {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS (Ring, Earring, Pendant) ✨ --}}
-        {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS ✨ --}}
-        @if (isset($showcaseSections) && $showcaseSections->count() > 0)
-            @foreach ($showcaseSections as $section)
-                @if ($section->products->count() > 0)
-                    <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
-                        <div class="container-fluid px-4">
 
-                            {{-- 1. Heading --}}
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h2 class="h3 fw-bold text-dark m-0">
-                                    {{ $section->category->name }} {{ $section->name }}
-                                </h2>
-                                <a href="{{ route('products.subcategory', ['cat_slug' => $section->category->slug, 'sub_slug' => $section->slug]) }}"
-                                    class="btn btn-outline-dark rounded-pill px-4">
-                                    View all
-                                </a>
-                            </div>
+    {{-- ✨ 6. DYNAMIC SUB-CATEGORY SHOWCASE SECTIONS ✨ --}}
+    {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS (Ring, Earring, Pendant) ✨ --}}
+    {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS ✨ --}}
+    @if (isset($showcaseSections) && $showcaseSections->count() > 0)
+        @foreach ($showcaseSections as $section)
+            @if ($section->products->count() > 0)
+                <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
+                    <div class="container-fluid px-4">
 
-                            <div class="row g-3">
+                        {{-- 1. Heading --}}
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h3 fw-bold text-dark m-0">
+                                {{ $section->category->name }} {{ $section->name }}
+                            </h2>
+                            <a href="{{ route('products.subcategory', ['cat_slug' => $section->category->slug, 'sub_slug' => $section->slug]) }}"
+                                class="btn btn-outline-dark rounded-pill px-4">
+                                View all
+                            </a>
+                        </div>
 
+                        <div class="row g-3">
 
-                                {{-- 3. RIGHT SIDE: PRODUCTS GRID --}}
-                                <div class="col-lg-12 col-12">
-                                    {{-- Use 'row' for proper grid alignment of products --}}
-                                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-3">
-                                        <div class="col">
-                                            <div class="category-banner-card h-100 position-relative overflow-hidden rounded-3"
-                                                style="min-height: 300px; background-color: #e0d4c3;">
-                                                {{-- Added min-height & bg-color --}}
+                            {{-- 2. LEFT SIDE: CATEGORY BANNER --}}
+                            <div class="col-lg-2 d-none d-lg-block">
+                                <div class="category-banner-card h-100 position-relative overflow-hidden rounded-3"
+                                    style="min-height: 300px; background-color: #e0d4c3;"> {{-- Added min-height & bg-color --}}
 
-                                                {{-- Image Logic: Check if image exists, else show placeholder --}}
-                                                @php
-                                                    $bannerImage = $section->image
-                                                        ? asset($section->image)
-                                                        : 'https://placehold.co/300x500/e0d4c3/555?text=' .
-                                                            urlencode($section->name);
-                                                @endphp
+                                    {{-- Image Logic: Check if image exists, else show placeholder --}}
+                                    @php
+                                        $bannerImage = $section->image
+                                            ? asset($section->image)
+                                            : 'https://placehold.co/300x500/e0d4c3/555?text=' .
+                                                urlencode($section->name);
+                                    @endphp
 
-                                                <img src="{{ $bannerImage }}" alt="{{ $section->name }}"
-                                                    class="img-fluid w-100 h-100 object-fit-cover banner-img">
+                                    <img src="{{ $bannerImage }}" alt="{{ $section->name }}"
+                                        class="img-fluid w-100 h-100 object-fit-cover banner-img">
 
-                                                <div class="banner-content position-absolute bottom-0 start-0 p-3 w-100 text-white"
-                                                    style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
-                                                    <h3 class="h4 fw-bold mb-0">{{ $section->name }}<br>Collection</h3>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @foreach ($section->products as $product)
-                                            <div class="col"> {{-- Auto column width based on row-cols classes above --}}
-                                                <div
-                                                    class="product-card-standard h-100 border rounded-3 overflow-hidden bg-white shadow-sm">
-
-                                                    {{-- Image --}}
-                                                    <div class="card-img-wrapper position-relative bg-light"
-                                                        style="aspect-ratio: 1/1;">
-                                                        @if ($product->discount > 0)
-                                                            <span
-                                                                class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
-                                                                style="z-index: 2;">
-                                                                {{ $product->discount }}% OFF
-                                                            </span>
-                                                        @endif
-
-                                                        <a href="{{ route('product.detail', $product->slug) }}"
-                                                            class="d-block w-100 h-100">
-                                                            <img src="{{ asset($product->main_image) }}"
-                                                                alt="{{ $product->name }}"
-                                                                class="w-100 h-100 object-fit-cover">
-                                                        </a>
-                                                    </div>
-
-                                                    {{-- Info --}}
-                                                    <div class="p-3 text-start">
-                                                        <h6 class="product-title mb-1 text-truncate fw-bold"
-                                                            style="font-size: 14px;">
-                                                            <a href="{{ route('product.detail', $product->slug) }}"
-                                                                class="text-dark text-decoration-none">
-                                                                {{ $product->name }}
-                                                            </a>
-                                                        </h6>
-
-                                                        <div class="mb-2 text-warning small">
-                                                            <i class="las la-star"></i><i class="las la-star"></i><i
-                                                                class="las la-star"></i>
-                                                            <i class="las la-star"></i><i class="las la-star"></i>
-                                                            <span class="text-muted ms-1">(24)</span>
-                                                        </div>
-
-                                                        <div class="mb-2">
-                                                            <span
-                                                                class="fw-bold text-dark">₹{{ number_format($product->price) }}</span>
-                                                            @if ($product->mrp_price > $product->price)
-                                                                <span
-                                                                    class="text-muted text-decoration-line-through small ms-2">
-                                                                    ₹{{ number_format($product->mrp_price) }}
-                                                                </span>
-                                                            @endif
-                                                        </div>
-
-                                                        <button class="btn btn-earthy w-100 btn-sm"
-                                                            onclick="addToCart({{ $product->id }}, 1, 0, this)">
-                                                            Add to cart
-                                                        </button>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        @endforeach
-
+                                    <div class="banner-content position-absolute bottom-0 start-0 p-3 w-100 text-white"
+                                        style="background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);">
+                                        <h3 class="h4 fw-bold mb-0">{{ $section->name }}<br>Collection</h3>
                                     </div>
                                 </div>
-
                             </div>
+
+                            {{-- 3. RIGHT SIDE: PRODUCTS GRID --}}
+                            <div class="col-lg-10 col-12">
+                                {{-- Use 'row' for proper grid alignment of products --}}
+                                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+
+                                    @foreach ($section->products as $product)
+                                        <div class="col"> {{-- Auto column width based on row-cols classes above --}}
+                                            <div
+                                                class="product-card-standard h-100 border rounded-3 overflow-hidden bg-white shadow-sm">
+
+                                                {{-- Image --}}
+                                                <div class="card-img-wrapper position-relative bg-light"
+                                                    style="aspect-ratio: 1/1;">
+                                                    @if ($product->discount > 0)
+                                                        <span
+                                                            class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                                            style="z-index: 2;">
+                                                            {{ $product->discount }}% OFF
+                                                        </span>
+                                                    @endif
+
+                                                    <a href="{{ route('product.detail', $product->slug) }}"
+                                                        class="d-block w-100 h-100">
+                                                        <img src="{{ asset($product->main_image) }}"
+                                                            alt="{{ $product->name }}"
+                                                            class="w-100 h-100 object-fit-cover">
+                                                    </a>
+                                                </div>
+
+                                                {{-- Info --}}
+                                                <div class="p-3 text-start">
+                                                    <h6 class="product-title mb-1 text-truncate fw-bold"
+                                                        style="font-size: 14px;">
+                                                        <a href="{{ route('product.detail', $product->slug) }}"
+                                                            class="text-dark text-decoration-none">
+                                                            {{ $product->name }}
+                                                        </a>
+                                                    </h6>
+
+                                                    <div class="mb-2 text-warning small">
+                                                        <i class="las la-star"></i><i class="las la-star"></i><i
+                                                            class="las la-star"></i>
+                                                        <i class="las la-star"></i><i class="las la-star"></i>
+                                                        <span class="text-muted ms-1">(24)</span>
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <span
+                                                            class="fw-bold text-dark">₹{{ number_format($product->price) }}</span>
+                                                        @if ($product->mrp_price > $product->price)
+                                                            <span
+                                                                class="text-muted text-decoration-line-through small ms-2">
+                                                                ₹{{ number_format($product->mrp_price) }}
+                                                            </span>
+                                                        @endif
+                                                    </div>
+
+                                                    <button class="btn btn-earthy w-100 btn-sm"
+                                                        onclick="addToCart({{ $product->id }}, 1, 0, this)">
+                                                        Add to cart
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>
+
                         </div>
-                    </section>
-                @endif
-            @endforeach
-        @endif
-    </div>
+                    </div>
+                </section>
+            @endif
+        @endforeach
+    @endif
+
     <section class="ratings-bar-section">
         <div class="container">
             <div class="row justify-content-center text-center">
@@ -878,7 +873,7 @@ if (
         </div>
     </section>
 
-    <section class="py-5 faq-section"> {{-- Earthy Background --}}
+    <section class="py-5 faq-section" style="background-color: #f7f1de;"> {{-- Earthy Background --}}
         <div class="container">
 
             {{-- 1. Fancy Heading (Light Box on Dark BG) --}}
@@ -1081,4 +1076,6 @@ if (
 
         </div>
     </section>
+
+
 @endsection
