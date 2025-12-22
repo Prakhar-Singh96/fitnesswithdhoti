@@ -46,7 +46,7 @@
             {{-- 🖼️ LEFT SIDE: IMAGE GALLERY --}}
             {{-- ========================== --}}
             <div class="col-lg-6 mb-4">
-                <div class="sticky-top" style="top: 100px; z-index: 1;">
+                <div class="product-images" style="top: 100px; z-index: 1;">
 
                     {{-- 1. Main Big Slider (Yeh ab Slider hai, static image nahi) --}}
                     <div class="product-main-slider">

@@ -49,7 +49,8 @@
         @include('frontend.includes.header')
 
         {{-- 🏠 Page Content --}}
-        <main class="flex-grow-1"> {{-- <<< KEY FIX: flex-grow-1 added to <main> --}}
+        <main class="flex-grow-1" style="
+    background-color: #f7f1de;"> {{-- <<< KEY FIX: flex-grow-1 added to <main> --}}
             @yield('content')
         </main>
 

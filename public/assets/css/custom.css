@@ -2628,6 +2628,19 @@ nav .d-none.flex-sm-fill.d-sm-flex .small.text-muted {
 nav .d-none.flex-sm-fill.d-sm-flex {
     justify-content: center !important;
 }
+
+/* बटन को Static करें ताकि मेनू स्क्रीन के हिसाब से खुले, बटन के हिसाब से नहीं */
+    .nav-item.dropdown {
+        position: static !important; 
+    }
+
+    /* मेनू को स्क्रीन के बीच में (Center) लाएं */
+    .japam-mega-menu {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 900px !important; /* Width fixed rakhein */
+        max-width: 95vw !important; /* Screen se bahar na jaye */
+    }
 /* 1. Active Page (Jo select hai) */
 .pagination .page-item.active .page-link {
     background-color: #ffcc66 !important;

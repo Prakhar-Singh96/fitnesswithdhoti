@@ -49,12 +49,12 @@
             <div class="collapse navbar-collapse justify-content-center" id="mainMenu">
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0 main-nav-list align-items-center">
 
-                    <li class="nav-item dropdown mega-parent me-3">
+                    {{-- <li class="nav-item dropdown mega-parent me-3">
                         <a class="nav-link text-dark dropdown-toggle" href="#" id="productsDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Products
                         </a>
-                        {{-- 🔴 Empty Dropdown: As requested, we will leave the content empty here --}}
+                        {{-- 🔴 Empty Dropdown: As requested, we will leave the content empty here
                         <div class="dropdown-menu mega-menu border-0 shadow w-100" aria-labelledby="productsDropdown">
                             <div class="mega-bg container-fluid px-5 py-3"
                                 style="background-color: var(--light) !important;">
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
 
                     {{-- 🟢 DYNAMIC CATEGORIES LOOP (JAPAM STYLE) --}}
                     @foreach ($headerCategories as $category)
