@@ -21,25 +21,31 @@
                         <h5 class="fw-bold mb-1">Login to continue</h5>
                         <p class="text-muted small mb-4">Enter your mobile number to verify details</p>
 
-                        <div class="form-floating mb-3">
-                            <input type="tel" id="chk_mobile" class="form-control rounded-3"
-                                placeholder="Mobile Number" maxlength="10">
-                            <label for="chk_mobile" class="text-muted">Enter Mobile Number</label>
+                        {{-- Phone Input (Updated for Country Code) --}}
+                        <div class="mb-3">
+                            <label class="fw-bold small mb-2 d-block">Mobile Number</label>
+                            {{-- Width 100% zaroori hai plugin ke liye --}}
+                            <input type="tel" id="chk_mobile" class="form-control rounded-3" style="width: 100%;"
+                                placeholder="Enter Mobile Number">
+                            <small id="chk_mobile_error" class="text-danger"></small>
                         </div>
 
-                        {{-- OTP Section --}}
+                        {{-- OTP Section (Hidden initially) --}}
                         <div id="chk_otp_box" style="display: none;">
                             <div class="form-floating mb-3">
                                 <input type="text" id="chk_otp" class="form-control rounded-3 letter-spacing-2"
                                     placeholder="OTP">
                                 <label for="chk_otp">Enter OTP</label>
                             </div>
-                            <button type="button" class="btn btn-dark w-100 py-3 rounded-3 fw-bold mb-3"
-                                onclick="verifyCheckoutOtp()">
+
+                            {{-- Verify Button --}}
+                            <button type="button" id="btn_verify_otp"
+                                class="btn btn-dark w-100 py-3 rounded-3 fw-bold mb-3" onclick="verifyCheckoutOtp()">
                                 VERIFY OTP
                             </button>
                         </div>
 
+                        {{-- Send OTP Button --}}
                         <button type="button" id="btn_send_otp"
                             class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white"
                             style="background-color: #ff6f00; border: none;" onclick="sendCheckoutOtp()">
@@ -125,7 +131,8 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" id="chk_area" class="form-control rounded-3" placeholder="Area">
+                                <input type="text" id="chk_area" class="form-control rounded-3"
+                                    placeholder="Area">
                                 <label>Area, Street, Sector *</label>
                             </div>
 

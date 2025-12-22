@@ -208,8 +208,7 @@
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="las la-sign-out-alt me-2"></i> Logout
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                                 </li>
@@ -312,11 +311,9 @@
 
                                     <div class="mb-4">
                                         <label class="fw-bold small mb-2">Mobile Number</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-white border-end-0">+91</span>
-                                            <input type="number" id="phone_input"
-                                                class="form-control border-start-0 ps-0" placeholder="Enter Number">
-                                        </div>
+                                        {{-- intl-tel-input requires a standard input. The library handles the styling --}}
+                                        <input type="tel" id="phone_input" class="form-control"
+                                            placeholder="Enter Number" style="width: 100%;">
                                         <small id="phone_error" class="text-danger"></small>
                                     </div>
 

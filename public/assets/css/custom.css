@@ -59,7 +59,7 @@ nav.navbar {
     text-decoration: none;
     color: var(--dark) !important;
     font-weight: 500;
-    
+
 }
 
 .main-nav-list .nav-item a.nav-link {
@@ -126,7 +126,7 @@ nav.navbar {
     /* Flicker and Centering Fixes remain */
     margin-top: -10px !important;
     padding-top: 10px !important;
-    padding-bottom: 20px !important; 
+    padding-bottom: 20px !important;
     width: 100vw;
     max-width: 100vw;
     position: relative;
@@ -659,7 +659,7 @@ main {
     font-family: 'Merriweather', serif;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #222; 
+    color: #222;
 }
 
 .stars i {
@@ -2631,7 +2631,7 @@ nav .d-none.flex-sm-fill.d-sm-flex {
 
 /* बटन को Static करें ताकि मेनू स्क्रीन के हिसाब से खुले, बटन के हिसाब से नहीं */
     .nav-item.dropdown {
-        position: static !important; 
+        position: static !important;
     }
 
     /* मेनू को स्क्रीन के बीच में (Center) लाएं */
@@ -2740,7 +2740,7 @@ nav .d-none.flex-sm-fill.d-sm-flex {
     font-size: 24px;
 }
 
-/*mobile header*/ 
+/*mobile header*/
 /* Desktop - Hide mobile menu */
 @media (min-width: 992px){
   .Mobile-Header{
@@ -2753,7 +2753,7 @@ nav .d-none.flex-sm-fill.d-sm-flex {
   .Mobile-Header{
     display:block;
   }
-  
+
 header.z-1020.shadow-sm {
     display: none;
 }
@@ -2798,7 +2798,7 @@ header.z-1020.shadow-sm {
 }
 
 
-  
+
 /***************************/
 
 /***** BUTTON **************/
@@ -2811,11 +2811,11 @@ header.z-1020.shadow-sm {
     padding:  12px 0px;
     display: inline-flex;
     justify-content: center;
-    align-items: center;  
+    align-items: center;
     font-size: 14px;
     line-height: 1.5;
     border: 0;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     transition: all 250ms ease-in-out;
     z-index: 1;
         font-weight: 500;
@@ -2833,8 +2833,8 @@ header.z-1020.shadow-sm {
 .Mobile-Header .btn .btn__label {
     pointer-events: none;
 }
- 
- 
+
+
  .HeaderLeft .nav-search-icon {
     margin: 0;
 }
@@ -2846,7 +2846,7 @@ header.z-1020.shadow-sm {
     height: 100vh;
     height: 100svh;
     max-height: 100vh;
-    max-height: 100svh; 
+    max-height: 100svh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -2887,8 +2887,8 @@ transition: all 350ms ease-in-out;
     max-width: 100%;
     width: 550px;
     height: calc(100vh - 74px);
-    background: #fff; 
-    padding: 0; 
+    background: #fff;
+    padding: 0;
     transition: left 0.3s ease;
     z-index: 1000;
     overflow: auto;
@@ -2922,7 +2922,7 @@ transition: all 350ms ease-in-out;
 }
 
 .Mobile-Header aside#mega-menu--mobile .screen-back-btn {
-     
+
    font-size: 14px;
     text-transform: capitalize;
     display: flex;
@@ -2947,10 +2947,10 @@ transition: all 350ms ease-in-out;
     position: relative;
 }
 
-.Mobile-Header aside#mega-menu--mobile .mega__screen { 
+.Mobile-Header aside#mega-menu--mobile .mega__screen {
     padding-inline: var(--padding-container-inline, 20px);
     width: 100%;
-    height: 100%; 
+    height: 100%;
     position: absolute;
     inset: 0;
     background-color: white;
@@ -2968,15 +2968,15 @@ transition: all 350ms ease-in-out;
 
 .Mobile-Header aside#mega-menu--mobile nav.navigation {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .Mobile-Header aside#mega-menu--mobile nav.navigation a.btn {
-   
-    width: 100%;  
-    background-color: transparent; 
+
+    width: 100%;
+    background-color: transparent;
     color: #000;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
 .Mobile-Header aside#mega-menu--mobile nav.navigation a.btn .btn__label {
@@ -3076,8 +3076,8 @@ transition: all 350ms ease-in-out;
     font-size: 12px;
     transition: transform 0.3s ease, background 0.3s;
 }
-.accordion-button { 
-    font-size: 13px; 
+.accordion-button {
+    font-size: 13px;
 }
 div#heroSlider .bnanner-img {
     object-fit: cover;
@@ -3087,7 +3087,7 @@ div#heroSlider .bnanner-img {
     font-size: 15px !important;
     text-decoration: none;
 }
-.fancy-heading-box h2 { 
+.fancy-heading-box h2 {
     text-align: center;
     font-size: 21px;
     line-height: 1.5;
@@ -3100,4 +3100,46 @@ div#heroSlider .bnanner-img {
 .Mobile-Header aside#mega-menu--mobile nav.navigation.hidden {
     display: none !important;
 }
+}
+
+/* 3. CATEGORY SCROLL IMAGE FIX (No Overlap) */
+/* Inline style hatakar yahan define karein */
+.category-circle-wrapper {
+    width: 110px !important;  /* Thoda chota kiya taki overlap na ho */
+    height: 110px !important;
+    border-radius: 50% !important;
+    overflow: hidden;
+    margin: 0 auto 10px auto;
+    border: 2px solid #C19A6B; /* Gold Border */
+    padding: 3px; /* Border aur Image ke beech gap */
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-circle-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+}
+
+/* Category Text Spacing */
+.category-item span {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+/* 2. MOBILE BANNER UNIVERSAL FIX (Samsung/iPhone sab par chalega) */
+@media (max-width: 767px) {
+    div#heroSlider .bnanner-img {
+        width: 100% !important;
+        height: auto !important; /* Fixed height hatayein */
+        min-height: 350px; /* Kam se kam itna bada dikhe */
+        aspect-ratio: 1 / 1; /* Agar image square (400x400) hai to ye ratio maintain karega */
+        object-fit: contain !important; /* Image ko katne se bachayega */
+        background-color: #f4f4f4; /* Agar image choti hai to peeche grey color */
+    }
 }

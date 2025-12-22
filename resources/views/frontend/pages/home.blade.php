@@ -11,18 +11,15 @@
         <div class="container">
 
             {{-- Slider Container --}}
-            {{-- opacity: 0 means shuru me invisible rahega --}}
             <div id="categoryScroll" class="category-slider" style="opacity: 0; transition: opacity 0.5s;">
                 @foreach ($categories as $category)
-                    <div class="px-2"> {{-- Spacing --}}
+                    <div class="px-2">
                         <div class="text-center category-item">
                             <a href="{{ url('category/' . $category['slug']) }}" class="text-decoration-none d-block">
 
-                                {{-- Image Circle --}}
-                                <div class="mx-auto mb-2 rounded-circle border p-1"
-                                    style="width: 125px; height: 125px; border-color: #C19A6B !important; overflow: hidden;">
-                                    <img src="{{ asset($category->icon_image) }}" alt="{{ $category['name'] }}"
-                                        class="w-100 h-100 object-fit-cover rounded-circle">
+                                {{-- Image Circle (Updated Class) --}}
+                                <div class="category-circle-wrapper">
+                                    <img src="{{ asset($category->icon_image) }}" alt="{{ $category['name'] }}">
                                 </div>
 
                                 {{-- Name --}}

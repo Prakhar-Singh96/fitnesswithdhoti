@@ -32,6 +32,7 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 
 
     {{-- 💡 Premium Custom Styles --}}
@@ -78,6 +79,8 @@
     {{-- 3. Slick Slider (Depends on jQuery) --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     {{-- 4. Page Specific Scripts --}}
@@ -85,7 +88,7 @@
 
     {{-- 5. Custom JS (Main Logic) --}}
     <script src="{{ asset('assets/js/custom.js') }}"></script>
-    
+
     <script>
 init__megaMenu();
 

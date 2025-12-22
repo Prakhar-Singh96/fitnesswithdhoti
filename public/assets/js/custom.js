@@ -2,6 +2,7 @@
 function showLoginModal() {
     $('#login_modal').modal('show');
 }
+var iti;
 
 $(document).ready(function () {
     // 👇 Ye line Modal ko Header se nikaal kar Body me move kar degi
@@ -64,47 +65,80 @@ $(document).ready(function () {
     }
 });
 
+// Initialize intl-tel-input
+    var input = document.querySelector("#phone_input");
+    if (input) {
+        iti = window.intlTelInput(input, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            initialCountry: "auto",
+            separateDialCode: true, // Shows country code next to flag
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "in"; // Default to India
+                    callback(countryCode);
+                });
+            },
+            preferredCountries: ['in', 'us', 'ae', 'gb']
+        });
+    }
+
 // 1. SEND OTP
 function sendOtp() {
-    var phone = $('#phone_input').val();
     var btn = $('#btn-get-otp');
+    var errorMsg = $('#phone_error');
 
-    // Validation
-    if (phone.length != 10) {
-        $('#phone_error').text('Please enter a valid 10-digit number');
+    // Reset error
+    errorMsg.text('');
+
+    // Check if empty
+    if (!iti.getNumber()) {
+        errorMsg.text('Please enter a mobile number');
         return;
     }
-    $('#phone_error').text('');
+
+    // Validate using the library
+    if (!iti.isValidNumber()) {
+        errorMsg.text('Invalid number');
+        return;
+    }
+
+    // Get the full international number (e.g., +919876543210)
+    var fullPhoneNumber = iti.getNumber();
 
     btn.prop('disabled', true).text('Sending...');
 
     // AJAX Request
     $.ajax({
-        url: "/send-otp", // Ensure this route exists
+        url: "/send-otp",
         type: "POST",
         data: {
-            phone: phone,
+            phone: fullPhoneNumber, // Sending the full E.164 number
             _token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
             // Switch to OTP Screen
             $('#step-phone-container').hide();
             $('#step-otp-container').fadeIn();
-            $('#display_phone').text('+91 ' + phone);
+            $('#display_phone').text(fullPhoneNumber); // Display full number
             startTimer();
-            // console.log(response.message); // For debugging
         },
-        error: function (err) {
-            $('#phone_error').text('Something went wrong. Try again.');
+        error: function (xhr) {
+            var err = JSON.parse(xhr.responseText);
+            // Handle specific validation errors from backend if any
+            var msg = err.message || 'Something went wrong. Try again.';
+            if(err.errors && err.errors.phone) {
+                msg = err.errors.phone[0];
+            }
+            errorMsg.text(msg);
             btn.prop('disabled', false).text('GET OTP');
         }
     });
 }
 
-// 2. VERIFY OTP & LOGIN
+// 2. VERIFY OTP & LOGIN (Updated to use full number)
 function verifyOtp() {
-    var phone = $('#phone_input').val();
-    // Combine 4 inputs
+    // We use the number from the instance to ensure consistency
+    var fullPhoneNumber = iti.getNumber();
     var otp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + $('#otp4').val();
     var btn = $('#btn-verify');
 
@@ -116,16 +150,16 @@ function verifyOtp() {
     btn.prop('disabled', true).text('Verifying...');
 
     $.ajax({
-        url: "/login-with-otp", // Ensure this route exists
+        url: "/login-with-otp",
         type: "POST",
         data: {
-            phone: phone,
+            phone: fullPhoneNumber,
             otp: otp,
             _token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
             if (response.status) {
-                location.reload(); // Login Success!
+                location.reload();
             }
         },
         error: function (xhr) {
@@ -552,34 +586,142 @@ function showStep(step) {
     }
 }
 
-// 🔐 2. LOGIN LOGIC
+// Global variable for Checkout Modal Input
+var itiCheckout;
+
+// 1. Initialize Plugin on Document Ready
+$(document).ready(function () {
+    var inputChk = document.querySelector("#chk_mobile");
+
+    if (inputChk) {
+        itiCheckout = window.intlTelInput(inputChk, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            initialCountry: "auto",
+            separateDialCode: true, // Flag alag, code alag
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "in";
+                    callback(countryCode);
+                });
+            },
+            preferredCountries: ['in', 'us', 'ae', 'gb']
+        });
+    }
+});
+
+
+// 🔐 2. LOGIN LOGIC FOR CHECKOUT MODAL (Updated)
 function sendCheckoutOtp() {
-    var phone = $('#chk_mobile').val();
-    if (phone.length != 10) { alert('Valid number enter karein'); return; }
+    var btn = $('#btn_send_otp');
+    var errorMsg = $('#chk_mobile_error');
 
-    $('#btn_send_otp').text('Sending...').prop('disabled', true);
+    // Clear previous errors
+    errorMsg.text('');
 
-    $.post("/send-otp", { phone: phone, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
-        $('#chk_otp_box').slideDown();
-        $('#btn_send_otp').hide();
-    });
-}
+    // Check if valid using library
+    if (!itiCheckout.isValidNumber()) {
+        errorMsg.text('Please enter a valid mobile number.');
+        return;
+    }
 
-function verifyCheckoutOtp() {
-    var phone = $('#chk_mobile').val();
-    var otp = $('#chk_otp').val();
+    // 🔥 Get Full Number with Country Code (e.g. +919876543210)
+    var fullPhone = itiCheckout.getNumber();
 
-    $.post("/login-with-otp", { phone: phone, otp: otp, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
-        if (res.status) {
-            // Login Success -> Step 2 (Address) par jao
-            window.location.reload();
-            $('#user_phone_display').text(phone); // Number update karo
-            showStep('address');
+    btn.text('Sending...').prop('disabled', true);
+
+    $.post("/send-otp", {
+        phone: fullPhone, // Sending full number
+        _token: $('meta[name="csrf-token"]').attr('content')
+    }, function (res) {
+        if(res.status) {
+            $('#chk_otp_box').slideDown();
+            btn.hide();
+            // Optional: User ko dikhane ke liye format kar sakte hain
+            // $('#chk_mobile').val(fullPhone);
         } else {
-            alert('Invalid OTP');
+            errorMsg.text(res.message || 'Failed to send OTP');
+            btn.text('CONTINUE').prop('disabled', false);
         }
+    }).fail(function() {
+        errorMsg.text('Error sending OTP. Please try again.');
+        btn.text('CONTINUE').prop('disabled', false);
     });
 }
+
+// function verifyCheckoutOtp() {
+//     // Verify ke liye bhi full number chahiye
+//     var fullPhone = itiCheckout.getNumber();
+//     var otp = $('#chk_otp').val();
+//     var btn = $('#btn_verify_otp');
+
+//     if (!otp || otp.length < 4) {
+//         alert('Please enter valid OTP');
+//         return;
+//     }
+
+//     btn.text('Verifying...').prop('disabled', true);
+
+//     $.post("/login-with-otp", {
+//         phone: fullPhone,
+//         otp: otp,
+//         _token: $('meta[name="csrf-token"]').attr('content')
+//     }, function (res) {
+//         if (res.status) {
+//             // ✅ LOGIN SUCCESS
+//             $('#step_login').hide();
+
+//             $.get("/checkout/get-user-data", function(data) {
+//                 $('#user_phone_display').text(data.user_phone);
+//                 $('#chk_name').val(data.user_name);
+
+//                 if (data.has_address) {
+//                     $('#saved_address_list').html(data.html).show();
+//                     $('#new_address_form').hide();
+//                 } else {
+//                     $('#saved_address_list').hide();
+//                     $('#new_address_form').show();
+//                 }
+
+//                 $('#step_address').fadeIn();
+//                 $('meta[name="is-logged-in"]').attr('content', '1');
+//             });
+
+//         } else {
+//             alert('Invalid OTP');
+//             btn.text('VERIFY OTP').prop('disabled', false);
+//         }
+//     }).fail(function () {
+//         alert('Server Error during verification');
+//         btn.text('VERIFY OTP').prop('disabled', false);
+//     });
+// }
+// function sendCheckoutOtp() {
+//     var phone = $('#chk_mobile').val();
+//     if (phone.length != 10) { alert('Valid number enter karein'); return; }
+
+//     $('#btn_send_otp').text('Sending...').prop('disabled', true);
+
+//     $.post("/send-otp", { phone: phone, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
+//         $('#chk_otp_box').slideDown();
+//         $('#btn_send_otp').hide();
+//     });
+// }
+
+// function verifyCheckoutOtp() {
+//     var phone = $('#chk_mobile').val();
+//     var otp = $('#chk_otp').val();
+
+//     $.post("/login-with-otp", { phone: phone, otp: otp, _token: $('meta[name="csrf-token"]').attr('content') }, function (res) {
+//         if (res.status) {
+//             // Login Success -> Step 2 (Address) par jao
+//             window.location.reload();
+//             $('#user_phone_display').text(phone); // Number update karo
+//             showStep('address');
+//         } else {
+//             alert('Invalid OTP');
+//         }
+//     });
+// }
 
 // ⚡ 3. ADDRESS LOGIC (Pincode Fetch)
 function fetchCheckoutCityState() {
@@ -603,57 +745,147 @@ function fetchCheckoutCityState() {
     }
 }
 
+// ✅ CORRECTED & IMPROVED verifyCheckoutOtp
 function verifyCheckoutOtp() {
-    var phone = $('#chk_mobile').val();
+    // 1. Get Elements
     var otp = $('#chk_otp').val();
-    var btn = $('#btn-verify'); // Ensure button has this ID or pass 'event.target'
+    var btn = $('#btn_verify_otp');
 
-    // Button loading state
-    $(btn).text('Verifying...').prop('disabled', true);
+    // 2. Validate OTP Input
+    if (!otp || otp.length < 4) {
+        alert('Please enter valid OTP');
+        return;
+    }
 
+    // 3. Get Phone Number (Handle both intl-input and standard input)
+    var fullPhone = "";
+    if (typeof itiCheckout !== 'undefined' && itiCheckout.isValidNumber()) {
+         // Agar Library active hai to wahan se number lo
+        fullPhone = itiCheckout.getNumber();
+    } else {
+        // Fallback: Agar library fail ho to direct value lo
+        fullPhone = $('#chk_mobile').val();
+    }
+
+    // 4. Button Loading State
+    btn.text('Verifying...').prop('disabled', true);
+
+    // 5. AJAX Call
     $.post("/login-with-otp", {
-        phone: phone,
+        phone: fullPhone,
         otp: otp,
         _token: $('meta[name="csrf-token"]').attr('content')
     }, function (res) {
+        // ✅ SUCCESS BLOCK (HTTP 200 OK)
         if (res.status) {
 
-            // ✅ LOGIN SUCCESS: AB PAGE RELOAD NAHI KARENGE
-            // Seedha User Data aur Address mangwayenge
+            // Hide Login Step
+            $('#step_login').hide();
 
+            // Fetch User Data & Address
             $.get("/checkout/get-user-data", function(data) {
 
-                // 1. Update User Phone on UI
+                // Update UI
                 $('#user_phone_display').text(data.user_phone);
-                $('#chk_name').val(data.user_name); // Auto fill name in new form
+                $('#chk_name').val(data.user_name);
 
-                // 2. Decide: Show List or New Form?
+                // Show Address List or Form
                 if (data.has_address) {
-                    // Address hai -> List dikhao
                     $('#saved_address_list').html(data.html).show();
                     $('#new_address_form').hide();
                 } else {
-                    // Address nahi hai -> Form dikhao
                     $('#saved_address_list').hide();
                     $('#new_address_form').show();
                 }
 
-                // 3. Move to Step 2 (Address)
-                showStep('address');
+                // Show Next Step
+                $('#step_address').fadeIn();
 
-                // 4. Update Auth Meta Tag (Optional but good)
+                // Update Auth State
                 $('meta[name="is-logged-in"]').attr('content', '1');
             });
 
         } else {
-            alert('Invalid OTP');
-            $(btn).text('VERIFY OTP').prop('disabled', false);
+            // Logic handled here if server returns 200 but status false
+            alert(res.message || 'Invalid OTP');
+            btn.text('VERIFY OTP').prop('disabled', false);
         }
-    }).fail(function () {
-        alert('Server Error');
-        $(btn).text('VERIFY OTP').prop('disabled', false);
+
+    }).fail(function (xhr) {
+        // ❌ ERROR BLOCK (HTTP 401, 422, 500 etc.)
+
+        var errorMessage = "Something went wrong";
+
+        // Try to get message from JSON response
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+        } else if (xhr.responseText) {
+             // Fallback for simple text errors
+             try {
+                var err = JSON.parse(xhr.responseText);
+                errorMessage = err.message || errorMessage;
+             } catch(e) {}
+        }
+
+        // Show Actual Error (e.g., "Invalid OTP")
+        alert(errorMessage);
+
+        // Reset Button
+        btn.text('VERIFY OTP').prop('disabled', false);
     });
 }
+
+// function verifyCheckoutOtp() {
+//     var phone = $('#chk_mobile').val();
+//     var otp = $('#chk_otp').val();
+//     var btn = $('#btn-verify'); // Ensure button has this ID or pass 'event.target'
+
+//     // Button loading state
+//     $(btn).text('Verifying...').prop('disabled', true);
+
+//     $.post("/login-with-otp", {
+//         phone: phone,
+//         otp: otp,
+//         _token: $('meta[name="csrf-token"]').attr('content')
+//     }, function (res) {
+//         if (res.status) {
+
+//             // ✅ LOGIN SUCCESS: AB PAGE RELOAD NAHI KARENGE
+//             // Seedha User Data aur Address mangwayenge
+
+//             $.get("/checkout/get-user-data", function(data) {
+
+//                 // 1. Update User Phone on UI
+//                 $('#user_phone_display').text(data.user_phone);
+//                 $('#chk_name').val(data.user_name); // Auto fill name in new form
+
+//                 // 2. Decide: Show List or New Form?
+//                 if (data.has_address) {
+//                     // Address hai -> List dikhao
+//                     $('#saved_address_list').html(data.html).show();
+//                     $('#new_address_form').hide();
+//                 } else {
+//                     // Address nahi hai -> Form dikhao
+//                     $('#saved_address_list').hide();
+//                     $('#new_address_form').show();
+//                 }
+
+//                 // 3. Move to Step 2 (Address)
+//                 showStep('address');
+
+//                 // 4. Update Auth Meta Tag (Optional but good)
+//                 $('meta[name="is-logged-in"]').attr('content', '1');
+//             });
+
+//         } else {
+//             alert('Invalid OTP');
+//             $(btn).text('VERIFY OTP').prop('disabled', false);
+//         }
+//     }).fail(function () {
+//         alert('Server Error');
+//         $(btn).text('VERIFY OTP').prop('disabled', false);
+//     });
+// }
 
 // 💾 4. SAVE & CONTINUE
 function saveAndContinue() {
