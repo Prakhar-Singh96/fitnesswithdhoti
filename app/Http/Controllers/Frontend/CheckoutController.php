@@ -65,13 +65,23 @@ class CheckoutController extends Controller
             'pincode' => 'required',
             'address_line1' => 'required',
             'name' => 'required',
-            'phone' => 'required'
+            //'phone' => 'required'
         ]);
 
+        $user = Auth::user();
+
+        // 2. 🔥 Phone Number Logic (Main Fix)
+        // Agar form se number aya hai to wo lo, nahi to User Profile se utha lo
+        $phoneToSave = $request->phone;
+
+        if (empty($phoneToSave)) {
+            $phoneToSave = $user->phone;
+        }
+
         $address = UserAddress::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'name' => $request->name,
-            'phone' => $request->phone,
+            'phone' => $phoneToSave, // ✅ Ab yahan sahi number jayega
             'pincode' => $request->pincode,
             'city' => $request->city,
             'state' => $request->state,

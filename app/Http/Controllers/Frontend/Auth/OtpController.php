@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsService; // 👈 1. Import Service
+use App\Models\Cart;
+use Illuminate\Support\Facades\Session;
 
 class OtpController extends Controller
 {
@@ -86,6 +88,14 @@ class OtpController extends Controller
                     'password' => null
                 ]
             );
+
+            // 🔴 2. FIX: Login se pehle Guest Cart ko User ID assign karein
+            $sessionId = Session::getId();
+
+            // Jo bhi items is session ID ke sath cart me hain, unhe is User ke naam kar do
+            Cart::where('session_id', $sessionId)
+                ->whereNull('user_id') // Sirf wahi jo kisi user ke nahi hain
+                ->update(['user_id' => $user->id]);
 
             Auth::login($user);
             Cache::forget('otp_' . $phone);

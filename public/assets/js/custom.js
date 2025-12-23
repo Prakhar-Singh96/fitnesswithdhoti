@@ -894,10 +894,12 @@ function saveAndContinue() {
     var btn = event.target;
     $(btn).text('Saving...').prop('disabled', true);
 
+    var phoneInput = $('#chk_mobile').val();
+
     $.post("/checkout/save-address-ajax", {
         _token: $('meta[name="csrf-token"]').attr('content'),
         name: $('#chk_name').val(),
-        phone: $('#chk_mobile').val() || "{{ Auth::user()->phone ?? '' }}",
+        phone: phoneInput,
         pincode: $('#chk_pincode').val(),
         city: $('#chk_city').val(),
         state: $('#chk_state').val(),
