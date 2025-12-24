@@ -29,7 +29,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Slug</label>
                                 <input type="text" class="form-control" id="slug" name="slug"
-                                    value="{{ old('slug', $product->slug) }}" readonly>
+                                    value="{{ old('slug', $product->slug) }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Description</label>
@@ -285,10 +285,11 @@
             // Edit page me hum slug ko auto-update nahi karte taaki SEO kharab na ho
             // Lekin agar aap chahte hain to uncomment kar sakte hain:
 
-            /*
-            let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
+            let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g,
+                '-');
             document.getElementById('slug').value = slug;
-            */
+
         });
 
         // 2. AJAX SubCategory Loader
