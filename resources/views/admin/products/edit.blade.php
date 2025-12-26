@@ -3,21 +3,33 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
 
-        {{-- Header --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Product /</span> Edit Product</h4>
             <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Back</a>
         </div>
 
-        <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <h6 class="alert-heading d-flex align-items-center fw-bold mb-1">Oops! Something went wrong.</h6>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data"
+            id="productForm">
             @csrf
-            @method('PUT') {{-- 👈 Important for Updates --}}
+            @method('PUT')
 
             <div class="row">
                 {{-- LEFT COLUMN --}}
                 <div class="col-xl-8 col-lg-7">
 
-                    {{-- Basic Info --}}
+                    {{-- 1. Product Info --}}
                     <div class="card mb-4">
                         <h5 class="card-header">Product Information</h5>
                         <div class="card-body">
@@ -38,18 +50,17 @@
                         </div>
                     </div>
 
-                    {{-- Images --}}
+                    {{-- 2. Images --}}
                     <div class="card mb-4">
-                        <h5 class="card-header">Product Images</h5>
+                        <h5 class="card-header">Images</h5>
                         <div class="card-body">
-                            {{-- Main Image Preview --}}
-                            @if ($product->main_image)
-                                <div class="mb-2">
-                                    <img src="{{ asset($product->main_image) }}" width="100" class="rounded border p-1">
-                                </div>
-                            @endif
+                            {{-- Main Image --}}
                             <div class="mb-4 border p-3 rounded">
                                 <label class="form-label fw-bold">Update Main Image</label>
+                                @if ($product->main_image)
+                                    <div class="mb-2"><img src="{{ asset($product->main_image) }}" width="80"
+                                            class="rounded border"></div>
+                                @endif
                                 <input type="file" class="form-control mb-2" name="main_image">
                                 <input type="text" class="form-control form-control-sm" name="main_image_alt"
                                     value="{{ old('main_image_alt', $product->main_image_alt) }}" placeholder="Alt Text">
@@ -57,37 +68,221 @@
 
                             <hr>
 
-                            {{-- Existing Gallery Images (Show & Delete option) --}}
-                            @if ($product->images->count() > 0)
-                                <label class="form-label fw-bold">Existing Gallery Images</label>
-                                <div class="row g-2 mb-3">
-                                    @foreach ($product->images as $img)
-                                        {{-- Har image ke div ko ek unique ID de rahe hain taaki delete hone par gayab kar sakein --}}
-                                        <div class="col-3 position-relative" id="db_gallery_img_{{ $img->id }}">
-                                            <img src="{{ asset($img->image) }}" class="w-100 rounded border">
-
-                                            {{-- 👇 Yahan humne <a> tag hata diya aur button laga diya --}}
-                                            <button type="button"
-                                                class="btn btn-danger btn-xs position-absolute top-0 end-0 m-1 p-0 px-1"
-                                                onclick="deleteExistingImage({{ $img->id }})">
-                                                ×
-                                            </button>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            {{-- Add New Gallery Images --}}
+                            {{-- Gallery --}}
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Add More Gallery Images</label>
-                                <input type="file" class="form-control" name="gallery_images[]" multiple>
+                                <label class="form-label fw-bold">Gallery Images</label>
+
+                                {{-- Existing --}}
+                                @if ($product->images->count() > 0)
+                                    <div class="row g-2 mb-3">
+                                        @foreach ($product->images as $img)
+                                            <div class="col-3 position-relative" id="db_img_{{ $img->id }}">
+                                                <img src="{{ asset($img->image) }}" class="w-100 rounded border">
+                                                <button type="button"
+                                                    class="btn btn-danger btn-xs position-absolute top-0 end-0 m-1"
+                                                    onclick="deleteExistingImage({{ $img->id }})">×</button>
+                                                <input type="text" name="existing_alts[{{ $img->id }}]"
+                                                    class="form-control form-control-sm mt-1" value="{{ $img->alt }}"
+                                                    placeholder="Alt">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                {{-- Add New --}}
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <label for="gallery-input" class="btn btn-outline-primary btn-sm"><i
+                                            class="bx bx-plus me-1"></i> Add More</label>
+                                    <input type="file" id="gallery-input" name="gallery_images[]" multiple
+                                        style="display: none;" onchange="handleFiles(this.files)">
+                                </div>
+                                <div id="gallery-preview-container" class="row g-3"></div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Filters / Attributes --}}
+                    {{-- 3. 🔥 CONFIGURATION SECTION (EDIT MODE) 🔥 --}}
+                    <div class="card mb-4 border-primary">
+                        <div
+                            class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+                            <h5 class="mb-0 text-white">Product Configuration</h5>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input bg-white" type="checkbox" id="is_gemstone" name="is_gemstone"
+                                    value="1" {{ $product->is_gemstone ? 'checked' : '' }}
+                                    onchange="toggleConfigMode()" style="cursor: pointer;">
+                                <label class="form-check-label text-white fw-bold ms-2" for="is_gemstone"
+                                    style="cursor: pointer;">Gemstone Mode</label>
+                            </div>
+                        </div>
+
+                        <div class="card-body pt-4">
+
+                            {{-- 🛑 A. WEIGHT VARIANTS SECTION --}}
+                            <div id="standard_variant_section"
+                                style="{{ $product->is_gemstone ? 'display:none;' : '' }}">
+                                <div class="alert alert-secondary d-flex align-items-center p-2 mb-3">
+                                    <i class="bx bx-info-circle me-2"></i>
+                                    <small>For <strong>Simple Products</strong>, ignore this section. Add rows only for
+                                        <strong>Weight Variants</strong>.</small>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="min-width: 120px;">Weight</th>
+                                                <th style="min-width: 100px;">MRP</th>
+                                                <th style="min-width: 100px;">Price</th>
+                                                <th style="min-width: 70px;">Disc%</th>
+                                                <th style="min-width: 80px;">Stock</th>
+                                                <th style="width: 50px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="variants-container">
+                                            {{-- Loop Existing Variants --}}
+                                            @if (!$product->is_gemstone && $product->variants->count() > 0)
+                                                @foreach ($product->variants as $index => $v)
+                                                    <tr class="variant-row">
+                                                        <td><input type="text"
+                                                                name="variants[{{ $index }}][weight]"
+                                                                class="form-control form-control-sm"
+                                                                value="{{ $v->weight }}"></td>
+                                                        <td><input type="number" step="0.01"
+                                                                name="variants[{{ $index }}][mrp]"
+                                                                class="form-control form-control-sm v-mrp"
+                                                                value="{{ $v->mrp_price }}" oninput="calculateRow(this)">
+                                                        </td>
+                                                        <td><input type="number" step="0.01"
+                                                                name="variants[{{ $index }}][price]"
+                                                                class="form-control form-control-sm v-price"
+                                                                value="{{ $v->selling_price }}"
+                                                                oninput="calculateRow(this)"></td>
+                                                        <td><input type="number" step="0.01"
+                                                                name="variants[{{ $index }}][discount]"
+                                                                class="form-control form-control-sm v-discount bg-light"
+                                                                value="{{ $v->discount }}" readonly></td>
+                                                        <td><input type="number"
+                                                                name="variants[{{ $index }}][qty]"
+                                                                class="form-control form-control-sm v-qty"
+                                                                value="{{ $v->quantity }}"
+                                                                oninput="checkVariantsPresence()"></td>
+                                                        <td class="text-center"><button type="button"
+                                                                class="btn btn-danger btn-sm remove-row"><i
+                                                                    class="bx bx-trash"></i></button></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button type="button" class="btn btn-dark btn-sm mt-3" id="add-variant-btn">
+                                    <i class="bx bx-plus"></i> Add Variant Row
+                                </button>
+                            </div>
+
+                            {{-- 💎 B. GEMSTONE VARIANTS SECTION --}}
+                            <div id="gemstone_variant_section"
+                                style="{{ !$product->is_gemstone ? 'display:none;' : '' }}">
+                                <div class="alert alert-warning d-flex align-items-center p-2 mb-3">
+                                    <i class="bx bx-diamond me-2"></i>
+                                    <small><strong>Gemstone Mode:</strong> Define Ratti & Types.</small>
+                                </div>
+
+                                {{-- Gemstone Table --}}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle table-sm">
+                                        <thead class="bg-warning text-dark">
+                                            <tr>
+                                                <th style="min-width: 100px;">Type</th>
+                                                <th style="min-width: 80px;">Ratti</th>
+                                                <th style="min-width: 100px;">Material</th>
+                                                <th style="min-width: 100px;">MRP</th>
+                                                <th style="min-width: 100px;">Price</th>
+                                                <th style="min-width: 70px;">Disc%</th>
+                                                <th style="min-width: 80px;">Qty</th>
+                                                <th style="width: 50px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="gem_variants_body">
+                                            {{-- Loop Existing Gems --}}
+                                            @if ($product->is_gemstone && $product->gemstoneVariants->count() > 0)
+                                                @foreach ($product->gemstoneVariants as $index => $gv)
+                                                    <tr class="gem-row">
+                                                        <td>
+                                                            <select name="gem_variants[{{ $index }}][type]"
+                                                                class="form-select form-select-sm"
+                                                                onchange="toggleGemRowFields(this)">
+                                                                <option value="loose"
+                                                                    {{ $gv->type == 'loose' ? 'selected' : '' }}>Gemstone
+                                                                </option>
+                                                                <option value="ring"
+                                                                    {{ $gv->type == 'ring' ? 'selected' : '' }}>Ring
+                                                                </option>
+                                                                <option value="pendant"
+                                                                    {{ $gv->type == 'pendant' ? 'selected' : '' }}>Pendant
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="text"
+                                                                name="gem_variants[{{ $index }}][ratti]"
+                                                                class="form-control form-control-sm"
+                                                                value="{{ $gv->ratti_size }}"></td>
+                                                        <td>
+                                                            <select name="gem_variants[{{ $index }}][material]"
+                                                                class="form-select form-select-sm gem-mat"
+                                                                {{ $gv->type == 'loose' ? 'disabled' : '' }}>
+                                                                <option value="">-</option>
+                                                                <option value="silver"
+                                                                    {{ $gv->material == 'silver' ? 'selected' : '' }}>
+                                                                    Silver
+                                                                </option>
+                                                                <option value="panchdhatu"
+                                                                    {{ $gv->material == 'panchdhatu' ? 'selected' : '' }}>
+                                                                    Panchdhatu</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="number"
+                                                                name="gem_variants[{{ $index }}][mrp]"
+                                                                class="form-control form-control-sm v-mrp"
+                                                                value="{{ $gv->mrp }}" oninput="calculateRow(this)">
+                                                        </td>
+                                                        <td><input type="number"
+                                                                name="gem_variants[{{ $index }}][price]"
+                                                                class="form-control form-control-sm v-price"
+                                                                value="{{ $gv->price }}" oninput="calculateRow(this)">
+                                                        </td>
+                                                        {{-- Discount calculation logic needed here for existing rows or handled by js on input --}}
+                                                        @php $disc = ($gv->mrp > 0 && $gv->mrp > $gv->price) ? round((($gv->mrp - $gv->price)/$gv->mrp)*100, 2) : 0; @endphp
+                                                        <td><input type="number"
+                                                                name="gem_variants[{{ $index }}][discount]"
+                                                                class="form-control form-control-sm v-discount bg-light"
+                                                                value="{{ $disc }}" readonly></td>
+
+                                                        <td><input type="number"
+                                                                name="gem_variants[{{ $index }}][qty]"
+                                                                class="form-control form-control-sm v-qty"
+                                                                value="{{ $gv->quantity }}"
+                                                                oninput="checkVariantsPresence()"></td>
+                                                        <td class="text-center"><button type="button"
+                                                                class="btn btn-danger btn-sm remove-row"><i
+                                                                    class="bx bx-trash"></i></button></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button type="button" class="btn btn-warning text-dark btn-sm mt-3"
+                                    onclick="addGemRow()">
+                                    <i class="bx bx-plus"></i> Add Gemstone Variant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 4. Filters --}}
                     <div class="card mb-4">
-                        <h5 class="card-header">Filters / Attributes</h5>
+                        <h5 class="card-header">Filters</h5>
                         <div class="card-body">
                             @foreach ($filters as $filter)
                                 <div class="mb-3">
@@ -95,159 +290,82 @@
                                     <div class="d-flex flex-wrap gap-2">
                                         @foreach ($filter->filterValues as $value)
                                             <div class="form-check">
-                                                {{-- 👇 YAHAN UPDATE KIYA HAI --}}
                                                 <input class="form-check-input" type="checkbox" name="filter_values[]"
                                                     value="{{ $value->id }}" id="filter_{{ $value->id }}"
                                                     {{ $product->filterValues->contains($value->id) ? 'checked' : '' }}>
-
-                                                <label class="form-check-label" for="filter_{{ $value->id }}">
-                                                    {{ $value->value }}
-                                                </label>
+                                                <label class="form-check-label"
+                                                    for="filter_{{ $value->id }}">{{ $value->value }}</label>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        <div class="mb-3 mt-4">
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
-                                    value="1"
-                                    {{ old('is_featured', isset($product) ? $product->is_featured : 0) ? 'checked' : '' }}>
-                                <label class="form-check-label fw-bold" for="is_featured">Mark as Featured Product</label>
-                            </div>
-
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="is_best_seller" name="is_best_seller"
-                                    value="1"
-                                    {{ old('is_best_seller', isset($product) ? $product->is_best_seller : 0) ? 'checked' : '' }}>
-                                <label class="form-check-label fw-bold" for="is_best_seller">Mark as Best Selling</label>
-                            </div>
-                        </div>
                     </div>
 
+                    {{-- 5. SEO --}}
                     <div class="card mb-4">
-                        <h5 class="card-header">SEO Meta</h5>
+                        <h5 class="card-header">SEO</h5>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Meta Title</label>
-                                <input type="text" class="form-control" name="meta_title">
+                            <div class="mb-3"><label class="form-label">Meta Title</label><input type="text"
+                                    class="form-control" name="meta_title" value="{{ $product->meta_title }}"></div>
+                            <div class="mb-3"><label class="form-label">Meta Description</label>
+                                <textarea class="form-control" name="meta_description">{{ $product->meta_description }}</textarea>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Meta Description</label>
-                                <textarea class="form-control" name="meta_description"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">OG Image</label>
-                                <input type="file" class="form-control" name="og_image">
-                            </div>
+                            <div class="mb-3"><label class="form-label">Update OG Image</label><input type="file"
+                                    class="form-control" name="og_image"></div>
                         </div>
                     </div>
-
                 </div>
 
                 {{-- RIGHT COLUMN --}}
                 <div class="col-xl-4 col-lg-5">
-
-                    {{-- Pricing --}}
+                    {{-- Base Pricing --}}
                     <div class="card mb-4">
-                        <h5 class="card-header">Pricing & Inventory</h5>
+                        <h5 class="card-header">Pricing & Stock</h5>
                         <div class="card-body">
+                            {{-- Logic: If variants exist (check via JS on load), make readonly --}}
                             <div class="mb-3">
-                                <label class="form-label">MRP Price (₹)</label>
+                                <label class="form-label">MRP (₹) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="mrp_price" name="mrp_price"
-                                    step="0.01" value="{{ old('mrp_price', $product->mrp_price) }}" required>
+                                    step="0.01" value="{{ $product->mrp_price }}" required
+                                    oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Discount (%)</label>
-                                {{-- 👇 step="0.01" add kiya gaya hai --}}
-                                <input type="number" class="form-control" id="discount" name="discount"
-                                    min="0" max="100" step="0.01"
-                                    value="{{ old('discount', isset($product) ? $product->discount : 0) }}">
+                                <input type="number" class="form-control" id="discount" name="discount" step="0.01"
+                                    value="{{ $product->discount }}" oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Selling Price (₹) <span class="text-danger">*</span></label>
-                                {{-- 👇 Yahan se 'readonly' hata diya gaya hai --}}
                                 <input type="number" class="form-control" id="price" name="price" step="0.01"
-                                    value="{{ old('price', isset($product) ? $product->price : '') }}" required>
+                                    value="{{ $product->price }}" required oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Quantity</label>
-                                <input type="number" class="form-control" name="quantity"
-                                    value="{{ old('quantity', $product->quantity) }}" required>
+                                <label class="form-label">Total Quantity</label>
+                                <input type="number" class="form-control" id="total_quantity" name="quantity"
+                                    value="{{ $product->quantity }}" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">SKU</label>
-                                <input type="text" class="form-control" name="sku"
-                                    value="{{ old('sku', $product->sku) }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Weight (kg)</label>
-                                <input type="text" class="form-control" name="weight"
-                                    value="{{ old('weight', $product->weight) }}">
-                            </div>
+
+                            <hr>
+                            <div class="mb-3"><label class="form-label">SKU</label><input type="text"
+                                    class="form-control" name="sku" value="{{ $product->sku }}"></div>
+                            <div class="mb-3"><label class="form-label">Weight (kg)</label><input type="text"
+                                    class="form-control" name="weight" value="{{ $product->weight }}"></div>
                         </div>
                     </div>
 
-                    {{-- Marketing --}}
+                    {{-- Settings --}}
                     <div class="card mb-4">
-                        <h5 class="card-header">Marketing & Add-ons</h5>
-                        <div class="card-body">
-                            {{-- Timer --}}
-                            {{-- <div class="mb-3">
-                                <label class="form-label">Offer Ends At (Currently)</label>
-                                <input type="text" class="form-control mb-2" value="{{ $product->offer_end_time }}"
-                                    readonly>
-                                <label class="small text-muted">Add Hours to extend:</label>
-                                <input type="number" class="form-control" name="offer_hours" placeholder="e.g. 12">
-                            </div>
-
-                            <hr> --}}
-
-                            {{-- Siddh --}}
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="is_siddh_enabled"
-                                    name="is_siddh_enabled" value="1"
-                                    {{ $product->is_siddh_enabled ? 'checked' : '' }}>
-                                <label class="form-check-label fw-bold" for="is_siddh_enabled">Enable Siddh
-                                    Version?</label>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Extra Price (₹)</label>
-                                <input type="number" class="form-control" name="siddh_price"
-                                    value="{{ old('siddh_price', $product->siddh_price) }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Shipping --}}
-                    <div class="card mb-4">
-                        <h5 class="card-header">EMI</h5>
-                        <div class="card-body">
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="emi_available" name="emi_available"
-                                    value="1" {{ $product->emi_available ? 'checked' : '' }}>
-                                <label class="form-check-label" for="emi_available">EMI Available?</label>
-                            </div>
-                            {{-- <div class="mb-3">
-                                <label class="form-label">Delivery Days</label>
-                                <input type="number" class="form-control" name="delivery_days"
-                                    value="{{ old('delivery_days', $product->delivery_days) }}">
-                            </div> --}}
-                        </div>
-                    </div>
-
-                    {{-- Organization --}}
-                    <div class="card mb-4">
-                        <h5 class="card-header">Organization</h5>
+                        <h5 class="card-header">Settings</h5>
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">Category</label>
+                                <label class="form-label">Category <span class="text-danger">*</span></label>
                                 <select class="form-select" name="category_id" id="category_id" required>
+                                    <option value="" disabled>Select</option>
                                     @foreach ($categories as $cat)
                                         <option value="{{ $cat->id }}"
-                                            {{ $product->category_id == $cat->id ? 'selected' : '' }}>
-                                            {{ $cat->name }}
+                                            {{ $product->category_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -255,22 +373,123 @@
                             <div class="mb-3">
                                 <label class="form-label">Sub Category</label>
                                 <select class="form-select" name="sub_category_id" id="sub_category_id">
-                                    {{-- JS will load this, but for edit we can pre-populate if needed --}}
-                                    <option value="{{ $product->sub_category_id }}" selected>
+                                    <option value="{{ $product->sub_category_id }}">
                                         {{ $product->subCategory->name ?? 'Select' }}</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Status</label>
+                            <div class="mb-3"><label class="form-label">Status</label>
                                 <select class="form-select" name="status">
                                     <option value="1" {{ $product->status == 1 ? 'selected' : '' }}>Active</option>
                                     <option value="0" {{ $product->status == 0 ? 'selected' : '' }}>Inactive</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Update Product</button>
+
+                            <hr>
+
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
+                                    value="1" {{ $product->is_featured ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_featured">Featured</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="is_best_seller"
+                                    name="is_best_seller" value="1" {{ $product->is_best_seller ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_best_seller">Best Seller</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="emi_available" name="emi_available"
+                                    value="1" {{ $product->emi_available ? 'checked' : '' }}>
+                                <label class="form-check-label" for="emi_available">EMI Available</label>
+                            </div>
+
+                            <hr>
+
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="is_siddh_enabled"
+                                    name="is_siddh_enabled" value="1"
+                                    {{ $product->is_siddh_enabled ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_siddh_enabled">Siddh Version</label>
+                            </div>
+                            <div class="mb-3"><input type="number" class="form-control form-control-sm"
+                                    name="siddh_price" value="{{ $product->siddh_price }}"
+                                    placeholder="Siddh Price (₹)"></div>
+
+                            {{-- <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">Update Product</button> --}}
                         </div>
                     </div>
 
+                    {{-- 🔥 ADDITIONAL CATEGORIES SECTION (EDIT) --}}
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Additional Categories (Multi-Listing)</h5>
+                            <button type="button" class="btn btn-primary btn-sm" id="add-cat-row">
+                                <i class="bx bx-plus"></i> Add More
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th>Category</th>
+                                            <th>Sub Category</th>
+                                            <th style="width: 50px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="additional-cats-container">
+
+                                        {{-- 🔄 EXISTING ROWS LOOP --}}
+                                        @foreach ($product->additionalCategories as $index => $adCat)
+                                            <tr id="acr-{{ $index }}">
+                                                <td>
+                                                    <select name="additional_cats[{{ $index }}][category_id]"
+                                                        class="form-select form-select-sm"
+                                                        onchange="loadAddSubCat(this, {{ $index }})">
+                                                        <option value="">Select Category</option>
+                                                        @foreach ($categories as $cat)
+                                                            <option value="{{ $cat->id }}"
+                                                                {{ $adCat->id == $cat->id ? 'selected' : '' }}>
+                                                                {{ $cat->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="additional_cats[{{ $index }}][sub_category_id]"
+                                                        class="form-select form-select-sm"
+                                                        id="add-sub-{{ $index }}">
+                                                        <option value="">Select Sub Category</option>
+                                                        {{-- Fetch Subcategories for this specific category directly --}}
+                                                        @php
+                                                            // Quick query to get subcategories for this row's category
+$rowSubs = \App\Models\SubCategory::where(
+    'category_id',
+                                                                $adCat->id,
+                                                            )->get();
+                                                        @endphp
+                                                        @foreach ($rowSubs as $sub)
+                                                            <option value="{{ $sub->id }}"
+                                                                {{ $adCat->pivot->sub_category_id == $sub->id ? 'selected' : '' }}>
+                                                                {{ $sub->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm p-1"
+                                                        onclick="removeCatRow({{ $index }})">
+                                                        <i class="bx bx-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">Update Product</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -280,19 +499,10 @@
 @section('scripts')
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
-        // 1. Auto Slug
-        document.getElementById('name').addEventListener('input', function() {
-            // Edit page me hum slug ko auto-update nahi karte taaki SEO kharab na ho
-            // Lekin agar aap chahte hain to uncomment kar sakte hain:
+        // CKEditor
+        ClassicEditor.create(document.querySelector('#editor')).catch(error => console.error(error));
 
-
-            let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g,
-                '-');
-            document.getElementById('slug').value = slug;
-
-        });
-
-        // 2. AJAX SubCategory Loader
+        // SubCategory AJAX
         $('#category_id').change(function() {
             let catId = $(this).val();
             let subCatSelect = $('#sub_category_id');
@@ -310,20 +520,226 @@
             });
         });
 
-        // ===============================================
-        // 3. LOGIC FOR NEW IMAGES (DataTransfer)
-        // ===============================================
+        // Delete Existing Image
+        function deleteExistingImage(id) {
+            if (confirm('Delete this image?')) {
+                $.ajax({
+                    url: "{{ url('admin/delete-gallery-image') }}/" + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(res) {
+                        if (res.success) $('#db_img_' + id).remove();
+                    }
+                });
+            }
+        }
+
+        // ==========================================
+        // 🔄 MASTER TOGGLE & SYNC LOGIC
+        // ==========================================
+        function toggleConfigMode() {
+            const isGemstone = document.getElementById('is_gemstone').checked;
+            const standardSection = document.getElementById('standard_variant_section');
+            const gemstoneSection = document.getElementById('gemstone_variant_section');
+
+            if (isGemstone) {
+                standardSection.style.display = 'none';
+                gemstoneSection.style.display = 'block';
+                checkVariantsPresence();
+            } else {
+                standardSection.style.display = 'block';
+                gemstoneSection.style.display = 'none';
+                checkVariantsPresence();
+            }
+        }
+
+        function checkVariantsPresence() {
+            const isGemstone = document.getElementById('is_gemstone').checked;
+            const weightRows = document.querySelectorAll('.variant-row');
+            const gemRows = document.querySelectorAll('.gem-row');
+
+            const inputs = [document.getElementById('mrp_price'), document.getElementById('price'), document.getElementById(
+                'discount'), document.getElementById('total_quantity')];
+            let hasVariants = false;
+
+            if (isGemstone && gemRows.length > 0) hasVariants = true;
+            if (!isGemstone && weightRows.length > 0) hasVariants = true;
+
+            if (hasVariants) {
+                inputs.forEach(input => {
+                    input.setAttribute('readonly', true);
+                    input.classList.add('bg-light');
+                });
+                calculateTotals();
+            } else {
+                inputs.forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('bg-light');
+                });
+            }
+        }
+        // Run on load
+        document.addEventListener("DOMContentLoaded", function() {
+            toggleConfigMode();
+        });
+
+        // ==========================================
+        // ⚖️ WEIGHT VARIANTS
+        // ==========================================
+        let variantIndex = 5000; // Start high to avoid conflicts
+        document.getElementById('add-variant-btn').addEventListener('click', function() {
+            let container = document.getElementById('variants-container');
+            let html = `
+                <tr class="variant-row">
+                    <td><input type="text" name="variants[${variantIndex}][weight]" class="form-control form-control-sm" placeholder="e.g. 500g"></td>
+                    <td><input type="number" step="0.01" name="variants[${variantIndex}][mrp]" class="form-control form-control-sm v-mrp" placeholder="MRP" oninput="calculateRow(this)"></td>
+                    <td><input type="number" step="0.01" name="variants[${variantIndex}][price]" class="form-control form-control-sm v-price" placeholder="Price" oninput="calculateRow(this)"></td>
+                    <td><input type="number" step="0.01" name="variants[${variantIndex}][discount]" class="form-control form-control-sm v-discount bg-light" placeholder="%" readonly></td>
+                    <td><input type="number" name="variants[${variantIndex}][qty]" class="form-control form-control-sm v-qty" placeholder="Qty" value="1" oninput="checkVariantsPresence()"></td>
+                    <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bx bx-trash"></i></button></td>
+                </tr>`;
+            container.insertAdjacentHTML('beforeend', html);
+            variantIndex++;
+            checkVariantsPresence();
+        });
+
+        // ==========================================
+        // 💎 GEMSTONE VARIANTS
+        // ==========================================
+        let gemIndex = 9000;
+
+        function addGemRow() {
+            const html = `
+            <tr class="gem-row">
+                <td>
+                    <select name="gem_variants[${gemIndex}][type]" class="form-select form-select-sm" onchange="toggleGemRowFields(this)">
+                        <option value="loose">Gemstone</option>
+                        <option value="ring">Ring</option>
+                        <option value="pendant">Pendant</option>
+                    </select>
+                </td>
+                <td><input type="text" name="gem_variants[${gemIndex}][ratti]" class="form-control form-control-sm" placeholder="Ratti"></td>
+                <td>
+                    <select name="gem_variants[${gemIndex}][material]" class="form-select form-select-sm gem-mat" disabled>
+                        <option value="">-</option>
+                        <option value="silver">Silver</option>
+                        <option value="panchdhatu">Panchdhatu</option>
+                    </select>
+                </td>
+                <td><input type="number" name="gem_variants[${gemIndex}][mrp]" class="form-control form-control-sm v-mrp" placeholder="MRP" oninput="calculateRow(this)"></td>
+                <td><input type="number" name="gem_variants[${gemIndex}][price]" class="form-control form-control-sm v-price" placeholder="Price" oninput="calculateRow(this)"></td>
+                <td><input type="number" name="gem_variants[${gemIndex}][discount]" class="form-control form-control-sm v-discount bg-light" placeholder="%" readonly></td>
+
+                <td><input type="number" name="gem_variants[${gemIndex}][qty]" class="form-control form-control-sm v-qty" placeholder="Qty" value="1" oninput="checkVariantsPresence()"></td>
+                <td class="text-center"><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bx bx-trash"></i></button></td>
+            </tr>`;
+            document.getElementById('gem_variants_body').insertAdjacentHTML('beforeend', html);
+            gemIndex++;
+            checkVariantsPresence();
+        }
+
+        function toggleGemRowFields(select) {
+            const row = select.closest('tr');
+            const matSelect = row.querySelector('.gem-mat');
+            if (select.value === 'loose') {
+                matSelect.disabled = true;
+                matSelect.value = "";
+            } else {
+                matSelect.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // 🔥 CALCS & HELPERS
+        // ==========================================
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-row')) {
+                e.target.closest('tr').remove();
+                checkVariantsPresence();
+            }
+        });
+
+        function calculateRow(input) {
+            let row = input.closest('tr');
+            let mrp = parseFloat(row.querySelector('.v-mrp').value) || 0;
+            let price = parseFloat(row.querySelector('.v-price').value) || 0;
+            let discInput = row.querySelector('.v-discount');
+
+            if (mrp > 0 && price > 0) {
+                let disc = ((mrp - price) / mrp) * 100;
+                discInput.value = disc.toFixed(2);
+            }
+            checkVariantsPresence();
+        }
+
+        function calculateTotals() {
+            const isGemstone = document.getElementById('is_gemstone').checked;
+            let minPrice = Infinity;
+            let minMrp = 0;
+            let totalQty = 0;
+            let found = false;
+
+            let rows = isGemstone ? document.querySelectorAll('.gem-row') : document.querySelectorAll('.variant-row');
+
+            rows.forEach(row => {
+                let price = parseFloat(row.querySelector('.v-price').value) || 0;
+                let mrp = parseFloat(row.querySelector('.v-mrp').value) || 0;
+                let qty = parseInt(row.querySelector('.v-qty').value) || 0;
+
+                if (price > 0) {
+                    found = true;
+                    if (price < minPrice) {
+                        minPrice = price;
+                        minMrp = mrp;
+                    }
+                    totalQty += qty;
+                }
+            });
+
+            if (found && minPrice !== Infinity) {
+                document.getElementById('price').value = minPrice;
+                document.getElementById('mrp_price').value = minMrp;
+                document.getElementById('total_quantity').value = totalQty;
+
+                if (minMrp > 0 && minPrice > 0) {
+                    let d = ((minMrp - minPrice) / minMrp) * 100;
+                    document.getElementById('discount').value = d.toFixed(2);
+                }
+            }
+        }
+
+        function calcSimpleProduct(input) {
+            if (document.getElementById('price').hasAttribute('readonly')) return;
+
+            const mrp = parseFloat(document.getElementById('mrp_price').value) || 0;
+            const priceInput = document.getElementById('price');
+            const discountInput = document.getElementById('discount');
+
+            if (input.id === 'mrp_price' || input.id === 'discount') {
+                const disc = parseFloat(discountInput.value) || 0;
+                if (mrp > 0) priceInput.value = (mrp - (mrp * disc / 100)).toFixed(2);
+            } else if (input.id === 'price') {
+                const price = parseFloat(priceInput.value) || 0;
+                if (mrp > 0 && price > 0) discountInput.value = ((mrp - price) / mrp * 100).toFixed(2);
+            }
+        }
+
+        // ... (Image handling code stays same) ...
+        // Global DataTransfer object to hold files
         const dt = new DataTransfer();
 
         function handleFiles(files) {
             const container = document.getElementById('gallery-preview-container');
             const input = document.getElementById('gallery-input');
 
+            // Loop through new files and add them to DataTransfer
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                let isDuplicate = false;
 
-                // Check duplicates
+                // Prevent duplicates (optional check by name/size)
+                let isDuplicate = false;
                 for (let j = 0; j < dt.files.length; j++) {
                     if (dt.files[j].name === file.name && dt.files[j].size === file.size) {
                         isDuplicate = true;
@@ -333,183 +749,99 @@
 
                 if (!isDuplicate) {
                     dt.items.add(file);
+
+                    // Create Preview Element
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const fileId = file.name.replace(/[^a-zA-Z0-9]/g, '') + file.lastModified;
+                        // Generate unique ID for this item based on file name (sanitized)
+                        const fileId = file.name.replace(/[^a-zA-Z0-9]/g, '');
 
-                        // 🟢 UPDATE 2: Added Alt Text Input in the HTML string
                         const html = `
                         <div class="col-md-6" id="preview-${fileId}">
                             <div class="d-flex align-items-center border p-2 rounded position-relative bg-white">
                                 <img src="${e.target.result}" width="60" height="60" class="object-fit-cover rounded me-3">
                                 <div class="flex-grow-1">
                                     <small class="text-muted d-block text-truncate" style="max-width: 150px;">${file.name}</small>
-
-                                    {{-- New Image Alt Input --}}
-                                    <input type="text" name="gallery_alts[]" class="form-control form-control-sm mt-1" placeholder="Enter Alt Text">
-
-                                    <span class="badge bg-label-success mt-1">New</span>
+                                    <input type="text" name="gallery_alts[]" class="form-control form-control-sm mt-1" placeholder="Alt Text">
                                 </div>
-                                <button type="button" class="btn btn-danger btn-sm ms-2 p-1" onclick="removeNewFile('${file.name}', '${fileId}')">
+                                <button type="button" class="btn btn-danger btn-sm ms-2 p-1" onclick="removeFile('${file.name}', '${fileId}')" style="line-height: 1;">
                                     <i class="bx bx-x fs-5"></i>
                                 </button>
                             </div>
-                        </div>`;
-
+                        </div>
+                    `;
                         container.insertAdjacentHTML('beforeend', html);
                     }
                     reader.readAsDataURL(file);
                 }
             }
+
+            // Update the input files property
             input.files = dt.files;
         }
 
-        function removeNewFile(fileName, fileId) {
-            const input = document.getElementById('gallery-input');
-            const newDt = new DataTransfer();
-            for (let i = 0; i < dt.files.length; i++) {
-                if (dt.files[i].name !== fileName) newDt.items.add(dt.files[i]);
-            }
-            dt.items.clear();
-            for (let i = 0; i < newDt.files.length; i++) dt.items.add(newDt.files[i]);
-            input.files = dt.files;
-            document.getElementById('preview-' + fileId).remove();
+        // ==========================================
+        // 🔗 ADDITIONAL CATEGORIES JS (EDIT PAGE)
+        // ==========================================
+
+        // Start index from existing count so IDs don't clash
+        let catRowIndex = {{ $product->additionalCategories->count() + 1 }};
+
+        // 1. Add Row
+        $('#add-cat-row').click(function() {
+            let html = `
+            <tr id="acr-${catRowIndex}">
+                <td>
+                    <select name="additional_cats[${catRowIndex}][category_id]" class="form-select form-select-sm" onchange="loadAddSubCat(this, ${catRowIndex})" required>
+                        <option value="">Select Category</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="additional_cats[${catRowIndex}][sub_category_id]" class="form-select form-select-sm" id="add-sub-${catRowIndex}">
+                        <option value="">Select Sub Category</option>
+                    </select>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm p-1" onclick="removeCatRow(${catRowIndex})">
+                        <i class="bx bx-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+            $('#additional-cats-container').append(html);
+            catRowIndex++;
+        });
+
+        // 2. Remove Row
+        window.removeCatRow = function(index) {
+            $('#acr-' + index).remove();
         }
 
-        // ===============================================
-        // 4. LOGIC FOR EXISTING DB IMAGES (AJAX DELETE)
-        // ===============================================
-        function deleteExistingImage(id) {
-            if (confirm('Are you sure you want to permanently delete this image?')) {
+        // 3. Load SubCategory via AJAX
+        window.loadAddSubCat = function(select, index) {
+            let catId = $(select).val();
+            let subSelect = $('#add-sub-' + index);
+
+            subSelect.html('<option value="">Loading...</option>');
+
+            if (catId) {
                 $.ajax({
-                    url: "{{ url('admin/delete-gallery-image') }}/" + id,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#db_gallery_img_' + id).fadeOut(300, function() {
-                                $(this).remove();
-                            });
-                        } else {
-                            alert('Error deleting image.');
-                        }
-                    },
-                    error: function() {
-                        alert('Something went wrong!');
+                    url: "{{ url('admin/get-subcategories') }}/" + catId,
+                    type: 'GET',
+                    success: function(data) {
+                        subSelect.html('<option value="">Select Sub Category</option>');
+                        $.each(data, function(key, val) {
+                            subSelect.append('<option value="' + val.id + '">' + val.name +
+                                '</option>');
+                        });
                     }
                 });
+            } else {
+                subSelect.html('<option value="">Select Sub Category</option>');
             }
-        }
-
-        // 2. Initialize CKEditor on the textarea
-        ClassicEditor.create(document.querySelector('#editor'), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
-                heading: {
-                    options: [{
-                            model: 'paragraph',
-                            title: 'Paragraph',
-                            class: 'ck-heading_paragraph'
-                        },
-                        {
-                            model: 'heading1',
-                            view: 'h1',
-                            title: 'Heading 1',
-                            class: 'ck-heading_heading1'
-                        },
-                        {
-                            model: 'heading2',
-                            view: 'h2',
-                            title: 'Heading 2',
-                            class: 'ck-heading_heading2'
-                        },
-                        {
-                            model: 'heading3',
-                            view: 'h3',
-                            title: 'Heading 3',
-                            class: 'ck-heading_heading2'
-                        },
-                        {
-                            model: 'heading4',
-                            view: 'h4',
-                            title: 'Heading 4',
-                            class: 'ck-heading_heading4'
-                        }
-                    ]
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-        // Price Calculation Logic
-        const mrpInput = document.getElementById('mrp_price');
-        const discountInput = document.getElementById('discount');
-        const priceInput = document.getElementById('price');
-
-        // Flag to prevent recursive loop
-        let isCalculating = false;
-
-        // 1. MRP ya Discount change hone par -> Selling Price nikalo
-        function calculatePriceFromDiscount() {
-            if (isCalculating) return; // Agar pehle se calculate ho rha hai to ruk jao
-            isCalculating = true;
-
-            const mrp = parseFloat(mrpInput.value) || 0;
-            const discount = parseFloat(discountInput.value) || 0;
-
-            // Formula: Price = MRP - (MRP * Discount / 100)
-            let sellingPrice = mrp - (mrp * discount / 100);
-
-            // Negative price protection
-            if (sellingPrice < 0) sellingPrice = 0;
-
-            // Update Price Input (Fixed to 2 decimals)
-            priceInput.value = sellingPrice.toFixed(2);
-
-            isCalculating = false;
-        }
-
-        // 2. Selling Price change hone par -> Discount nikalo
-        function calculateDiscountFromPrice() {
-            if (isCalculating) return;
-            isCalculating = true;
-
-            const mrp = parseFloat(mrpInput.value) || 0;
-            const price = parseFloat(priceInput.value) || 0;
-
-            if (mrp > 0) {
-                // Formula: Discount = ((MRP - Price) / MRP) * 100
-                let discountPercent = ((mrp - price) / mrp) * 100;
-
-                // Boundary checks
-                if (discountPercent < 0) discountPercent = 0;
-                // if(discountPercent > 100) discountPercent = 100;
-
-                // Update Discount Input (Fixed to 2 decimals)
-                discountInput.value = discountPercent.toFixed(2);
-            }
-            isCalculating = false;
-        }
-
-        // Events
-        if (mrpInput && discountInput && priceInput) {
-
-            // MRP badalne par Price update karein (Discount constant rahega)
-            mrpInput.addEventListener('input', function() {
-                if (discountInput.value && parseFloat(discountInput.value) > 0) {
-                    calculatePriceFromDiscount();
-                } else if (priceInput.value) {
-                    calculateDiscountFromPrice();
-                }
-            });
-
-            // Discount badalne par Price update
-            discountInput.addEventListener('input', calculatePriceFromDiscount);
-
-            // Price badalne par Discount update
-            priceInput.addEventListener('input', calculateDiscountFromPrice);
         }
     </script>
 @endsection

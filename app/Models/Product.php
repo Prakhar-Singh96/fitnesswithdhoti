@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\FilterValue;
 use App\Models\SubCategory;
 use App\Models\ProductImage;
+use App\Models\ProductVariant;
+use App\Models\GemstoneVariant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -44,6 +46,7 @@ class Product extends Model
 
         'sku',
         'weight',
+        'is_gemstone',
 
         'status',
         'is_featured',    // ✅ New
@@ -51,6 +54,7 @@ class Product extends Model
 
         'delivery_days',
         'emi_available'
+
     ];
 
     protected $casts = [
@@ -80,5 +84,31 @@ class Product extends Model
     public function filterValues()
     {
         return $this->belongsToMany(FilterValue::class, 'product_filter', 'product_id', 'filter_value_id');
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function gemstoneVariants()
+    {
+        return $this->hasMany(GemstoneVariant::class);
+    }
+
+    // ✅ 3. NEW: Additional Categories Relationship
+    public function additionalCategories()
+    {
+        // 'product_additional_categories' table use karega
+        return $this->belongsToMany(Category::class, 'product_additional_categories', 'product_id', 'category_id')
+                    ->withPivot('sub_category_id') // Pivot se sub-category id bhi milegi
+                    ->withTimestamps();
+    }
+
+    // ✅ 4. NEW: Additional SubCategories Relationship (Direct Access ke liye)
+    public function additionalSubCategories()
+    {
+        return $this->belongsToMany(SubCategory::class, 'product_additional_categories', 'product_id', 'sub_category_id')
+                    ->withTimestamps();
     }
 }

@@ -9,7 +9,6 @@ use App\Models\SubCategory;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
-use App\Models\GemstoneVariant; // 👈 Import Gemstone Model
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
@@ -46,8 +45,6 @@ class ProductController extends Controller
             'quantity' => 'required|integer',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-
-            // Gemstone Fields
             'is_gemstone' => 'nullable|boolean',
         ]);
 
@@ -55,9 +52,9 @@ class ProductController extends Controller
             DB::beginTransaction();
 
             // B. Save Product Basic Info
-            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants']);
 
-            // --- Price Calculation Logic ---
+            // --- Price Calculation for Main Product ---
             $mrp = $request->mrp_price;
             $inputPrice = $request->price;
             $inputDiscount = $request->discount;
@@ -87,82 +84,33 @@ class ProductController extends Controller
             $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
-
-            // 💎 Gemstone specific fields
             $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
 
             $product = Product::create($data);
 
-            // =========================================================
-            // 🔗 SAVE ADDITIONAL CATEGORIES (Pivot Table)
-            // =========================================================
-            if ($request->has('additional_cats')) {
-                $syncData = [];
-
-                foreach ($request->additional_cats as $item) {
-                    // Sirf tab add karein jab Category select ho
-                    if (!empty($item['category_id'])) {
-                        // Hum structure bana rahe hain: [category_id => ['sub_category_id' => id]]
-                        // Isse pivot table me extra column 'sub_category_id' bhi bhar jayega
-
-                        // Note: Agar ek hi category multiple baar select ho gayi to override ho jayegi,
-                        // isliye hum index ko ignore karke unique ID use karte hain, par attach best hai yahan.
-
-                        $product->additionalCategories()->attach($item['category_id'], [
-                            'sub_category_id' => $item['sub_category_id'] ?? null
+            // --- ⚖️ WEIGHT VARIANT LOGIC START (Updated) ---
+            $hasVariants = false;
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variant) {
+                    if (!empty($variant['weight']) && !empty($variant['price'])) {
+                        ProductVariant::create([
+                            'product_id' => $product->id,
+                            'weight' => $variant['weight'],
+                            'mrp_price' => $variant['mrp'] ?? $variant['price'],
+                            'selling_price' => $variant['price'],
+                            'quantity' => $variant['qty'] ?? 0,     // 🟢 Added Qty
+                            'discount' => $variant['discount'] ?? 0 // 🟢 Added Discount
                         ]);
+                        $hasVariants = true;
                     }
                 }
             }
 
-            // =========================================================
-            // 💎 IF GEMSTONE: SAVE GEMSTONE VARIANTS
-            // =========================================================
-            if ($data['is_gemstone'] == 1) {
-                if ($request->has('gem_variants')) {
-                    foreach ($request->gem_variants as $gem) {
-                        // Type & Price are required
-                        if (!empty($gem['type']) && !empty($gem['price'])) {
-                            GemstoneVariant::create([
-                                'product_id' => $product->id,
-                                'type' => $gem['type'], // ring, pendant, loose
-                                'ratti_size' => $gem['ratti'] ?? null,
-                                'material' => $gem['material'] ?? null, // silver, panchdhatu
-                                'ring_size' => $gem['ring_size'] ?? null,
-                                'price' => $gem['price'],
-                                'mrp' => $gem['mrp'] ?? $gem['price'],
-                                'quantity' => $gem['qty'] ?? 0
-                            ]);
-                        }
-                    }
-                    // Auto-sync Main Price (Lowest Gemstone Price)
-                    $this->syncMainProductWithGemstones($product);
-                }
+            // 🔥 AUTO-SYNC: Update Main Product Price & Stock based on Variants
+            if ($hasVariants) {
+                $this->syncMainProductWithVariants($product);
             }
-            // =========================================================
-            // ⚖️ ELSE: SAVE NORMAL WEIGHT VARIANTS
-            // =========================================================
-            else {
-                if ($request->has('variants')) {
-                    $hasVariants = false;
-                    foreach ($request->variants as $variant) {
-                        if (!empty($variant['weight']) && !empty($variant['price'])) {
-                            ProductVariant::create([
-                                'product_id' => $product->id,
-                                'weight' => $variant['weight'],
-                                'mrp_price' => $variant['mrp'] ?? $variant['price'],
-                                'selling_price' => $variant['price'],
-                                'quantity' => $variant['qty'] ?? 0,
-                                'discount' => $variant['discount'] ?? 0
-                            ]);
-                            $hasVariants = true;
-                        }
-                    }
-                    if ($hasVariants) {
-                        $this->syncMainProductWithVariants($product);
-                    }
-                }
-            }
+            // -----------------------------------------------
 
             // Gallery Images
             if ($request->hasFile('gallery_images')) {
@@ -194,10 +142,7 @@ class ProductController extends Controller
     // 4. Show Edit Form
     public function edit($id)
     {
-        // Load both relations: variants AND gemstoneVariants
-        // 👇 yahan 'additionalCategories' add karein
-        $product = Product::with(['images', 'filterValues', 'variants', 'gemstoneVariants', 'additionalCategories'])->findOrFail($id);
-
+        $product = Product::with(['images', 'filterValues', 'variants'])->findOrFail($id);
         $categories = Category::where('status', 1)->get();
         $subCategories = SubCategory::where('category_id', $product->category_id)->get();
         $filters = Filter::with('filterValues')->get();
@@ -223,7 +168,7 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants']);
 
             // --- Price Logic ---
             $mrp = $request->mrp_price;
@@ -250,10 +195,6 @@ class ProductController extends Controller
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
 
-            // Gemstone fields
-            $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
-            // Note: If checkbox unchecked, these will act as 0 or old value if not present in request (handled by update)
-
             // Images Logic
             if ($request->hasFile('main_image')) {
                 deleteImage($product->main_image);
@@ -266,85 +207,31 @@ class ProductController extends Controller
 
             $product->update($data);
 
-            // =========================================================
-            // 🔗 UPDATE ADDITIONAL CATEGORIES (Sync)
-            // =========================================================
-            if ($request->has('additional_cats')) {
-                $syncData = [];
-                foreach ($request->additional_cats as $item) {
-                    if (!empty($item['category_id'])) {
-                        // Array Key me Category ID dalne se duplicate hat jayenge
-                        // Value me Pivot table ka data (sub_category_id)
-                        $syncData[$item['category_id']] = [
-                            'sub_category_id' => $item['sub_category_id'] ?? null
-                        ];
-                    }
-                }
-                // Sync purane hata kar naye dal deta hai
-                $product->additionalCategories()->sync($syncData);
-            } else {
-                // Agar user ne sab rows delete kar di, to DB se bhi hata do
-                $product->additionalCategories()->detach();
-            }
+            // --- ⚖️ UPDATE VARIANTS LOGIC (Updated) ---
+            $product->variants()->delete(); // Purane variants delete
 
-            // =========================================================
-            // 💎 IF GEMSTONE: UPDATE GEMSTONE VARIANTS
-            // =========================================================
-            if ($product->is_gemstone) {
-                // Clear old normal variants if any
-                $product->variants()->delete();
-
-                // Clear old gem variants and re-create (simplest way)
-                $product->gemstoneVariants()->delete();
-
-                if ($request->has('gem_variants')) {
-                    foreach ($request->gem_variants as $gem) {
-                        if (!empty($gem['type']) && !empty($gem['price'])) {
-                            GemstoneVariant::create([
-                                'product_id' => $product->id,
-                                'type' => $gem['type'],
-                                'ratti_size' => $gem['ratti'] ?? null,
-                                'material' => $gem['material'] ?? null,
-                                'ring_size' => $gem['ring_size'] ?? null,
-                                'price' => $gem['price'],
-                                'mrp' => $gem['mrp'] ?? $gem['price'],
-                                'quantity' => $gem['qty'] ?? 0
-                            ]);
-                        }
-                    }
-                    $this->syncMainProductWithGemstones($product);
-                }
-            }
-            // =========================================================
-            // ⚖️ ELSE: UPDATE NORMAL VARIANTS
-            // =========================================================
-            else {
-                // Clear old gem variants if any
-                $product->gemstoneVariants()->delete();
-
-                // Clear and recreate normal variants
-                $product->variants()->delete();
-
-                if ($request->has('variants')) {
-                    $hasVariants = false;
-                    foreach ($request->variants as $variant) {
-                        if (!empty($variant['weight']) && !empty($variant['price'])) {
-                            ProductVariant::create([
-                                'product_id' => $product->id,
-                                'weight' => $variant['weight'],
-                                'mrp_price' => $variant['mrp'] ?? $variant['price'],
-                                'selling_price' => $variant['price'],
-                                'quantity' => $variant['qty'] ?? 0,
-                                'discount' => $variant['discount'] ?? 0
-                            ]);
-                            $hasVariants = true;
-                        }
-                    }
-                    if ($hasVariants) {
-                        $this->syncMainProductWithVariants($product);
+            $hasVariants = false;
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variant) {
+                    if (!empty($variant['weight']) && !empty($variant['price'])) {
+                        ProductVariant::create([
+                            'product_id' => $product->id,
+                            'weight' => $variant['weight'],
+                            'mrp_price' => $variant['mrp'] ?? $variant['price'],
+                            'selling_price' => $variant['price'],
+                            'quantity' => $variant['qty'] ?? 0,     // 🟢 Added Qty
+                            'discount' => $variant['discount'] ?? 0 // 🟢 Added Discount
+                        ]);
+                        $hasVariants = true;
                     }
                 }
             }
+
+            // 🔥 AUTO-SYNC: Update Main Product Price & Stock based on Variants
+            if ($hasVariants) {
+                $this->syncMainProductWithVariants($product);
+            }
+            // --------------------------------
 
             // Gallery Updates
             if ($request->has('existing_alts')) {
@@ -408,14 +295,22 @@ class ProductController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // 🔥 Helper 1: Sync Normal Variants
+    // 🔥 Helper Function: Sync Main Product Data with Variants
     private function syncMainProductWithVariants($product)
     {
+        // Sare variants load karo
         $product->refresh();
         $variants = $product->variants;
 
         if ($variants->count() > 0) {
+            // Logic:
+            // 1. Total Quantity = Sum of all variant quantities
+            // 2. Main Price = Lowest Selling Price among variants
+            // 3. Main MRP = MRP of that lowest priced variant
+
             $totalQty = $variants->sum('quantity');
+
+            // Sabse sasta variant dhundo
             $minVariant = $variants->sortBy('selling_price')->first();
 
             if ($minVariant) {
@@ -424,35 +319,6 @@ class ProductController extends Controller
                     'mrp_price' => $minVariant->mrp_price,
                     'quantity' => $totalQty,
                     'discount' => $minVariant->discount
-                ]);
-            }
-        }
-    }
-
-    // 🔥 Helper 2: Sync Gemstone Variants
-    private function syncMainProductWithGemstones($product)
-    {
-        $product->refresh();
-        $gems = $product->gemstoneVariants;
-
-        if ($gems->count() > 0) {
-            $totalQty = $gems->sum('quantity');
-
-            // Find lowest price among all gem variants
-            $minGem = $gems->sortBy('price')->first();
-
-            if ($minGem) {
-                // Calculate discount if MRP > Price
-                $discount = 0;
-                if ($minGem->mrp > 0 && $minGem->mrp > $minGem->price) {
-                    $discount = (($minGem->mrp - $minGem->price) / $minGem->mrp) * 100;
-                }
-
-                $product->update([
-                    'price' => $minGem->price,
-                    'mrp_price' => $minGem->mrp,
-                    'quantity' => $totalQty,
-                    'discount' => round($discount, 2)
                 ]);
             }
         }

@@ -49,32 +49,66 @@
             <div class="collapse navbar-collapse justify-content-center" id="mainMenu">
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0 main-nav-list align-items-center">
 
-                    {{-- <li class="nav-item dropdown mega-parent me-3">
-                        <a class="nav-link text-dark dropdown-toggle" href="#" id="productsDropdown"
+                    {{-- ✨ MEGA MENU FOR ALL COLLECTIONS --}}
+                    {{-- <li class="nav-item dropdown mega-parent me-3 position-static">
+                        <a class="nav-link text-dark dropdown-toggle fw-bold" href="#" id="productsDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Products
+                            All Collections
                         </a>
-                        {{-- 🔴 Empty Dropdown: As requested, we will leave the content empty here
-                        <div class="dropdown-menu mega-menu border-0 shadow w-100" aria-labelledby="productsDropdown">
-                            <div class="mega-bg container-fluid px-5 py-3"
-                                style="background-color: var(--light) !important;">
-                                <div class="row text-center mega-grid">
 
+                        {{-- Dropdown Container
+                        <div class="dropdown-menu mega-menu border-0 shadow-lg w-100 mt-0"
+                            aria-labelledby="productsDropdown" style="border-top: 3px solid #ff6f00 !important;">
+
+                            <div class="container py-4">
+                                <div class="row g-4">
+
+                                    {{-- Loop Through Categories
                                     @foreach ($headerCategories as $category)
-                                        <div class="col-3 mb-2">
-                                            <a href="{{ route('products.category', $category->slug) }}"
-                                                class="d-flex flex-column align-items-center text-decoration-none">
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <div class="d-flex align-items-start gap-3 p-2 hover-bg rounded transition">
 
-                                                <div class="mega-icon">
-                                                    <img src="{{ asset($category->icon_image) }}"
-                                                        alt="{{ $category->name }}" class="rounded-circle"
-                                                        onerror="this.src='{{ asset('assets/img/placeholder.jpg') }}'">
+                                                {{-- Icon
+                                                <div class="flex-shrink-0">
+                                                    <a href="{{ route('products.category', $category->slug) }}">
+                                                        <img src="{{ asset($category->icon_image) }}"
+                                                            alt="{{ $category->name }}" class="rounded-circle border"
+                                                            style="width: 50px; height: 50px; object-fit: cover;"
+                                                            onerror="this.src='https://via.placeholder.com/50'">
+                                                    </a>
                                                 </div>
 
-                                                <span class="small fw-bold text-dark mt-2">
-                                                    {{ $category->name }}
-                                                </span>
-                                            </a>
+                                                {{-- Name & Subcategories
+                                                <div class="flex-grow-1">
+                                                    <a href="{{ route('products.category', $category->slug) }}"
+                                                        class="d-block fw-bold text-dark text-decoration-none mb-1"
+                                                        style="font-family: 'Merriweather', serif;">
+                                                        {{ $category->name }}
+                                                    </a>
+
+                                                    {{-- Show first 3 Subcategories
+                                                    @if ($category->subCategories->count() > 0)
+                                                        <ul class="list-unstyled mb-0 small">
+                                                            @foreach ($category->subCategories->take(3) as $sub)
+                                                                <li>
+                                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
+                                                                        class="text-muted text-decoration-none hover-orange">
+                                                                        - {{ $sub->name }}
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                            @if ($category->subCategories->count() > 3)
+                                                                <li>
+                                                                    <a href="{{ route('products.category', $category->slug) }}"
+                                                                        class="text-primary fw-bold small">
+                                                                        View All
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
                                     @endforeach
 
@@ -208,7 +242,8 @@
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="las la-sign-out-alt me-2"></i> Logout
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </li>
