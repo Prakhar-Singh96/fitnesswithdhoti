@@ -249,7 +249,7 @@
             {{-- Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
-                    <h2 class="m-0">our Products</h2>
+                    <h2 class="m-0">Our Products</h2>
                 </div>
             </div>
 

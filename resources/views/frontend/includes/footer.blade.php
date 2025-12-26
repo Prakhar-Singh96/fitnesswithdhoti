@@ -244,8 +244,8 @@
                 <h4 class="footer-heading">Quick Links</h4>
                 <ul class="footer-list">
                     <li><a href="{{ url('shops/create') }}">Become a Seller</a></li>
-                    <li><a href="{{ url('track-your-order') }}">Track Your Order</a></li>
-                    <li><a href="{{ url('best-sellers') }}">Best Sellers</a></li>
+                    <li><a href="{{ route('track.order') }}">Track Your Order</a></li>
+                    {{-- <li><a href="{{ url('best-sellers') }}">Best Sellers</a></li> --}}
                     <li><a href="{{ url('contact-us') }}">Contact Us</a></li>
                     <li><a href="{{ url('about-us') }}">About Us</a></li>
                     <li><a href="{{ url('faqs') }}">FAQs</a></li>
