@@ -218,7 +218,7 @@
                                         @if ($product->discount > 0)
                                             <span
                                                 class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-0 fw-normal px-2">
-                                                {{ $product->discount }}% OFF
+                                                {{ round($product->discount) }}% OFF
                                             </span>
                                         @endif
                                     </div>

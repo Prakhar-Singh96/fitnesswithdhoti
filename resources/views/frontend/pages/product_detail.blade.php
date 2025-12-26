@@ -171,7 +171,7 @@
                     </span>
 
                     <span id="discount_container" class="text-danger fw-bold ms-3 bg-danger-subtle px-2 py-1 rounded small {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
-                        <span id="display_discount">{{ $product->discount }}</span>% OFF
+                        <span id="display_discount">{{ round($product->discount) }}</span>% OFF
                     </span>
                 </div>
 

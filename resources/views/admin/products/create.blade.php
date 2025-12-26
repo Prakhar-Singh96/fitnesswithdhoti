@@ -204,7 +204,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Discount (%)</label>
                                 <input type="number" class="form-control" id="discount" name="discount"
-                                    value="0.01" oninput="calcSimpleProduct(this)">
+                                    value="0" step="0.01"  oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Selling Price (₹) <span class="text-danger">*</span></label>
