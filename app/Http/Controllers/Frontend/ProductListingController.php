@@ -263,7 +263,13 @@ class ProductListingController extends Controller
         ];
 
         // Related Products Logic (Updated to check both categories)
-        $relatedProducts = Product::where('category_id', $product->category_id)
+        $relatedProducts = Product::where('status', 1)
+            ->where(function($q) use ($product) {
+                $q->where('category_id', $product->category_id)
+                  ->orWhereHas('additionalCategories', function($sq) use ($product) {
+                      $sq->where('categories.id', $product->category_id);
+                  });
+            })
             ->where('id', '!=', $product->id)
             ->take(8)->get();
 
