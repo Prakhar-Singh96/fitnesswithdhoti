@@ -2638,7 +2638,7 @@ nav .d-none.flex-sm-fill.d-sm-flex {
     .japam-mega-menu {
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 900px !important; /* Width fixed rakhein */
+        width: 1200px !important; /* Width fixed rakhein */
         max-width: 95vw !important; /* Screen se bahar na jaye */
     }
 /* 1. Active Page (Jo select hai) */
