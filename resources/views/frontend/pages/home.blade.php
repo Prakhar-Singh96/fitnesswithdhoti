@@ -429,7 +429,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Rudraksh Jap Mala">
                             <div class="fav-content">
                                 <h3>Rudraksh Jap Mala</h3>
-                                <a href="url {{'category/rudraksh/rudraksh-mala'}}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url {{ 'category/rudraksh/rudraksh-mala' }}" class="btn btn-fav-shop">Shop
+                                    now</a>
                             </div>
                         </div>
 
@@ -443,7 +444,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                         alt="Tiger Eye Stone">
                                     <div class="fav-content">
                                         <h3>Rashi Bracelet</h3>
-                                        <a href="url{{ 'category/rashi-bracelet' }}" class="btn btn-fav-shop">Shop now</a>
+                                        <a href="url{{ 'category/rashi-bracelet' }}" class="btn btn-fav-shop">Shop
+                                            now</a>
                                     </div>
                                 </div>
                             </div>
@@ -455,7 +457,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                         alt="Black Stone">
                                     <div class="fav-content">
                                         <h3>Spritual Stone Jewellery</h3>
-                                        <a href="url{{'category/spritual-jewellery'}}" class="btn btn-fav-shop">Shop now</a>
+                                        <a href="url{{ 'category/spritual-jewellery' }}" class="btn btn-fav-shop">Shop
+                                            now</a>
                                     </div>
                                 </div>
                             </div>
@@ -472,7 +475,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
                                 <h3>Karungali Mala</h3>
-                                <a href="url{{'category/karungali/karungali-mala'}}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url{{ 'category/karungali/karungali-mala' }}" class="btn btn-fav-shop">Shop
+                                    now</a>
                             </div>
                         </div>
                     </div>
@@ -491,7 +495,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Rose Product">
                             <div class="fav-content">
                                 <h3>Ganesh Shankh Collection</h3>
-                                <a href="url{{'category/pooja-items-/shankh'}}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url{{ 'category/pooja-items-/shankh' }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -504,7 +508,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Suyagya Collection">
                             <div class="fav-content">
                                 <h3>Murti Collection</h3>
-                                <a href="url {{'category/spritual-idols'}}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url {{ 'category/spritual-idols' }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -716,80 +720,62 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section>
 
-    {{-- 🌟 CUSTOMER LOVE / REVIEWS SECTION --}}
     <section class="py-5 testimonial-section" style="background-color: #f7f1de;">
         <div class="container">
-
-            {{-- 1. Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
                     <h2 class="m-0">Customer Love</h2>
                 </div>
             </div>
 
-            {{-- 2. Testimonial Slider --}}
             <div class="testimonial-slider-container">
                 <div class="testimonial-slider">
-
                     @if (isset($reviews) && $reviews->count() > 0)
                         @foreach ($reviews as $review)
-                            <div class="px-3"> {{-- Spacing between cards --}}
-                                <div class="testimonial-card">
+                            <div class="px-3">
+                                {{-- 🔥 Added fixed height style --}}
+                                <div class="testimonial-card shadow-sm border-0 overflow-hidden"
+                                    style="height: 280px; border-radius: 15px; background: #fff;">
                                     <div class="row g-0 h-100">
 
                                         {{-- Left: Text Content --}}
-                                        <div
-                                            class="col-md-7 col-12 d-flex flex-column justify-content-center p-4 text-content">
-
-                                            {{-- Stars Dynamic Loop --}}
-                                            <div class="mb-3 text-warning">
+                                        <div class="col-7 p-4 d-flex flex-column justify-content-center">
+                                            <div class="text-warning mb-2">
                                                 @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= $review->rating)
-                                                        <i class="las la-star"></i>
-                                                    @else
-                                                        <i class="lar la-star"></i>
-                                                    @endif
+                                                    <i class="{{ $i <= $review->rating ? 'las' : 'lar' }} la-star"></i>
                                                 @endfor
                                             </div>
 
-                                            {{-- Review Text --}}
-                                            <p class="review-text mb-3">
-                                                "{{ Str::limit($review->review, 150) }}"
+                                            {{-- Limit text to keep height consistent --}}
+                                            <p class="mb-2 small text-muted"
+                                                style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;">
+                                                "{{ $review->review }}"
                                             </p>
 
-                                            {{-- Title & Name --}}
                                             @if ($review->title)
-                                                <h6 class="fw-bold text-dark mb-1">{{ $review->title }}</h6>
+                                                <h6 class="fw-bold text-dark mb-0 text-truncate">{{ $review->title }}</h6>
                                             @endif
-
-                                            <p class="text-muted small m-0 fw-600">- {{ $review->display_name }}</p>
+                                            <p class="text-muted x-small m-0 fw-bold mt-1">- {{ $review->display_name }}
+                                            </p>
                                         </div>
 
-                                        {{-- Right: Image (Media) --}}
-                                        <div class="col-md-5 col-12">
-                                            <div class="review-img-wrapper h-100">
-                                                @php
-                                                    // Check if media exists (it's an array)
-// If yes, take the first image. If no, use a placeholder.
-$reviewImage =
-    'https://placehold.co/400x400/e0d4c3/555?text=Happy+Customer';
-
-if (
-    !empty($review->media) &&
-    is_array($review->media) &&
-    count($review->media) > 0
-) {
-    // Check if file is image (simple check)
-    $firstFile = $review->media[0];
-    if (!Str::endsWith($firstFile, '.mp4')) {
-                                                            $reviewImage = asset($firstFile);
-                                                        }
-                                                    }
-                                                @endphp
-
-                                                <img src="{{ $reviewImage }}" alt="{{ $review->display_name }}"
-                                                    class="img-fluid w-100 h-100 object-fit-cover">
-                                            </div>
+                                        {{-- Right: Image (Single) --}}
+                                        <div class="col-5 h-100">
+                                            @php
+                                                $reviewImage =
+                                                    'https://placehold.co/400x400/e0d4c3/555?text=Happy+Customer';
+                                                // Agar media array hai aur usme items hain
+                                                if (
+                                                    !empty($review->media) &&
+                                                    is_array($review->media) &&
+                                                    count($review->media) > 0
+                                                ) {
+                                                    // Sirf pehli file le lo
+                                                    $reviewImage = asset($review->media[0]);
+                                                }
+                                            @endphp
+                                            <img src="{{ $reviewImage }}" alt="Review"
+                                                class="w-100 h-100 object-fit-cover">
                                         </div>
 
                                     </div>
@@ -798,13 +784,11 @@ if (
                         @endforeach
                     @else
                         <div class="col-12 text-center text-muted">
-                            <p>No reviews yet. Be the first to share your experience!</p>
+                            <p>No reviews yet.</p>
                         </div>
                     @endif
-
                 </div>
             </div>
-
         </div>
     </section>
 
