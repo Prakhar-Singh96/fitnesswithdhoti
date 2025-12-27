@@ -808,17 +808,17 @@ if (
         </div>
     </section>
 
-    <section class="py-5 blog-section" style="background-color: #f7f1de;">
+    {{-- <section class="py-5 blog-section" style="background-color: #f7f1de;">
         <div class="container">
 
-            {{-- 1. Heading --}}
+
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
                     <h2 class="m-0">Blogs</h2>
                 </div>
             </div>
 
-            {{-- 2. Blog Cards Row --}}
+
             <div class="row g-4 justify-content-center">
 
                 @php
@@ -855,7 +855,7 @@ if (
                     <div class="col-md-6 col-lg-4">
                         <div class="blog-card h-100">
 
-                            {{-- Image & Tag Wrapper --}}
+
                             <div class="blog-img-wrapper">
                                 <span class="blog-tag">{{ $blog['tag'] }}</span>
                                 <a href="#" class="d-block h-100">
@@ -863,7 +863,7 @@ if (
                                 </a>
                             </div>
 
-                            {{-- Card Content --}}
+
                             <div class="blog-content">
                                 <h3 class="blog-title">
                                     <a href="#" class="text-decoration-none text-dark">{{ $blog['title'] }}</a>
@@ -880,7 +880,7 @@ if (
 
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <section class="py-5 faq-section"> {{-- Earthy Background --}}
         <div class="container">
