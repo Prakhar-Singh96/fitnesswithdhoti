@@ -152,7 +152,8 @@
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}?type=featured" class="btn btn-view-all rounded-pill px-4 py-2">
+                <a href="{{ route('products.all_collection') }}?type=featured"
+                    class="btn btn-view-all rounded-pill px-4 py-2">
                     View all Featured
                 </a>
             </div>
@@ -234,7 +235,8 @@
 
             {{-- View All --}}
             <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}?type=best-selling" class="btn btn-view-all rounded-pill px-4 py-2">
+                <a href="{{ route('products.all_collection') }}?type=best-selling"
+                    class="btn btn-view-all rounded-pill px-4 py-2">
                     View all Best Selling
                 </a>
             </div>
@@ -417,40 +419,43 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                 {{-- TOP ROW WRAPPER --}}
                 <div class="row g-3">
 
-                    {{-- LEFT COLUMN (Contains 1 Wide Image + 2 Small Images) --}}
+                    {{-- LEFT COLUMN --}}
                     <div class="col-lg-8">
 
-                        {{-- 1. Wide Image (Top Left) --}}
+                        {{-- 1. Wide Image (Top Left) - Rudraksha Jap Mala --}}
                         <div class="fav-card wide mb-3">
-                            <img src="https://prinjal.com/cdn/shop/files/02_Detail_copy.jpg?v=1711632938"
-                                class="img-fluid" alt="Rudraksha Mala">
+                            {{-- Using your uploaded image: image_08a5ae.jpg --}}
+                            <img src="{{ asset('uploads/home/fav/rudarask_mala.png') }}" class="img-fluid"
+                                alt="Rudraksh Jap Mala">
                             <div class="fav-content">
-                                <h3>Rudraksha Mala</h3>
-                                <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                <h3>Rudraksh Jap Mala</h3>
+                                <a href="url {{'category/rudraksh/rudraksh-mala'}}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
 
                         {{-- Row for 2 Small Images --}}
                         <div class="row g-3">
                             <div class="col-md-6">
-                                {{-- 2. Small Image (Middle Left 1) --}}
+                                {{-- 2. Small Image (Middle Left 1) - Tiger Eye Stone --}}
                                 <div class="fav-card standard">
-                                    <img src="https://prinjal.com/cdn/shop/files/SNA69239-min.jpg?v=1745405791"
-                                        class="img-fluid" alt="Bracelets">
+                                    {{-- Using your uploaded image: image_08406c.jpg --}}
+                                    <img src="{{ asset('uploads/home/fav/rashi.webp') }}" class="img-fluid"
+                                        alt="Tiger Eye Stone">
                                     <div class="fav-content">
-                                        <h3>Rudraksha Bracelets</h3>
-                                        <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                        <h3>Rashi Bracelet</h3>
+                                        <a href="url{{ 'category/rashi-bracelet' }}" class="btn btn-fav-shop">Shop now</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                {{-- 3. Small Image (Middle Left 2) --}}
+                                {{-- 3. Small Image (Middle Left 2) - Black Stone --}}
                                 <div class="fav-card standard">
-                                    <img src="https://prinjal.com/cdn/shop/files/SNA69051-min.jpg?v=1744891596"
-                                        class="img-fluid" alt="Pendant">
+                                    {{-- Using your uploaded image: image_09214d.jpg --}}
+                                    <img src="{{ asset('uploads/home/fav/ring.webp') }}" class="img-fluid"
+                                        alt="Black Stone">
                                     <div class="fav-content">
-                                        <h3>Rudraksha Pendant</h3>
-                                        <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                        <h3>Spritual Stone Jewellery</h3>
+                                        <a href="url{{'category/spritual-jewellery'}}" class="btn btn-fav-shop">Shop now</a>
                                     </div>
                                 </div>
                             </div>
@@ -458,15 +463,16 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
 
                     </div>
 
-                    {{-- RIGHT COLUMN (Contains 1 Tall Image) --}}
+                    {{-- RIGHT COLUMN --}}
                     <div class="col-lg-4">
-                        {{-- 4. Tall Image (Right Side) --}}
+                        {{-- 4. Tall Image (Right Side) - Rashi Bracelet --}}
                         <div class="fav-card tall h-100">
-                            <img src="https://prinjal.com/cdn/shop/files/Karungali_Beads_Silver_Mala.jpg?v=1750912937"
-                                class="img-fluid" alt="Karungali Mala">
+                            {{-- Using your uploaded image: image_aeee28.jpg --}}
+                            <img src="{{ asset('uploads/home/fav/karungali_mala.webp') }}" class="img-fluid"
+                                alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
                                 <h3>Karungali Mala</h3>
-                                <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url{{'category/karungali/karungali-mala'}}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -474,30 +480,31 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                 </div>
                 {{-- END TOP ROW --}}
 
-                {{-- BOTTOM ROW (Layout: 1 Small + 1 Wide) --}}
+                {{-- BOTTOM ROW --}}
                 <div class="row g-3 mt-0">
 
-                    {{-- 1. Small Image (Left) --}}
+                    {{-- 1. Small Image (Left) - Rose Product --}}
                     <div class="col-md-4">
                         <div class="fav-card standard">
-                            <img src="https://prinjal.com/cdn/shop/files/02_Detail_3172df1f-7ec7-447a-8345-581cdee4798f.jpg?v=1711690744"
-                                class="img-fluid" alt="Adiyogi">
+                            {{-- Using your uploaded image: image_08a246.png --}}
+                            <img src="{{ asset('uploads/home/fav/ganesh_shankh.webp') }}" class="img-fluid"
+                                alt="Rose Product">
                             <div class="fav-content">
-                                <h3>Adiyogi Pendant</h3>
-                                <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                <h3>Ganesh Shankh Collection</h3>
+                                <a href="url{{'category/pooja-items-/shankh'}}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
 
-                    {{-- 2. Merged Wide Image (Right - Replaces 2 small divs) --}}
+                    {{-- 2. Wide Image (Right) - Murti Collection (Using existing/placeholder or you can upload one) --}}
                     <div class="col-md-8">
                         <div class="fav-card wide">
-                            {{-- यहाँ अपनी पसंद की चौड़ी इमेज लगाएं --}}
-                            <img src="https://prinjal.com/cdn/shop/files/HanumanSilverIdol.png?v=1744016339"
-                                class="img-fluid" alt="Murti Collection">
+                            {{-- Using your uploaded image: image_390489.jpg (Collage) as a banner --}}
+                            <img src="{{ asset('uploads/home/fav/murti.webp') }}" class="img-fluid"
+                                alt="Suyagya Collection">
                             <div class="fav-content">
                                 <h3>Murti Collection</h3>
-                                <a href="#" class="btn btn-fav-shop">Shop now</a>
+                                <a href="url {{'category/spritual-idols'}}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
