@@ -331,6 +331,6 @@
 {{-- Footer Bottom: Copyright Bar --}}
 <div class="footer-copyright-bar">
     <div class="container text-center">
-        © 2025. Suyagya. All Rights Reserved to Suyagya Private Limited
+        © 2025. Suyagya. All Copyrights Reserved to Suyagya
     </div>
 </div>
