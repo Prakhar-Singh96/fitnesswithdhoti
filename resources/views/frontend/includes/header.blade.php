@@ -25,6 +25,7 @@
     /* 💻 DESKTOP STYLE (Min-width 992px) */
     @media (min-width: 992px) {
         .header-search-bar {
+            display: none;
             position: fixed !important;
             /* Desktop Header Height Adjustment */
             top: 106px !important;
@@ -38,6 +39,7 @@
             background-color: #fff;
             overflow-y: auto;
         }
+
     }
 </style>
 
