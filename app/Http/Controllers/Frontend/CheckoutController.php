@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\UserAddress;
-use App\Models\Order;
-use App\Models\OrderItem;
-use Razorpay\Api\Api;
-use App\Models\PaymentSetting;
+use Carbon\Carbon;
 use App\Models\Cart;
+use App\Models\Order;
+use Razorpay\Api\Api;
+use App\Models\Coupon;
 use App\Models\Product;
-use Illuminate\Support\Facades\Auth;
+use App\Models\OrderItem;
+use App\Models\UserAddress;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\PaymentSetting;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -320,7 +322,6 @@ class CheckoutController extends Controller
             Cart::where('user_id', Auth::id())->delete();
 
             return response()->json(['status' => true, 'message' => 'Payment Verified']);
-
         } catch (\Exception $e) {
             // ❌ Verification Failed
             return response()->json([
@@ -346,5 +347,63 @@ class CheckoutController extends Controller
             'has_address' => $addresses->count() > 0,
             'html' => $html
         ]);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $code = $request->code;
+        $cartTotal = $request->cart_total; // Frontend se cart value bhejo
+
+        // 1. Find Coupon
+        $coupon = Coupon::where('code', $code)->where('status', 1)->first();
+
+        // 2. Validations
+        if (!$coupon) {
+            return response()->json(['status' => false, 'message' => 'Invalid Coupon Code']);
+        }
+
+        if ($coupon->expires_at && Carbon::now()->gt($coupon->expires_at)) {
+            return response()->json(['status' => false, 'message' => 'Coupon Expired']);
+        }
+
+        if ($coupon->min_cart_amount && $cartTotal < $coupon->min_cart_amount) {
+            return response()->json(['status' => false, 'message' => 'Minimum cart amount should be ₹' . $coupon->min_cart_amount]);
+        }
+
+        // 3. Calculate Discount
+        $discountAmount = 0;
+
+        if ($coupon->type == 'fixed') {
+            $discountAmount = $coupon->value;
+        } else {
+            // Percentage Calculation
+            $discountAmount = ($cartTotal * $coupon->value) / 100;
+        }
+
+        // Discount total se zyada nahi ho sakta
+        if ($discountAmount > $cartTotal) {
+            $discountAmount = $cartTotal;
+        }
+
+        $newTotal = $cartTotal - $discountAmount;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Coupon Applied!',
+            'discount' => $discountAmount,
+            'new_total' => $newTotal
+        ]);
+    }
+
+    public function getCoupons()
+    {
+        // Sirf Active aur Future me expire hone wale coupons layenge
+        $coupons = \App\Models\Coupon::where('status', 1)
+            ->where('expires_at', '>', now())
+            ->orWhereNull('expires_at')
+            ->latest()
+            ->get();
+
+        return response()->json($coupons);
     }
 }

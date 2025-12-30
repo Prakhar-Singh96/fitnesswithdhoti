@@ -183,6 +183,11 @@
                             <div class="mb-3"><label class="form-label">Meta Description</label>
                                 <textarea class="form-control" name="meta_description"></textarea>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="meta_keywords">Meta Keywords</label>
+                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
+                                    value="{{ old('meta_keywords') }}" placeholder="keyword1, keyword2, keyword3">
+                            </div>
                             <div class="mb-3"><label class="form-label">OG Image</label><input type="file"
                                     class="form-control" name="og_image"></div>
                         </div>
@@ -204,7 +209,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Discount (%)</label>
                                 <input type="number" class="form-control" id="discount" name="discount"
-                                    value="0" step="0.01"  oninput="calcSimpleProduct(this)">
+                                    value="0" step="0.01" oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Selling Price (₹) <span class="text-danger">*</span></label>
@@ -322,7 +327,16 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
         // CKEditor & Slug
-        ClassicEditor.create(document.querySelector('#editor')).catch(error => console.error(error));
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    // Token hata diya hai, simple URL rakhein
+                    uploadUrl: "{{ route('admin.product.upload_image') }}"
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
         document.getElementById('name').addEventListener('input', function() {
             let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g,
                 '-');
@@ -556,23 +570,50 @@
         function handleFiles(files) {
             const container = document.getElementById('gallery-preview-container');
             const input = document.getElementById('gallery-input');
+
+            // Loop through new files and add them to DataTransfer
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                dt.items.add(file);
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const fileId = file.name.replace(/[^a-zA-Z0-9]/g, '');
-                    const html = `
-                    <div class="col-md-3" id="preview-${fileId}">
-                        <div class="border p-2 rounded position-relative">
-                            <img src="${e.target.result}" class="w-100 rounded" style="height:80px; object-fit:cover;">
-                            <button type="button" class="btn btn-danger btn-xs position-absolute top-0 end-0 m-1" onclick="removeFile('${file.name}', '${fileId}')">×</button>
-                        </div>
-                    </div>`;
-                    container.insertAdjacentHTML('beforeend', html);
+
+                // Prevent duplicates (optional check by name/size)
+                let isDuplicate = false;
+                for (let j = 0; j < dt.files.length; j++) {
+                    if (dt.files[j].name === file.name && dt.files[j].size === file.size) {
+                        isDuplicate = true;
+                        break;
+                    }
                 }
-                reader.readAsDataURL(file);
+
+                if (!isDuplicate) {
+                    dt.items.add(file);
+
+                    // Create Preview Element
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Generate unique ID for this item based on file name (sanitized)
+                        const fileId = file.name.replace(/[^a-zA-Z0-9]/g, '');
+
+                        const html = `
+                        <div class="col-md-6" id="preview-${fileId}">
+                            <div class="d-flex align-items-center border p-2 rounded position-relative bg-white">
+                                <img src="${e.target.result}" width="60" height="60" class="object-fit-cover rounded me-3">
+                                <div class="flex-grow-1">
+                                    <small class="text-muted d-block text-truncate" style="max-width: 150px;">${file.name}</small>
+                                    <input type="text" name="gallery_alts[]" class="form-control form-control-sm mt-1" placeholder="Alt Text">
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm ms-2 p-1" onclick="removeFile('${file.name}', '${fileId}')" style="line-height: 1;">
+                                    <i class="bx bx-x fs-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    }
+                    reader.readAsDataURL(file);
+                }
             }
+
+            // Update the input files property
             input.files = dt.files;
         }
 

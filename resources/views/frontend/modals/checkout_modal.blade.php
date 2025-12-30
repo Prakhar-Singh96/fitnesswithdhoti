@@ -1,5 +1,6 @@
 <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
+        {{-- 👆 END COUPON SECTION 👆 --}}
         <div class="modal-content border-0 overflow-hidden" style="border-radius: 16px;">
 
             {{-- Header --}}
@@ -165,6 +166,64 @@
                     </div>
 
                 </div>
+            </hr>
+
+                {{-- 👇 UPDATED COUPON SECTION (ASTROTALK STYLE) 👇 --}}
+                {{-- <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="fw-bold small m-0"><i class="las la-percent text-warning fs-5"></i> Coupons &
+                            Offers</label>
+                        <a href="javascript:void(0);" class="text-primary small fw-bold text-decoration-none"
+                            onclick="toggleCouponList()">View All</a>
+                    </div>
+
+
+                    <div class="input-group mb-2" id="coupon_input_group">
+                        <input type="text" id="coupon_code" class="form-control border-end-0"
+                            placeholder="Enter coupon code" style="box-shadow: none;">
+                        <button class="btn border border-start-0 bg-white text-primary fw-bold" type="button"
+                            onclick="applyCouponManual()">APPLY</button>
+                    </div>
+
+
+                    <small id="coupon_msg" class="fw-bold d-block mb-2 text-danger"></small>
+
+
+                    <div id="coupon_applied_box" class="coupon-success-box mb-3" style="display: none;">
+                        <div class="d-flex align-items-center">
+                            <i class="las la-check-circle fs-5 me-2"></i>
+                            <div>
+                                <span class="d-block fw-bold" id="applied_code_text">CODE</span>
+                                <small>You saved <span id="saved_amount_text">₹0</span></small>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0);" class="remove-coupon-btn" onclick="removeCoupon()">REMOVE</a>
+                    </div>
+
+
+                    <div id="coupon_list_box" class="mt-2" style="display: none;">
+
+                        <div class="text-center py-3 text-muted small">Loading offers...</div>
+                    </div>
+
+
+                    <div class="bg-light p-3 rounded border border-dashed mt-3">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span>Subtotal</span>
+                            <span id="bill_subtotal">₹0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1 small text-success">
+                            <span>Discount</span>
+                            <span id="bill_discount">- ₹0</span>
+                        </div>
+                        <div class="border-top my-2"></div>
+                        <div class="d-flex justify-content-between fw-bold text-dark">
+                            <span>To Pay</span>
+                            <span id="bill_total">₹0</span>
+                        </div>
+                    </div>
+                </div> --}}
+
 
                 {{-- =================================== --}}
                 {{-- 💰 STEP 3: PAYMENT --}}

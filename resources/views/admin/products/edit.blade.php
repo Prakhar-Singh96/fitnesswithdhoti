@@ -312,6 +312,11 @@
                             <div class="mb-3"><label class="form-label">Meta Description</label>
                                 <textarea class="form-control" name="meta_description">{{ $product->meta_description }}</textarea>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="meta_keywords">Meta Keywords</label>
+                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
+                                    value="{{ old('meta_keywords') }}" placeholder="keyword1, keyword2, keyword3">
+                            </div>
                             <div class="mb-3"><label class="form-label">Update OG Image</label><input type="file"
                                     class="form-control" name="og_image"></div>
                         </div>
@@ -333,8 +338,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Discount (%)</label>
-                                <input type="number" class="form-control" id="discount" name="discount" step="0.01"
-                                    value="{{ $product->discount }}" oninput="calcSimpleProduct(this)">
+                                <input type="number" class="form-control" id="discount" name="discount"
+                                    step="0.01" value="{{ $product->discount }}" oninput="calcSimpleProduct(this)">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Selling Price (₹) <span class="text-danger">*</span></label>
@@ -500,7 +505,21 @@ $rowSubs = \App\Models\SubCategory::where(
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
         // CKEditor
-        ClassicEditor.create(document.querySelector('#editor')).catch(error => console.error(error));
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    // Token hata diya hai, simple URL rakhein
+                    uploadUrl: "{{ route('admin.product.upload_image') }}"
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        document.getElementById('name').addEventListener('input', function() {
+            let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g,
+                '-');
+            document.getElementById('slug').value = slug;
+        });
 
         // SubCategory AJAX
         $('#category_id').change(function() {

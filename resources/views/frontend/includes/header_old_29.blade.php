@@ -1,65 +1,32 @@
-{{-- ============================================================== --}}
-{{-- 🎨 INTERNAL CSS FOR SEARCH BAR (Mobile vs Desktop) --}}
-{{-- ============================================================== --}}
-<style>
-    /* 📱 MOBILE STYLE (Max-width 991px) */
-    @media (max-width: 991px) {
-        .header-search-bar {
-            display: none;
-            position: fixed !important;
-            /* Header ki height ke barabar niche (approx 60px-70px) */
-            top: 65px !important;
-            left: 0;
-            width: 100%;
-            /* ✅ Auto Height: Taaki pura page na dhake */
-            height: auto !important;
-            max-height: 80vh; /* Screen ka 80% hi use kare */
-            z-index: 990; /* Header (z-1020) ke niche, content ke upar */
-            background-color: #fff;
-            overflow-y: auto;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-top: 1px solid #f1f1f1;
-        }
-    }
+<header class="sticky-top z-1020 shadow-sm" style="background-color: var(--light) !important;">
 
-    /* 💻 DESKTOP STYLE (Min-width 992px) */
-    @media (min-width: 992px) {
-        .header-search-bar {
-            position: fixed !important;
-            /* Desktop Header Height Adjustment */
-            top: 106px !important;
-            left: 0;
-            width: 100%;
-            height: auto !important;
-            max-height: 70vh;
-            z-index: 1010;
-            border-top: 1px solid #eee;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background-color: #fff;
-            overflow-y: auto;
-        }
-    }
-</style>
-
-{{-- 🟢 DESKTOP HEADER START --}}
-<header class="sticky-top z-1020 shadow-sm" style="background-color: var(--light) !important; position: relative;">
-
-    {{-- ⭐️ Top Bar --}}
+    {{-- ⭐️ Top Bar - Language, Currency, Seller Links --}}
+    {{-- Top bar background color changed to match the light tone in the example --}}
     <div class="top-navbar d-none d-lg-block border-bottom" style="background-color: var(--light) !important;">
         <div class="container-fluid px-3">
             <div class="d-flex justify-content-between align-items-center py-1">
+
                 <div class="d-flex align-items-center">
+                    {{-- Language switcher --}}
                     <div class="dropdown me-3" id="lang-change">
-                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown">
+                        {{-- Text color is dark, not light --}}
+                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown"
+                            data-bs-display="static">
                             <span style="color: var(--dark);">English</span>
                         </a>
+                        {{-- ... (Dropdown Content) ... --}}
                     </div>
+
+                    {{-- Currency Switcher --}}
                     <div class="dropdown" id="currency-change">
-                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-toggle text-dark small" data-bs-toggle="dropdown"
+                            data-bs-display="static">
                             <span style="color: var(--dark);">Currency</span>
                         </a>
+                        {{-- ... (Dropdown Content) ... --}}
                     </div>
                 </div>
+
                 <div class="d-flex align-items-center">
                     <a href="{{ url('shops/create') }}" class="text-dark small pe-3 border-end">Become a seller!</a>
                     <a href="{{ url('seller/login') }}" class="text-dark small ps-3">Login to Seller</a>
@@ -68,16 +35,91 @@
         </div>
     </div>
 
-    {{-- 🏠 Main Nav Bar --}}
+    {{-- 🏠 Logo and Main Nav Bar --}}
+    {{-- Golden Border is correctly placed at the bottom of the whole header, handled by CSS --}}
     <nav class="navbar navbar-expand-lg py-0">
         <div class="container-fluid px-3">
+
+            {{-- Logo --}}
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
                 <img src="{{ asset('assets/img/logo.png') }}" alt="Suyagya" height="50">
             </a>
 
+            {{-- Collapse/Main Menu Links --}}
             <div class="collapse navbar-collapse justify-content-center" id="mainMenu">
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0 main-nav-list align-items-center">
+
+                    {{-- ✨ MEGA MENU FOR ALL COLLECTIONS --}}
+                    {{-- <li class="nav-item dropdown mega-parent me-3 position-static">
+                        <a class="nav-link text-dark dropdown-toggle fw-bold" href="#" id="productsDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            All Collections
+                        </a>
+
+                        {{-- Dropdown Container
+                        <div class="dropdown-menu mega-menu border-0 shadow-lg w-100 mt-0"
+                            aria-labelledby="productsDropdown" style="border-top: 3px solid #ff6f00 !important;">
+
+                            <div class="container py-4">
+                                <div class="row g-4">
+
+                                    {{-- Loop Through Categories
+                                    @foreach ($headerCategories as $category)
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <div class="d-flex align-items-start gap-3 p-2 hover-bg rounded transition">
+
+                                                {{-- Icon
+                                                <div class="flex-shrink-0">
+                                                    <a href="{{ route('products.category', $category->slug) }}">
+                                                        <img src="{{ asset($category->icon_image) }}"
+                                                            alt="{{ $category->name }}" class="rounded-circle border"
+                                                            style="width: 50px; height: 50px; object-fit: cover;"
+                                                            onerror="this.src='https://via.placeholder.com/50'">
+                                                    </a>
+                                                </div>
+
+                                                {{-- Name & Subcategories
+                                                <div class="flex-grow-1">
+                                                    <a href="{{ route('products.category', $category->slug) }}"
+                                                        class="d-block fw-bold text-dark text-decoration-none mb-1"
+                                                        style="font-family: 'Merriweather', serif;">
+                                                        {{ $category->name }}
+                                                    </a>
+
+                                                    {{-- Show first 3 Subcategories
+                                                    @if ($category->subCategories->count() > 0)
+                                                        <ul class="list-unstyled mb-0 small">
+                                                            @foreach ($category->subCategories->take(3) as $sub)
+                                                                <li>
+                                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
+                                                                        class="text-muted text-decoration-none hover-orange">
+                                                                        - {{ $sub->name }}
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                            @if ($category->subCategories->count() > 3)
+                                                                <li>
+                                                                    <a href="{{ route('products.category', $category->slug) }}"
+                                                                        class="text-primary fw-bold small">
+                                                                        View All
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </div>
+                    </li> --}}
+
+                    {{-- 🟢 DYNAMIC CATEGORIES LOOP (JAPAM STYLE) --}}
                     @foreach ($headerCategories as $category)
+
                         @if ($category->subCategories->count() > 0)
                             <li class="nav-item dropdown hover-dropdown me-3">
                                 <a class="nav-link text-dark dropdown-toggle fw-bold"
@@ -85,20 +127,32 @@
                                     id="catDrop{{ $category->id }}" role="button" aria-expanded="false">
                                     {{ $category->name }}
                                 </a>
-                                <div class="dropdown-menu japam-mega-menu shadow-lg border-0" aria-labelledby="catDrop{{ $category->id }}">
+
+                                {{-- ✨ JAPAM STYLE MEGA MENU ✨ --}}
+                                <div class="dropdown-menu japam-mega-menu shadow-lg border-0"
+                                    aria-labelledby="catDrop{{ $category->id }}">
                                     <div class="row g-0">
+
+                                        {{-- LEFT COL: Sub Categories List --}}
                                         <div class="col-4 col-lg-3">
                                             <div class="japam-sc-list">
                                                 @foreach ($category->subCategories as $sub)
-                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}" class="japam-sc-item">
-                                                        {{ $sub->name }} <i class="las la-angle-right"></i>
+                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
+                                                        class="japam-sc-item">
+                                                        {{ $sub->name }}
+                                                        <i class="las la-angle-right"></i>
                                                     </a>
                                                 @endforeach
-                                                <a href="{{ route('products.category', $category->slug) }}" class="japam-sc-item text-primary fw-bold">
-                                                    View All {{ $category->name }} <i class="las la-arrow-right"></i>
+
+                                                <a href="{{ route('products.category', $category->slug) }}"
+                                                    class="japam-sc-item text-primary fw-bold">
+                                                    View All {{ $category->name }}
+                                                    <i class="las la-arrow-right"></i>
                                                 </a>
                                             </div>
                                         </div>
+
+                                        {{-- RIGHT COL: Product Images / Featured Items --}}
                                         <div class="col-8 col-lg-9">
                                             <div class="japam-prod-grid h-100">
                                                 <div class="row g-3">
@@ -106,12 +160,16 @@
                                                         @foreach ($category->products as $product)
                                                             <div class="col-3">
                                                                 <a href="#" class="japam-prod-card">
-                                                                    <img src="{{ asset($product->main_image) }}" class="japam-prod-img" alt="{{ $product->name }}">
-                                                                    <span class="japam-prod-title">{{ $product->name }}</span>
+                                                                    <img src="{{ asset($product->main_image) }}"
+                                                                        class="japam-prod-img"
+                                                                        alt="{{ $product->name }}">
+                                                                    <span
+                                                                        class="japam-prod-title">{{ $product->name }}</span>
                                                                 </a>
                                                             </div>
                                                         @endforeach
                                                     @else
+                                                        {{-- Fallback if no products --}}
                                                         <div class="col-12 text-center py-5 text-muted">
                                                             <i class="las la-box-open fs-1 mb-2"></i>
                                                             <p>Explore our {{ $category->name }} collection</p>
@@ -120,76 +178,135 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </li>
                         @else
                             <li class="nav-item me-3">
-                                <a href="{{ route('products.category', $category->slug) }}" class="nav-link text-dark fw-bold">
+                                <a href="{{ route('products.category', $category->slug) }}"
+                                    class="nav-link text-dark fw-bold">
                                     {{ $category->name }}
                                 </a>
                             </li>
                         @endif
+
                     @endforeach
+
                 </ul>
             </div>
 
-            {{-- 3. ICON ACTION BLOCK --}}
+            {{-- 3. ICON ACTION BLOCK (Astrotalk Style) --}}
             <div class="d-flex align-items-center nav-action-icons ms-auto">
-                {{-- 🔍 Search Icon Trigger --}}
+
+                {{-- 🔥 1. Search Icon --}}
                 <div class="nav-search-icon ms-2">
                     <a href="javascript:void(0);" onclick="toggleSearch()" title="Search">
                         <i class="las la-search"></i>
                     </a>
                 </div>
 
+                {{-- 👤 2. Account Icon --}}
                 <div class="nav-user-auth ms-4">
                     @auth
+                        {{-- ✅ LOGGED IN USER (Dropdown) --}}
                         <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-dark text-decoration-none" role="button" data-bs-toggle="dropdown">
+                            <a href="#" class="d-flex align-items-center text-dark text-decoration-none"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="las la-user-circle fs-2"></i>
+                                {{-- Optional: Show First Name --}}
+                                {{-- <span class="ms-2 small fw-bold d-none d-md-block">{{ Auth::user()->name }}</span> --}}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3" style="min-width: 200px;">
+
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3"
+                                style="min-width: 200px;">
                                 <li class="px-3 py-2 border-bottom">
                                     <span class="small text-muted d-block">Welcome,</span>
                                     <span class="fw-bold text-dark">{{ Auth::user()->name ?? 'User' }}</span>
                                 </li>
-                                <li><a class="dropdown-item py-2" href="{{ url('/orders') }}"><i class="las la-box me-2"></i> Order History</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ url('/profile') }}"><i class="las la-user-cog me-2"></i> My Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item py-2" href="{{ url('/orders') }}">
+                                        <i class="las la-box me-2"></i> Order History
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2" href="{{ url('/profile') }}">
+                                        <i class="las la-user-cog me-2"></i> My Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="las la-sign-out-alt me-2"></i> Logout
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
+                                        @csrf
+                                    </form>
                                 </li>
                             </ul>
                         </div>
                     @else
+                        {{-- ❌ GUEST USER (Login Modal Trigger) --}}
                         <a href="javascript:void(0);" onclick="showLoginModal()" title="Login / Signup">
                             <i class="las la-user-circle fs-2"></i>
                         </a>
                     @endauth
                 </div>
 
+                {{-- ⭐ 3. Wishlist/Favorite Icon --}}
                 <div class="nav-wishlist-icon ms-4">
-                    <a href="{{ url('/wishlists') }}" title="Wishlist">
-                        <span class="icon-la lar"></span>
+                    <a href="{{ url('/wishlists') }}" title="Wishlist" class="position-relative">
+                        <span data-v-ef25be53="" class="icon-la lar"></span>
                     </a>
                 </div>
 
+                {{-- 🛒 4. Cart Icon (Side Cart Trigger) --}}
                 <div class="nav-cart-box ms-4 position-relative">
                     <a href="javascript:void(0);" onclick="openSideCart()" title="Cart" class="text-dark">
                         <i class="las la-shopping-bag" style="font-size: 28px;"></i>
-                        <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+
+                        {{-- Badge --}}
+                        <span id="cart-badge"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                             style="font-size: 10px; {{ isset($cartGlobalCount) && $cartGlobalCount > 0 ? '' : 'display: none;' }}">
                             {{ $cartGlobalCount ?? 0 }}
                         </span>
                     </a>
                 </div>
+
             </div>
 
-            {{-- Login Modal (Hidden) --}}
+            {{-- 👇 Search Bar Section --}}
+            {{-- 👇 LIVE SEARCH BAR SECTION --}}
+            <div class="header-search-bar bg-white border-bottom shadow-lg"
+                style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 1100; max-height: 80vh; overflow-y: auto;">
+
+                <div class="container py-3">
+                    {{-- Input Field (No Button) --}}
+                    <div class="position-relative">
+                        <i
+                            class="las la-search position-absolute top-50 start-0 translate-middle-y ms-3 fs-4 text-muted"></i>
+                        <input type="text"
+                            class="form-control border-0 bg-light py-3 ps-5 rounded-pill fs-6 fw-bold"
+                            id="live-search-input" placeholder="Search for products, categories..."
+                            autocomplete="off">
+                        {{-- Close Icon --}}
+                        <i class="las la-times position-absolute top-50 end-0 translate-middle-y me-3 fs-4 cursor-pointer"
+                            onclick="toggleSearch()"></i>
+                    </div>
+                </div>
+
+                {{-- 🟢 AJAX RESULTS CONTAINER --}}
+                <div id="search-results-box" class="bg-white">
+                    {{-- Results will load here via JS --}}
+                </div>
+
+            </div>
+
             <div class="modal fade" id="login_modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
                 <div class="modal-dialog modal-dialog-centered login-modal-dialog">
                     <div class="modal-content login-modal-content">
@@ -275,15 +392,17 @@
                 </div>
             </div>
 
-            <button class="navbar-toggler p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+            {{-- Mobile Toggle Button (Hidden on Desktop) --}}
+            <button class="navbar-toggler p-0 d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
     </nav>
 </header>
 
-{{-- Mobile Header (Separate Block) --}}
-<div class="Mobile-Header sticky-top" style="background: #fff; z-index: 1020;">
+<div class="Mobile-Header">
     <div class="mobileHeader">
         <div class="HeaderLeft">
             <button id="menuButton">
@@ -480,26 +599,27 @@
     </aside>
 
 </div>
+</div>
+{{-- 👇 Search Bar Section --}}
+{{-- 👇 LIVE SEARCH BAR SECTION --}}
+<div class="header-search-bar bg-white border-bottom shadow-lg"
+    style="display: none; position: absolute; top: 70px; left: 0; width: 100%; z-index: 999; max-height: 80vh; overflow-y: auto;">
 
-{{-- ✅✅✅ UNIVERSAL SEARCH BAR (PLACED AT BOTTOM OF FILE) ✅✅✅ --}}
-{{-- ✅✅✅ UNIVERSAL SEARCH BAR (BOTTOM OF FILE) ✅✅✅ --}}
-<div class="header-search-bar bg-white border-bottom shadow-lg">
     <div class="container py-3">
+        {{-- Input Field (No Button) --}}
         <div class="position-relative">
             <i class="las la-search position-absolute top-50 start-0 translate-middle-y ms-3 fs-4 text-muted"></i>
-
-            <input type="text"
-                class="form-control border-0 bg-light py-3 ps-5 rounded-pill fs-6 fw-bold"
-                id="live-search-input"
-                placeholder="Search for products..."
-                autocomplete="off">
-
-            {{-- Close Icon (Visible on both now for ease) --}}
+            <input type="text" class="form-control border-0 bg-light py-3 ps-5 rounded-pill fs-6 fw-bold"
+                id="live-search-input" placeholder="Search for products, categories..." autocomplete="off">
+            {{-- Close Icon --}}
             <i class="las la-times position-absolute top-50 end-0 translate-middle-y me-3 fs-4 cursor-pointer"
                 onclick="toggleSearch()"></i>
         </div>
     </div>
 
-    {{-- Result Box --}}
-    <div id="search-results-box" class="bg-white"></div>
+    {{-- 🟢 AJAX RESULTS CONTAINER --}}
+    <div id="search-results-box" class="bg-white">
+        {{-- Results will load here via JS --}}
+    </div>
+
 </div>

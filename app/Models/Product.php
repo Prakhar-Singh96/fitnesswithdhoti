@@ -111,4 +111,10 @@ class Product extends Model
         return $this->belongsToMany(SubCategory::class, 'product_additional_categories', 'product_id', 'sub_category_id')
                     ->withTimestamps();
     }
+
+    // ✅ NEW: Reviews Relationship
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 }

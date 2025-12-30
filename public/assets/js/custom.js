@@ -207,8 +207,18 @@ function startTimer() {
 
 // Simple function to toggle a search bar (you may need to adapt this)
 function toggleSearch() {
-    // This example assumes you have a hidden search bar element you want to show
-    $('.header-search-bar').slideToggle();
+    // Select the universal search bar
+    var searchBar = $('.header-search-bar');
+
+    if (searchBar.is(':visible')) {
+        searchBar.fadeOut(200);
+    } else {
+        searchBar.fadeIn(200);
+        // Focus input for immediate typing
+        setTimeout(function() {
+            $('#live-search-input').focus();
+        }, 100);
+    }
 }
 
 $(document).ready(function () {
@@ -1160,4 +1170,205 @@ function filterReviews(productId) {
             container.style.opacity = '1';
         }
     });
+}
+
+let currentCartTotal = 0; // Isko modal open hote waqt set karna padega
+let appliedCouponCode = null;
+
+// 1. Fetch Coupons (View All Click)
+function fetchCoupons() {
+    $('#coupon_list_box').slideToggle();
+
+    $.ajax({
+        url: "{{ route('get.coupons') }}",
+        type: "GET",
+        success: function(response) {
+            let html = '';
+            if(response.length > 0) {
+                response.forEach(c => {
+                    html += `
+                        <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2">
+                            <div>
+                                <strong class="text-uppercase text-primary border border-primary px-2 rounded small me-2">${c.code}</strong>
+                                <small class="text-muted d-block mt-1" style="font-size:10px;">${c.type == 'fixed' ? 'Flat ₹'+c.value+' OFF' : c.value+'% OFF'}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-dark py-0" onclick="$('#coupon_code').val('${c.code}'); applyCoupon();">Apply</button>
+                        </div>
+                    `;
+                });
+            } else {
+                html = '<p class="text-center small text-muted">No coupons available.</p>';
+            }
+            $('#coupon_list_box').html(html);
+        }
+    });
+}
+
+// 2. Apply Coupon Logic
+function applyCoupon() {
+    let code = $('#coupon_code').val();
+    let msg = $('#coupon_msg');
+
+    // Reset Message
+    msg.text('').removeClass('text-success text-danger');
+
+    if (!code) {
+        msg.text('Please enter a coupon code').addClass('text-danger');
+        return;
+    }
+
+    // Get current total (Parse from UI or Variable)
+    // Note: Ensure currentCartTotal is set when modal opens
+    // e.g. currentCartTotal = 1500;
+
+    $.ajax({
+        url: "{{ route('apply.coupon') }}",
+        type: "POST",
+        data: {
+            code: code,
+            cart_total: currentCartTotal,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(res) {
+            if (res.status) {
+                // Success
+                $('#coupon_applied_box').slideDown();
+                $('#applied_code').text(code);
+                $('#saved_amount').text('₹' + res.discount);
+
+                // Update Bill UI
+                $('#bill_discount').text('- ₹' + res.discount);
+                $('#bill_total').text('₹' + res.new_total);
+
+                // Hide input box to prevent re-apply
+                $('.input-group').slideUp();
+                $('#coupon_list_box').slideUp();
+
+                appliedCouponCode = code;
+
+                msg.text(res.message).addClass('text-success');
+            } else {
+                // Error
+                msg.text(res.message).addClass('text-danger');
+            }
+        },
+        error: function(err) {
+            msg.text('Something went wrong').addClass('text-danger');
+        }
+    });
+}
+
+// 3. Remove Coupon
+function removeCoupon() {
+    $('#coupon_code').val('');
+    $('#coupon_applied_box').slideUp();
+    $('.input-group').slideDown();
+
+    // Reset Bill
+    $('#bill_discount').text('- ₹0');
+    $('#bill_total').text('₹' + currentCartTotal);
+    $('#coupon_msg').text('');
+
+    appliedCouponCode = null;
+}
+
+// 🔥 IMPORTANT: Jab Modal Open ho tab ye value set karein
+// Ye function aapke 'Buy Now' button par call hona chahiye
+function openCheckoutModal(price, productId) {
+    currentCartTotal = parseFloat(price); // Global Variable Set
+
+    // UI Update
+    $('#bill_subtotal').text('₹' + currentCartTotal);
+    $('#bill_total').text('₹' + currentCartTotal);
+
+    // Reset Old State
+    removeCoupon();
+
+    $('#checkoutModal').modal('show');
+}
+
+// 1. Toggle Coupon List & Fetch Data
+function toggleCouponList() {
+    let box = $('#coupon_list_box');
+
+    if (box.is(':visible')) {
+        box.slideUp();
+    } else {
+        box.slideDown();
+        // Fetch Coupons only if empty
+        // if (box.html().includes('Loading')) {
+            $.get("{{ route('get.coupons') }}", function(data) {
+                let html = '';
+                if(data.length > 0) {
+                    data.forEach(c => {
+                        let desc = c.type === 'fixed' ? 'Flat ₹'+c.value+' OFF' : c.value+'% OFF';
+                        html += `
+                            <div class="coupon-card">
+                                <div>
+                                    <span class="coupon-code-box">${c.code}</span>
+                                    <div class="small text-muted mt-1">${desc}</div>
+                                </div>
+                                <button class="btn-apply-coupon" onclick="applyCouponDirect('${c.code}')">APPLY</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = '<div class="text-center small text-muted py-2">No coupons available</div>';
+                }
+                box.html(html);
+            });
+        // }
+    }
+}
+
+// 2. Apply Coupon (Manual Input)
+function applyCouponManual() {
+    let code = $('#coupon_code').val();
+    if(!code) {
+        $('#coupon_msg').text('Please enter a code').show();
+        return;
+    }
+    applyCouponDirect(code);
+}
+
+// 3. Main Apply Function
+function applyCouponDirect(code) {
+    $('#coupon_msg').hide(); // Hide old errors
+
+    $.post("{{ route('apply.coupon') }}", {
+        code: code,
+        cart_total: currentCartTotal, // Global variable from modal open
+        _token: "{{ csrf_token() }}"
+    }, function(res) {
+        if(res.status) {
+            // Success UI
+            $('#coupon_input_group').hide(); // Input chupao
+            $('#coupon_list_box').slideUp(); // List band karo
+
+            $('#applied_code_text').text(code);
+            $('#saved_amount_text').text('₹' + res.discount);
+            $('#coupon_applied_box').fadeIn(); // Green box dikhao
+
+            // Bill Update
+            $('#bill_discount').text('- ₹' + res.discount);
+            $('#bill_total').text('₹' + res.new_total);
+
+        } else {
+            // Error
+            $('#coupon_msg').text(res.message).addClass('text-danger').show();
+        }
+    }).fail(function() {
+        $('#coupon_msg').text('Something went wrong').show();
+    });
+}
+
+// 4. Remove Coupon
+function removeCoupon() {
+    $('#coupon_applied_box').hide();
+    $('#coupon_input_group').fadeIn();
+    $('#coupon_code').val('');
+
+    // Reset Bill
+    $('#bill_discount').text('- ₹0');
+    $('#bill_total').text('₹' + currentCartTotal);
 }

@@ -457,4 +457,48 @@ class ProductController extends Controller
             }
         }
     }
+
+    // ✅ CKEditor Image Upload Handler (Updated)
+    public function uploadCkImage(Request $request)
+    {
+        try {
+            // 1. Check if file is present
+            if ($request->hasFile('upload')) {
+
+                $file = $request->file('upload');
+
+                // 2. Generate Unique Filename
+                $originName = $file->getClientOriginalName();
+                $fileName = pathinfo($originName, PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $newFileName = $fileName . '_' . time() . '.' . $extension;
+
+                // 3. Define Path
+                $destinationPath = public_path('uploads/description');
+
+                // 4. Check & Create Directory
+                if (!File::exists($destinationPath)) {
+                    File::makeDirectory($destinationPath, 0755, true, true);
+                }
+
+                // 5. Move File
+                $file->move($destinationPath, $newFileName);
+
+                // 6. Generate URL
+                $url = asset('uploads/description/' . $newFileName);
+
+                // ✅ SUCCESS RESPONSE (CKEditor format)
+                return response()->json([
+                    'uploaded' => 1,
+                    'fileName' => $newFileName,
+                    'url' => $url
+                ]);
+            }
+
+            return response()->json(['error' => ['message' => 'No file found in request']], 400);
+        } catch (\Exception $e) {
+            // ❌ ERROR RESPONSE (Taaki wo popup me HTML code na dikhaye)
+            return response()->json(['error' => ['message' => $e->getMessage()]], 500);
+        }
+    }
 }

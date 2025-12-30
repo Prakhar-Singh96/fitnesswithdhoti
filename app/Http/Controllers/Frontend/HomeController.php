@@ -18,6 +18,7 @@ class HomeController extends Controller
         // 1. Featured Products
         $featuredProducts = Product::where('status', 1)
             ->where('is_featured', 1)
+            ->with('reviews')
             ->latest()
             ->take(8)
             ->get();
@@ -25,6 +26,7 @@ class HomeController extends Controller
         // 2. Best Selling Products
         $bestSellingProducts = Product::where('status', 1)
             ->where('is_best_seller', 1)
+            ->with('reviews')
             ->latest()
             ->take(8)
             ->get();
@@ -34,6 +36,7 @@ class HomeController extends Controller
 
         // 4. Products (General)
         $products = Product::where('status', 1)
+            ->with('reviews')
             ->latest()
             ->take(8)
             ->get();
@@ -65,11 +68,17 @@ class HomeController extends Controller
             $showcaseSections = SubCategory::where('category_id', $spiritualCat->id)
                 ->whereIn('slug', $targetSubSlugs)
                 ->where('status', 1)
-                ->with(['products' => function ($q) {
-                    $q->where('status', 1)->latest()->take(15); // Take top 10 products per sub-category
-                }])
+                ->with([
+                    'category',
+                    'products' => function ($q) {
+                        $q->where('status', 1)
+                            ->latest()
+                            ->take(15); // ✅ ONLY 15 PRODUCTS
+                    }
+                ])
                 ->get();
         }
+
 
         // 🟢 2. Fetch Approved Reviews (Customer Love)
         $reviews = ProductReview::where('status', 1) // Only Approved

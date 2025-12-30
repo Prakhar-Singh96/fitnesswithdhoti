@@ -6,6 +6,7 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FilterController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
@@ -79,6 +80,10 @@ Route::post('/login-with-otp', [OtpController::class, 'loginWithOtp'])->name('lo
 Route::get('/track-order', [TrackingController::class, 'index'])->name('track.order');
 Route::post('/track-order', [TrackingController::class, 'track'])->name('track.order.submit');
 
+// Coupon Routes
+Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('apply.coupon');
+Route::get('/get-coupons', [CheckoutController::class, 'getCoupons'])->name('get.coupons'); // Coupon List ke liye
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
@@ -137,8 +142,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('banners', BannerController::class);
 
+        Route::post('product/upload-image', [ProductController::class, 'uploadCkImage'])->name('product.upload_image');
+
         // Quick Status Toggle Route
         Route::get('reviews/status/{id}', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');
+
+        Route::resource('coupons', CouponController::class);
 
         // Admin Middleware Group ke andar
         Route::group(['prefix' => 'logistic', 'as' => 'logistic.'], function () {

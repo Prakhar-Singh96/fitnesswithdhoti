@@ -161,6 +161,30 @@
             </a>
         </li>
 
+        {{-- 🎟️ COUPONS MODULE --}}
+        <li class="menu-item {{ request()->is('admin/coupons*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                {{-- Icon for Coupon (Tag) --}}
+                <i class="menu-icon tf-icons bx bx-purchase-tag-alt"></i>
+                <div>Coupons</div>
+            </a>
+            <ul class="menu-sub">
+                {{-- List --}}
+                <li class="menu-item {{ request()->routeIs('admin.coupons.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.coupons.index') }}" class="menu-link">
+                        <div>Coupon List</div>
+                    </a>
+                </li>
+
+                {{-- Create --}}
+                <li class="menu-item {{ request()->routeIs('admin.coupons.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.coupons.create') }}" class="menu-link">
+                        <div>Add Coupon</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         {{-- video feed --}}
         <li class="menu-item {{ request()->is('admin/videos*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
