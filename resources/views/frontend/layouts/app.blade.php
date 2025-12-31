@@ -212,6 +212,13 @@ function initFooterAccordion() {
 
 initFooterAccordion();
 </script>
+<script>
+    window.appRoutes = {
+        getCoupons: "{{ route('get.coupons') }}",
+        applyCoupon: "{{ route('apply.coupon') }}"
+    };
+    window.csrfToken = "{{ csrf_token() }}";
+</script>
 </body>
 
 </html>

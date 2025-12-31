@@ -13,9 +13,9 @@ $(document).ready(function () {
     var $catSlider = $('#categoryScroll');
 
     if ($catSlider.length) {
-        $catSlider.on('init', function (event, slick) {
+        $catSlider.on('init', function(event, slick){
             // Show the slider once initialized to prevent the 1px glitch
-            $(this).css({ 'visibility': 'visible', 'opacity': '1' });
+            $(this).css({'visibility': 'visible', 'opacity': '1'});
         });
 
         $catSlider.slick({
@@ -54,33 +54,33 @@ $(document).ready(function () {
 
     if ($('#heroSlider').length) {
         $('#heroSlider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 1500,
-            infinite: true,
-            arrows: false, // Hide Previous & Next buttons
-            dots: false
-        });
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 1500,
+        infinite: true,
+        arrows: false, // Hide Previous & Next buttons
+        dots: false
+    });
     }
 });
 
 // Initialize intl-tel-input
-var input = document.querySelector("#phone_input");
-if (input) {
-    iti = window.intlTelInput(input, {
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-        initialCountry: "auto",
-        separateDialCode: true, // Shows country code next to flag
-        geoIpLookup: function (callback) {
-            $.get('https://ipinfo.io', function () { }, "jsonp").always(function (resp) {
-                var countryCode = (resp && resp.country) ? resp.country : "in"; // Default to India
-                callback(countryCode);
-            });
-        },
-        preferredCountries: ['in', 'us', 'ae', 'gb']
-    });
-}
+    var input = document.querySelector("#phone_input");
+    if (input) {
+        iti = window.intlTelInput(input, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            initialCountry: "auto",
+            separateDialCode: true, // Shows country code next to flag
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "in"; // Default to India
+                    callback(countryCode);
+                });
+            },
+            preferredCountries: ['in', 'us', 'ae', 'gb']
+        });
+    }
 
 // 1. SEND OTP
 function sendOtp() {
@@ -126,7 +126,7 @@ function sendOtp() {
             var err = JSON.parse(xhr.responseText);
             // Handle specific validation errors from backend if any
             var msg = err.message || 'Something went wrong. Try again.';
-            if (err.errors && err.errors.phone) {
+            if(err.errors && err.errors.phone) {
                 msg = err.errors.phone[0];
             }
             errorMsg.text(msg);
@@ -215,7 +215,7 @@ function toggleSearch() {
     } else {
         searchBar.fadeIn(200);
         // Focus input for immediate typing
-        setTimeout(function () {
+        setTimeout(function() {
             $('#live-search-input').focus();
         }, 100);
     }
@@ -498,25 +498,26 @@ function removeFromSideCart(id) {
 
 // 🚀 5. CHECKOUT FROM SIDE CART
 function initiateCartCheckout() {
-    // 1. Close Side Drawer
+    // Close Drawer
     var sideCartEl = document.getElementById('sideCart');
     var sideCart = bootstrap.Offcanvas.getInstance(sideCartEl);
-    if(sideCart) sideCart.hide();
+    sideCart.hide();
 
-    // 2. Get Values from Side Cart HTML
-    // Text Example: "₹ 1,000"
-    let subtotalText = $('#cart_subtotal').text();
-    let savingsText = $('#cart_savings').text(); // Ye side cart me hota hai
+    // Open Main Checkout Modal
+    $('#final_buy_mode').val('cart');
 
-    // 3. Convert to Numbers
-    let subtotal = parseFloat(subtotalText.replace(/[^\d.]/g, '')) || 0;
-    let savings = parseFloat(savingsText.replace(/[^\d.]/g, '')) || 0;
+    // Summary Update for Cart
+    $('#summ_img').attr('src', 'https://cdn-icons-png.flaticon.com/512/2543/2543369.png'); // Cart Icon
+    $('#summ_name').text('Cart Checkout');
+    $('#summ_qty').text($('#side_cart_count').text() + ' Items');
+    $('#summ_total').text($('#cart_subtotal').text());
 
-    // MRP = Selling Price + Savings
-    let mrp = subtotal + savings;
+    $('#checkoutModal').modal('show');
 
-    // 4. Call Modal with ALL Data
-    openCheckoutModal(subtotal, mrp, savings);
+    // Auth Check Logic
+    const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
+    if (isLoggedIn) showStep('address');
+    else showStep('login');
 }
 
 // 🛒 DETAIL PAGE HELPER (Values collect karne ke liye)
@@ -538,94 +539,61 @@ function addToCartFromDetail(btn) {
 
 // 🛒 1. OPEN CHECKOUT MODAL
 function openDirectCheckout(btn) {
-    // ... (Data collection logic - same as before) ...
+    // 1. Collect Data
     var prodId = $(btn).data('id');
     var qty = $('#qty_input').val() || 1;
-    var priceText = $('#display_price').text().replace(/,/g, '');
-    var price = parseFloat(priceText);
-    var mrpText = $('#display_mrp').text().replace(/,/g, '');
-    var mrp = parseFloat(mrpText) || price;
+    var isSiddh = $('#input_is_siddh').val() || 0;
 
-    var img = $('.product-main-slider .slick-current img').attr('src');
-    if (!img) img = $('.product-main-slider img').first().attr('src');
+    // Summary Data
+    var img = $('#mainImage').attr('src');
     var title = $('h1.font-heading').text().trim();
+    var price = $('#display_price').text();
 
-    currentCartTotal = price * qty;
-    var totalMrp = mrp * qty;
-    var productDiscount = totalMrp - currentCartTotal;
-    currentProductId = prodId;
-
-    // UI Updates
+    // Populate Modal
     $('#summ_img').attr('src', img);
     $('#summ_name').text(title);
     $('#summ_qty').text('Qty: ' + qty);
-    $('#summ_total').text('₹' + currentCartTotal.toLocaleString('en-IN'));
+    $('#summ_total').text('₹' + price);
 
-    // --- Price Breakdown Logic ---
-    if (productDiscount > 0) {
-        $('#summ_mrp_display').text('₹' + totalMrp.toLocaleString('en-IN')).show();
-
-        // 🔥 FIX: Simple .show() use karein
-        $('#row_mrp_total').show();
-        $('#bill_mrp').text('₹' + totalMrp.toLocaleString('en-IN'));
-
-        // 🔥 FIX: Simple .show() use karein
-        $('#row_product_discount').show();
-        $('#bill_product_discount').text('- ₹' + productDiscount.toLocaleString('en-IN'));
-    } else {
-        $('#summ_mrp_display').hide();
-        $('#row_mrp_total').hide();
-        $('#row_product_discount').hide();
-    }
-
-    // Totals
-    $('#bill_subtotal').text('₹' + currentCartTotal.toLocaleString('en-IN'));
-    $('#bill_final_total').text('₹' + currentCartTotal.toLocaleString('en-IN'));
-    $('#btn_pay_amount').text('₹' + currentCartTotal.toLocaleString('en-IN'));
-
-    // ✅ FORCE RESET COUPON UI
-    $('#row_coupon_discount').hide();
-    $('#bill_coupon_discount').text('- ₹0');
-
-    $('#coupon_applied_box').hide();
-    $('#coupon_input_group').show();
-    $('#coupon_code').val('');
-    $('#coupon_msg').hide();
-    $('#coupon_list_box').hide();
-
-    // Hidden Inputs
+    // Hidden Inputs Fill
     $('#final_buy_mode').val('direct');
     $('#final_product_id').val(prodId);
     $('#final_quantity').val(qty);
-    $('#final_is_siddh').val($('#input_is_siddh').val());
-    $('#final_coupon_code').val('');
+    $('#final_is_siddh').val(isSiddh);
 
-    // Open Modal (jQuery)
+    // Show Modal
     $('#checkoutModal').modal('show');
 
-    // ... Login check logic (same as before) ...
+   // Auth Check Logic
     const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
-    if (isLoggedIn) {
-        $.get("/checkout/get-user-data", function(data) {
-             if (data.has_address) {
-                 $('#saved_address_list').html(data.html).show();
-                 $('#new_address_form').hide();
-             } else {
-                 $('#saved_address_list').hide();
-                 $('#new_address_form').show();
-             }
-             $('#user_phone_display').text(data.user_phone);
-             showStep('address');
-        });
-    } else {
-        showStep('login');
-    }
+    if (isLoggedIn) showStep('address');
+    else showStep('login');
 }
 
 // Helper: Switch Steps
 function showStep(step) {
     $('#step_login, #step_address, #step_payment').hide();
-    $('#step_' + step).fadeIn();
+    if (step === 'address') {
+        $('#step_address').fadeIn();
+
+        // Check if saved address list exists and has items
+        // We check if the radio buttons for addresses exist
+        if ($('.saved-addr-radio').length > 0) {
+            $('#saved_address_list').show();
+            $('#new_address_form').hide();
+
+            // Auto-select the first address if none is selected
+            if (!$('input[name="selected_address"]:checked').val()) {
+                $('.saved-addr-radio').first().prop('checked', true);
+            }
+        } else {
+            // No saved addresses, show new form
+            $('#saved_address_list').hide();
+            $('#new_address_form').show();
+        }
+    } else {
+        $('#step_' + step).fadeIn();
+    }
 }
 
 // Global variable for Checkout Modal Input
@@ -640,8 +608,8 @@ $(document).ready(function () {
             utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
             initialCountry: "auto",
             separateDialCode: true, // Flag alag, code alag
-            geoIpLookup: function (callback) {
-                $.get('https://ipinfo.io', function () { }, "jsonp").always(function (resp) {
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
                     var countryCode = (resp && resp.country) ? resp.country : "in";
                     callback(countryCode);
                 });
@@ -675,7 +643,7 @@ function sendCheckoutOtp() {
         phone: fullPhone, // Sending full number
         _token: $('meta[name="csrf-token"]').attr('content')
     }, function (res) {
-        if (res.status) {
+        if(res.status) {
             $('#chk_otp_box').slideDown();
             btn.hide();
             // Optional: User ko dikhane ke liye format kar sakte hain
@@ -684,7 +652,7 @@ function sendCheckoutOtp() {
             errorMsg.text(res.message || 'Failed to send OTP');
             btn.text('CONTINUE').prop('disabled', false);
         }
-    }).fail(function () {
+    }).fail(function() {
         errorMsg.text('Error sending OTP. Please try again.');
         btn.text('CONTINUE').prop('disabled', false);
     });
@@ -802,7 +770,7 @@ function verifyCheckoutOtp() {
     // 3. Get Phone Number (Handle both intl-input and standard input)
     var fullPhone = "";
     if (typeof itiCheckout !== 'undefined' && itiCheckout.isValidNumber()) {
-        // Agar Library active hai to wahan se number lo
+         // Agar Library active hai to wahan se number lo
         fullPhone = itiCheckout.getNumber();
     } else {
         // Fallback: Agar library fail ho to direct value lo
@@ -825,7 +793,7 @@ function verifyCheckoutOtp() {
             $('#step_login').hide();
 
             // Fetch User Data & Address
-            $.get("/checkout/get-user-data", function (data) {
+            $.get("/checkout/get-user-data", function(data) {
 
                 // Update UI
                 $('#user_phone_display').text(data.user_phone);
@@ -862,11 +830,11 @@ function verifyCheckoutOtp() {
         if (xhr.responseJSON && xhr.responseJSON.message) {
             errorMessage = xhr.responseJSON.message;
         } else if (xhr.responseText) {
-            // Fallback for simple text errors
-            try {
+             // Fallback for simple text errors
+             try {
                 var err = JSON.parse(xhr.responseText);
                 errorMessage = err.message || errorMessage;
-            } catch (e) { }
+             } catch(e) {}
         }
 
         // Show Actual Error (e.g., "Invalid OTP")
@@ -1070,8 +1038,6 @@ function getAreaPart(fullAddr) {
 function processPayment() {
     var btn = $('#btn_place_order');
     btn.prop('disabled', true).text('Processing...');
-    // ✅ Hidden input me coupon code set karo
-    $('#final_coupon_code').val(appliedCouponCode);
 
     // Form Data Collect
     var formData = {
@@ -1081,9 +1047,7 @@ function processPayment() {
         product_id: $('#final_product_id').val(),
         quantity: $('#final_quantity').val(),
         is_siddh: $('#final_is_siddh').val(),
-        address_id: $('#final_address_id').val(),
-        // ✅ Send Coupon Code
-        coupon_code: appliedCouponCode
+        address_id: $('#final_address_id').val()
     };
 
     $.post("/checkout/place-order", formData, function (res) {
@@ -1208,9 +1172,7 @@ function filterReviews(productId) {
     });
 }
 
-// Global Variables for Checkout
-let currentCartTotal = 0;
-let currentProductId = 0;
+let currentCartTotal = 0; // Isko modal open hote waqt set karna padega
 let appliedCouponCode = null;
 
 // 1. Fetch Coupons (View All Click)
@@ -1220,15 +1182,15 @@ function fetchCoupons() {
     $.ajax({
         url: "{{ route('get.coupons') }}",
         type: "GET",
-        success: function (response) {
+        success: function(response) {
             let html = '';
-            if (response.length > 0) {
+            if(response.length > 0) {
                 response.forEach(c => {
                     html += `
                         <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2">
                             <div>
                                 <strong class="text-uppercase text-primary border border-primary px-2 rounded small me-2">${c.code}</strong>
-                                <small class="text-muted d-block mt-1" style="font-size:10px;">${c.type == 'fixed' ? 'Flat ₹' + c.value + ' OFF' : c.value + '% OFF'}</small>
+                                <small class="text-muted d-block mt-1" style="font-size:10px;">${c.type == 'fixed' ? 'Flat ₹'+c.value+' OFF' : c.value+'% OFF'}</small>
                             </div>
                             <button class="btn btn-sm btn-outline-dark py-0" onclick="$('#coupon_code').val('${c.code}'); applyCoupon();">Apply</button>
                         </div>
@@ -1267,7 +1229,7 @@ function applyCoupon() {
             cart_total: currentCartTotal,
             _token: "{{ csrf_token() }}"
         },
-        success: function (res) {
+        success: function(res) {
             if (res.status) {
                 // Success
                 $('#coupon_applied_box').slideDown();
@@ -1290,91 +1252,39 @@ function applyCoupon() {
                 msg.text(res.message).addClass('text-danger');
             }
         },
-        error: function (err) {
+        error: function(err) {
             msg.text('Something went wrong').addClass('text-danger');
         }
     });
 }
 
+// 3. Remove Coupon
+function removeCoupon() {
+    $('#coupon_code').val('');
+    $('#coupon_applied_box').slideUp();
+    $('.input-group').slideDown();
+
+    // Reset Bill
+    $('#bill_discount').text('- ₹0');
+    $('#bill_total').text('₹' + currentCartTotal);
+    $('#coupon_msg').text('');
+
+    appliedCouponCode = null;
+}
 
 // 🔥 IMPORTANT: Jab Modal Open ho tab ye value set karein
 // Ye function aapke 'Buy Now' button par call hona chahiye
-function openCheckoutModal(price, mrpTotal = 0, discountTotal = 0) {
-    console.log("Opening Cart Checkout...", price, mrpTotal, discountTotal);
+function openCheckoutModal(price, productId) {
+    currentCartTotal = parseFloat(price); // Global Variable Set
 
-    // 1. Set Global Total
-    if (typeof price === 'string') price = parseFloat(price.replace(/[^\d.]/g, ''));
-    currentCartTotal = price;
+    // UI Update
+    $('#bill_subtotal').text('₹' + currentCartTotal);
+    $('#bill_total').text('₹' + currentCartTotal);
 
-    // 2. Format Values
-    let formattedPrice = currentCartTotal.toLocaleString('en-IN');
-    let formattedMrp = mrpTotal.toLocaleString('en-IN');
-    let formattedDisc = discountTotal.toLocaleString('en-IN');
+    // Reset Old State
+    removeCoupon();
 
-    // 3. Header & Images
-    $('#summ_name').text('Cart Checkout');
-    $('#summ_qty').text($('#side_cart_count').text() + ' Items');
-    $('#summ_img').attr('src', 'https://cdn-icons-png.flaticon.com/512/1170/1170678.png'); // Cart Icon
-
-    // 4. Update Prices
-    $('#summ_total').text('₹' + formattedPrice);       // Top Right
-    $('#bill_subtotal').text('₹' + formattedPrice);    // Subtotal Row
-    $('#bill_final_total').text('₹' + formattedPrice); // Final Total Row
-    $('#btn_pay_amount').text('₹' + formattedPrice);   // Button
-
-    // 5. 🔥 HANDLE MRP & DISCOUNT ROWS (The Fix)
-    if (discountTotal > 0) {
-        // Show Breakdown with values
-        $('#row_mrp_total').show();
-        $('#bill_mrp').text('₹' + formattedMrp);
-
-        $('#row_product_discount').show();
-        $('#bill_product_discount').text('- ₹' + formattedDisc);
-
-        // Optional: Top MRP Strikethrough
-        $('#summ_mrp_display').text('₹' + formattedMrp).show();
-    } else {
-        // Hide if no discount
-        $('#row_mrp_total').hide();
-        $('#row_product_discount').hide();
-        $('#summ_mrp_display').hide();
-    }
-
-    // 6. 🔥 FORCE RESET COUPON UI (Important)
-    $('#row_coupon_discount').css('display', 'none');
-    $('#bill_coupon_discount').text('- ₹0');
-
-    $('#coupon_applied_wrapper').hide();
-    $('#coupon_applied_box').hide();
-    $('#coupon_input_group').show();
-    $('#coupon_code').val('');
-    $('#coupon_msg').hide();
-    $('#coupon_list_box').hide();
-
-    // 7. Hidden Inputs
-    $('#final_buy_mode').val('cart'); // Mode is Cart
-    $('#final_coupon_code').val('');
-
-    // 8. Open Modal
     $('#checkoutModal').modal('show');
-
-    // Login Check Logic
-    const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
-    if (isLoggedIn) {
-        $.get("/checkout/get-user-data", function(data) {
-             if (data.has_address) {
-                 $('#saved_address_list').html(data.html).show();
-                 $('#new_address_form').hide();
-             } else {
-                 $('#saved_address_list').hide();
-                 $('#new_address_form').show();
-             }
-             $('#user_phone_display').text(data.user_phone);
-             showStep('address');
-        });
-    } else {
-        showStep('login');
-    }
 }
 
 // 1. Toggle Coupon List & Fetch Data
@@ -1385,103 +1295,80 @@ function toggleCouponList() {
         box.slideUp();
     } else {
         box.slideDown();
-
-        // 🔥 FIX: Use window.appRoutes instead of {{ route }}
-        $.get(window.appRoutes.getCoupons, function (data) {
-            let html = '';
-            if (data.length > 0) {
-                data.forEach(c => {
-                    let val = parseFloat(c.value);
-
-                    // Logic to show text properly
-                    let isPercent = c.type.toLowerCase().includes('percent') || c.type.includes('%');
-                    let desc = isPercent ? val + '% OFF' : 'Flat ₹' + val + ' OFF';
-
-                    html += `
-                        <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2">
-                            <div>
-                                <span class="badge bg-light text-dark border border-secondary mb-1 text-uppercase">${c.code}</span>
-                                <div class="small text-muted" style="font-size: 11px;">${desc}</div>
+        // Fetch Coupons only if empty
+        // if (box.html().includes('Loading')) {
+            $.get("{{ route('get.coupons') }}", function(data) {
+                let html = '';
+                if(data.length > 0) {
+                    data.forEach(c => {
+                        let desc = c.type === 'fixed' ? 'Flat ₹'+c.value+' OFF' : c.value+'% OFF';
+                        html += `
+                            <div class="coupon-card">
+                                <div>
+                                    <span class="coupon-code-box">${c.code}</span>
+                                    <div class="small text-muted mt-1">${desc}</div>
+                                </div>
+                                <button class="btn-apply-coupon" onclick="applyCouponDirect('${c.code}')">APPLY</button>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark fw-bold py-1 px-3" style="font-size: 11px;" onclick="applyCouponDirect('${c.code}')">APPLY</button>
-                        </div>
-                    `;
-                });
-            } else {
-                html = '<div class="text-center small text-muted py-2">No coupons available</div>';
-            }
-            box.html(html);
-        });
+                        `;
+                    });
+                } else {
+                    html = '<div class="text-center small text-muted py-2">No coupons available</div>';
+                }
+                box.html(html);
+            });
+        // }
     }
 }
 
 // 2. Apply Coupon (Manual Input)
 function applyCouponManual() {
     let code = $('#coupon_code').val();
-    if (!code) return;
+    if(!code) {
+        $('#coupon_msg').text('Please enter a code').show();
+        return;
+    }
     applyCouponDirect(code);
 }
 
 // 3. Main Apply Function
-// 3. Main Apply Function
 function applyCouponDirect(code) {
-    $('#coupon_msg').hide();
-    $('#coupon_code').val(code);
+    $('#coupon_msg').hide(); // Hide old errors
 
-    $.post(window.appRoutes.applyCoupon, {
+    $.post("{{ route('apply.coupon') }}", {
         code: code,
-        cart_total: currentCartTotal,
-        _token: window.csrfToken
+        cart_total: currentCartTotal, // Global variable from modal open
+        _token: "{{ csrf_token() }}"
     }, function(res) {
-        if (res.status) {
+        if(res.status) {
             // Success UI
-            $('#coupon_input_group').hide();
-            $('#coupon_list_box').slideUp();
+            $('#coupon_input_group').hide(); // Input chupao
+            $('#coupon_list_box').slideUp(); // List band karo
 
+            $('#applied_code_text').text(code);
             $('#saved_amount_text').text('₹' + res.discount);
-            $('#coupon_applied_box').fadeIn();
+            $('#coupon_applied_box').fadeIn(); // Green box dikhao
 
-            // 🔥 FIX: Sirf fadeIn() use karein (css flex hata diya)
-            // Kyunki ab HTML me wrapper hai, to simple show/fadeIn sahi kaam karega
-            $('#row_coupon_discount').fadeIn();
+            // Bill Update
+            $('#bill_discount').text('- ₹' + res.discount);
+            $('#bill_total').text('₹' + res.new_total);
 
-            $('#bill_coupon_discount').text('- ₹' + res.discount);
-
-            // Update Final Pay
-            $('#bill_final_total').text('₹' + res.new_total);
-            $('#btn_pay_amount').text('₹' + res.new_total);
-
-            // Store State
-            appliedCouponCode = code;
-            $('#final_coupon_code').val(code);
         } else {
+            // Error
             $('#coupon_msg').text(res.message).addClass('text-danger').show();
         }
     }).fail(function() {
-        $('#coupon_msg').text('Error applying coupon').show();
+        $('#coupon_msg').text('Something went wrong').show();
     });
 }
 
-// // 2. Remove Coupon Logic
+// 4. Remove Coupon
 function removeCoupon() {
-    // 1. Hide Green Box
     $('#coupon_applied_box').hide();
-
-    // 2. Show Input
     $('#coupon_input_group').fadeIn();
     $('#coupon_code').val('');
-    $('#coupon_msg').hide();
 
-    // 3. ✅ HIDE SUMMARY ROW (Ab ye 100% kaam karega wrapper ki wajah se)
-    $('#row_coupon_discount').hide();
-
-    // 4. Reset Price
-    let formattedTotal = currentCartTotal.toLocaleString('en-IN');
-    $('#bill_final_total').text('₹' + formattedTotal);
-    $('#btn_pay_amount').text('₹' + formattedTotal);
-
-    // 5. Clear Data
-    appliedCouponCode = null;
-    $('#final_coupon_code').val('');
+    // Reset Bill
+    $('#bill_discount').text('- ₹0');
+    $('#bill_total').text('₹' + currentCartTotal);
 }
-

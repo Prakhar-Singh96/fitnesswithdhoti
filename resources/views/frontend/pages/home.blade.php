@@ -101,7 +101,7 @@
                                 @if ($product->discount > 0)
                                     <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
                                         style="z-index: 2;">
-                                        {{ $product->discount }}% OFF
+                                        {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
                                 <button class="btn-wishlist">
@@ -182,7 +182,7 @@
     </section>
 
     {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 featured-products-section" style="background-color: #f7f1de;">
+    <section class="py-3 featured-products-section" style="background-color: #f7f1de;">
         <div class="container">
 
             {{-- Heading --}}
@@ -204,7 +204,7 @@
                                 @if ($product->discount > 0)
                                     <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
                                         style="z-index: 2;">
-                                        {{ $product->discount }}% OFF
+                                        {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
                                 <button class="btn-wishlist">
@@ -285,7 +285,7 @@
     </section>
 
     {{-- 🛒 3. OUR PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 featured-products-section" style="background-color: var(--light)">
+    <section class="py-3 featured-products-section" style="background-color: var(--light)">
         <div class="container">
 
             {{-- Heading --}}
@@ -307,7 +307,7 @@
                                 @if ($product->discount > 0)
                                     <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
                                         style="z-index: 2;">
-                                        {{ $product->discount }}% OFF
+                                        {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
                                 <button class="btn-wishlist">
@@ -387,7 +387,7 @@
     </section>
 
     {{-- 🛒 4. video-feed-section (Placeholder for next section) --}}
-    <section class="py-5 video-feed-section" style="background-color: #f7f1de;">
+    <section class="py-3 video-feed-section" style="background-color: #f7f1de;">
         <div class="container-fluid px-4">
 
             <div class="d-flex justify-content-center mb-4">
@@ -462,7 +462,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
     </section>
 
 
-    <section class="py-5 favourites-section" style="background-color: #f7f1de;">
+    <section class="py-3 favourites-section" style="background-color: #f7f1de;">
         <div class="container">
 
             {{-- 1. Fancy Heading --}}
@@ -574,7 +574,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section>
 
-    <section class="py-5 energy-section" style="background-color: #f7f1de;">
+    <section class="py-3 energy-section" style="background-color: #f7f1de;">
         <div class="container">
 
             {{-- 1. Fancy Heading --}}
@@ -632,7 +632,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         @if (isset($showcaseSections) && $showcaseSections->count() > 0)
             @foreach ($showcaseSections as $section)
                 @if ($section->products->count() > 0)
-                    <section class="py-5 category-showcase-section" style="background-color: #f7f1de;">
+                    <section class="py-3 category-showcase-section" style="background-color: #f7f1de;">
                         <div class="container-fluid px-4">
 
                             {{-- 1. Heading --}}
@@ -687,7 +687,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                             <span
                                                                 class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
                                                                 style="z-index: 2;">
-                                                                {{ $product->discount }}% OFF
+                                                                {{ round($product->discount) }}% OFF
                                                             </span>
                                                         @endif
 
@@ -775,7 +775,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section>
 
-    <section class="py-5 testimonial-section" style="background-color: #f7f1de;">
+    <section class="py-3 testimonial-section" style="background-color: #f7f1de;">
         <div class="container">
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
@@ -847,7 +847,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section>
 
-    {{-- <section class="py-5 blog-section" style="background-color: #f7f1de;">
+    {{-- <section class="py-3 blog-section" style="background-color: #f7f1de;">
         <div class="container">
 
 
@@ -921,7 +921,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section> --}}
 
-    <section class="py-5 faq-section"> {{-- Earthy Background --}}
+    <section class="py-3 faq-section"> {{-- Earthy Background --}}
         <div class="container">
 
             {{-- 1. Fancy Heading (Light Box on Dark BG) --}}
@@ -1027,7 +1027,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section>
 
-    <section class="py-5 brand-story-section" style="background-color: #f7f1de;">
+    <section class="py-3 brand-story-section" style="background-color: #f7f1de;">
         <div class="container">
 
             <div class="accordion" id="brandStoryAccordion">

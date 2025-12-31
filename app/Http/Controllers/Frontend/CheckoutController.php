@@ -187,6 +187,33 @@ class CheckoutController extends Controller
             }
         }
 
+        if ($request->coupon_code) {
+        $coupon = Coupon::where('code', $request->coupon_code)->where('status', 1)->first();
+
+        if ($coupon) {
+            // Check Expiry (Optional)
+            if ($coupon->expires_at && Carbon::now()->gt($coupon->expires_at)) {
+                // Expired hai to kuch mat karo ya error return karo
+            } else {
+                $discount = 0;
+
+                if ($coupon->type == 'fixed') {
+                    $discount = $coupon->value;
+                } else {
+                    $discount = ($totalAmount * $coupon->value) / 100;
+                }
+
+                // Discount Total se zyada nahi ho sakta
+                if ($discount > $totalAmount) {
+                    $discount = $totalAmount;
+                }
+
+                // Final Amount Update
+                $totalAmount = $totalAmount - $discount;
+            }
+        }
+    }
+
         // -----------------------------
         // 3. CREATE ORDER IN DATABASE
         // -----------------------------
@@ -352,35 +379,43 @@ class CheckoutController extends Controller
     public function applyCoupon(Request $request)
     {
         $code = $request->code;
-        $cartTotal = $request->cart_total; // Frontend se cart value bhejo
 
-        // 1. Find Coupon
+        // 🔥 FIX: Ensure cartTotal is treated as a float
+        $cartTotal = (float) str_replace(',', '', $request->cart_total);
+
+        // 1. Coupon Find karo
         $coupon = Coupon::where('code', $code)->where('status', 1)->first();
 
-        // 2. Validations
+        // 2. Validation
         if (!$coupon) {
             return response()->json(['status' => false, 'message' => 'Invalid Coupon Code']);
         }
 
+        // Expiry Check (Agar NULL nahi hai tabhi check karo)
         if ($coupon->expires_at && Carbon::now()->gt($coupon->expires_at)) {
             return response()->json(['status' => false, 'message' => 'Coupon Expired']);
         }
 
+        // Min Amount Check
         if ($coupon->min_cart_amount && $cartTotal < $coupon->min_cart_amount) {
-            return response()->json(['status' => false, 'message' => 'Minimum cart amount should be ₹' . $coupon->min_cart_amount]);
+            return response()->json(['status' => false, 'message' => 'Add more items worth ₹' . ($coupon->min_cart_amount - $cartTotal)]);
         }
 
-        // 3. Calculate Discount
+        // 3. Calculation Logic (Main Fix)
         $discountAmount = 0;
+        $couponValue = (float) $coupon->value;
 
-        if ($coupon->type == 'fixed') {
-            $discountAmount = $coupon->value;
+        // 🔥 FIX: Check lowercase string matches
+        $type = strtolower($coupon->type);
+
+        if ($type == 'fixed' || $type == 'flat') {
+            $discountAmount = $couponValue;
         } else {
-            // Percentage Calculation
-            $discountAmount = ($cartTotal * $coupon->value) / 100;
+            // Percent Case (10% of 500 = 50)
+            $discountAmount = ($cartTotal * $couponValue) / 100;
         }
 
-        // Discount total se zyada nahi ho sakta
+        // Discount Total se zyada nahi ho sakta
         if ($discountAmount > $cartTotal) {
             $discountAmount = $cartTotal;
         }
@@ -389,20 +424,29 @@ class CheckoutController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Coupon Applied!',
-            'discount' => $discountAmount,
-            'new_total' => $newTotal
+            'message' => 'Coupon Applied Successfully!',
+            'discount' => number_format($discountAmount, 2), // Format for display
+            'new_total' => number_format($newTotal, 2)
         ]);
     }
 
     public function getCoupons()
     {
-        // Sirf Active aur Future me expire hone wale coupons layenge
+        // 1. सिर्फ वो कूपन लाओ जो Active हैं (Status=1)
+        // AUR (Expiry future me ho YA Expiry Null ho)
         $coupons = \App\Models\Coupon::where('status', 1)
-            ->where('expires_at', '>', now())
-            ->orWhereNull('expires_at')
+            ->where(function($query) {
+                $query->whereDate('expires_at', '>', Carbon::now())
+                      ->orWhereNull('expires_at');
+            })
             ->latest()
             ->get();
+
+        // 2. Value ko Number banao taaki JS me dikkat na aaye
+        $coupons->transform(function ($coupon) {
+            $coupon->value = (float) $coupon->value;
+            return $coupon;
+        });
 
         return response()->json($coupons);
     }
