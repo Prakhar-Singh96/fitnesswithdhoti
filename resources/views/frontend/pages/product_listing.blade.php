@@ -244,14 +244,26 @@
                                         </div>
 
                                         {{-- Rating --}}
+                                        {{-- ⭐ Dynamic Rating Logic --}}
+                                        @php
+                                            $avgRating = $product->reviews->avg('rating') ?? 0;
+                                            $reviewCount = $product->reviews->count();
+                                        @endphp
+
                                         <div class="text-warning d-flex align-items-center"
                                             style="font-size: 18px; margin-bottom: 6px;">
-                                            <i class="las la-star"></i>
-                                            <i class="las la-star"></i>
-                                            <i class="las la-star"></i>
-                                            <i class="las la-star"></i>
-                                            <i class="las la-star"></i>
-                                            <span class="text-muted ms-1 text-dark fw-bold">(24)</span>
+                                            {{-- Loop for Stars --}}
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= round($avgRating))
+                                                    <i class="las la-star"></i> {{-- Filled --}}
+                                                @elseif($i - 0.5 <= $avgRating)
+                                                    <i class="las la-star-half-alt"></i> {{-- Half --}}
+                                                @else
+                                                    <i class="lar la-star"></i> {{-- Empty --}}
+                                                @endif
+                                            @endfor
+
+                                            <span class="text-muted ms-1 text-dark fw-bold">({{ $reviewCount }})</span>
                                         </div>
 
                                         {{-- Add to Cart --}}

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -152,51 +153,94 @@ class BigShipService
     public function addSingleOrder($order, $warehouseId, $weight, $dimensions)
     {
         $token = $this->getToken();
+
+        // 1. Address Parsing & Cleaning
         $addr = is_array($order->shipping_address) ? $order->shipping_address : json_decode($order->shipping_address, true);
 
-        // 🔥 FIX 1: Name Validation Logic
-        // BigShip ko Last Name min 3 chars chahiye.
-        // Agar naam single hai (e.g. "Prakhar"), to Last Name empty hoga.
-        // Hum Last Name mein bhi First Name daal denge ya "Customer" likh denge.
+        // Name Validation
         $fullName = trim($addr['name']);
         $parts = explode(' ', $fullName, 2);
         $firstName = $parts[0];
-        $lastName = isset($parts[1]) ? $parts[1] : $firstName; // Agar last name nahi hai to first name hi use karo
-
-        // Agar ab bhi Last Name 3 chars se chhota hai (e.g. "Om"), to padding lagao
+        $lastName = isset($parts[1]) ? $parts[1] : 'Customer';
         if (strlen($lastName) < 3) {
-            $lastName .= "   "; // Spaces add karke length badhao
+            $lastName = $lastName . ' Sr.';
+        }
+
+        // Phone Validation (Only 10 digits)
+        $phone = preg_replace('/[^0-9]/', '', $addr['phone']);
+        if(strlen($phone) > 10) {
+            $phone = substr($phone, -10);
+        }
+
+        // Address Length Validation
+        $addressLine = substr($addr['address_line1'], 0, 80);
+        if(strlen($addressLine) < 5) {
+            $addressLine .= " " . ($addr['address_line2'] ?? 'Landmark');
         }
 
         $isCOD = $order->payment_method == 'COD';
-        $totalValue = (float) $order->total_amount;
 
-        // 🔥 FIX 2: Dynamic Products Logic (Loop through items)
+        // ✅ Target Total Amount (Discount ke baad wala price, e.g., 900)
+        $totalValue = round((float) $order->total_amount, 2);
+
+        // 2. Items Calculation Logic (To match Total Value)
         $productList = [];
 
-        // Items load karein
         if($order->relationLoaded('items')){
              $items = $order->items;
         } else {
              $items = $order->items()->get();
         }
 
+        // Step A: Calculate Original Sum of Items (without discount)
+        $originalSum = 0;
         foreach ($items as $item) {
-            $productPrice = (float) $item->price;
+            $originalSum += ($item->price * $item->quantity);
+        }
+
+        // Step B: Loop items and adjust price based on discount ratio
+        $currentSum = 0;
+        $itemCount = count($items);
+        $counter = 0;
+
+        foreach ($items as $item) {
+            $counter++;
+
+            // Calculate item's original share
+            $itemOriginalTotal = $item->price * $item->quantity;
+
+            if ($originalSum > 0) {
+                // Agar last item hai, to bacha hua amount isme daal do (Rounding fix ke liye)
+                if ($counter == $itemCount) {
+                    $itemNewTotal = $totalValue - $currentSum;
+                } else {
+                    // Ratio ke hisab se price kam karo
+                    $share = $itemOriginalTotal / $originalSum;
+                    $itemNewTotal = round($totalValue * $share, 2);
+                }
+            } else {
+                $itemNewTotal = 0;
+            }
+
+            // Running Sum update karo
+            $currentSum += $itemNewTotal;
+
+            // Per unit price calculate karo
+            $unitPrice = ($item->quantity > 0) ? round($itemNewTotal / $item->quantity, 2) : 0;
 
             $productList[] = [
                 "product_category" => "Others",
                 "product_sub_category" => "General",
-                // Name ko limit karein taaki API error na de
-                "product_name" => substr($item->product_name ?? 'Item', 0, 40),
+                "product_name" => substr(preg_replace('/[^A-Za-z0-9 ]/', '', $item->product_name ?? 'Item'), 0, 35),
                 "product_quantity" => (int) $item->quantity,
-                "each_product_invoice_amount" => $productPrice,
-                "each_product_collectable_amount" => $isCOD ? $productPrice : 0,
-                "hsn" => ""
+                // 🔥 Ye ab Discounted Price hoga (e.g., 900)
+                "each_product_invoice_amount" => $unitPrice,
+                "each_product_collectable_amount" => $isCOD ? $unitPrice : 0,
+                "hsn" => "999999"
             ];
         }
 
-        // Payload Construct
+        // 3. Payload Construct
         $payload = [
             "shipment_category" => "b2c",
             "warehouse_detail" => [
@@ -205,20 +249,21 @@ class BigShipService
             ],
             "consignee_detail" => [
                 "first_name" => $firstName,
-                "last_name" => trim($lastName), // Trim spaces
+                "last_name" => $lastName,
                 "company_name" => "Personal",
-                "contact_number_primary" => substr($addr['phone'], -10),
+                "contact_number_primary" => (string)$phone,
                 "email_id" => $order->user->email ?? "support@suyagya.com",
                 "consignee_address" => [
-                    "address_line1" => substr($addr['address_line1'], 0, 50),
+                    "address_line1" => $addressLine,
                     "address_line2" => "",
                     "pincode" => (string)$addr['pincode']
                 ]
             ],
             "order_detail" => [
                 "invoice_date" => now()->format('Y-m-d\TH:i:s.000\Z'),
-                "invoice_id" => $order->order_number,
+                "invoice_id" => (string)$order->order_number,
                 "payment_type" => $isCOD ? "COD" : "Prepaid",
+                // Box Invoice Amount must match Sum of Products
                 "shipment_invoice_amount" => $totalValue,
                 "total_collectable_amount" => $isCOD ? $totalValue : 0,
                 "box_details" => [
@@ -227,14 +272,13 @@ class BigShipService
                         "each_box_length" => (int)$dimensions['length'],
                         "each_box_width" => (int)$dimensions['width'],
                         "each_box_height" => (int)$dimensions['height'],
-                        "each_box_invoice_amount" => $totalValue,
+                        "each_box_invoice_amount" => $totalValue, // 900
                         "each_box_collectable_amount" => $isCOD ? $totalValue : 0,
                         "box_count" => 1,
-                        "product_details" => $productList // ✅ Ab asli products jayenge
+                        "product_details" => $productList // Sum of these is now guaranteed to be 900
                     ]
                 ],
                 "ewaybill_number" => "",
-                // 🔥 FIX 3: Document Detail Added
                 "document_detail" => [
                     "invoice_document_file" => "",
                     "ewaybill_document_file" => ""
@@ -246,9 +290,9 @@ class BigShipService
         $response = Http::withHeaders(['Authorization' => 'Bearer ' . $token, 'Content-Type' => 'application/json'])
                         ->post("{$this->baseUrl}api/order/add/single", $payload);
 
-        // Debugging Code (Sirf tab chalega jab error aayega)
+        // Error Logging
         if (!$response->successful()) {
-             dd($response->json(), $payload);
+             \Log::error('BigShip API Fail:', ['response' => $response->json(), 'payload' => $payload]);
         }
 
         return $response->json();

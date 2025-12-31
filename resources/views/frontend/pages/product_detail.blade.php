@@ -63,9 +63,11 @@
         .gem-btn.active {
             border-color: #ff6f00;
             color: #ff6f00;
-            background-color: #fffbf2; /* Light orange tint */
+            background-color: #fffbf2;
+            /* Light orange tint */
             font-weight: 600;
-            box-shadow: 0 0 0 1px #ff6f00 inset; /* Thicker look */
+            box-shadow: 0 0 0 1px #ff6f00 inset;
+            /* Thicker look */
         }
 
         /* Icon styling inside buttons */
@@ -82,8 +84,14 @@
             margin-right: 5px;
             border: 1px solid #ccc;
         }
-        .bg-silver { background-color: #c0c0c0; }
-        .bg-panch { background-color: #d4af37; }
+
+        .bg-silver {
+            background-color: #c0c0c0;
+        }
+
+        .bg-panch {
+            background-color: #d4af37;
+        }
     </style>
 @endsection
 
@@ -95,7 +103,8 @@
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
+                    </li>
                     <li class="breadcrumb-item active text-dark">{{ $product->name }}</li>
                 </ol>
             </nav>
@@ -148,12 +157,17 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="text-warning small me-2">
                         @for ($i = 1; $i <= 5; $i++)
-                            @if ($i <= round($averageRating)) <i class="las la-star"></i>
-                            @elseif($i - 0.5 <= $averageRating) <i class="las la-star-half-alt"></i>
-                            @else <i class="lar la-star"></i> @endif
+                            @if ($i <= round($averageRating))
+                                <i class="las la-star"></i>
+                            @elseif($i - 0.5 <= $averageRating)
+                                <i class="las la-star-half-alt"></i>
+                            @else
+                                <i class="lar la-star"></i>
+                            @endif
                         @endfor
                     </div>
-                    <span class="text-muted small border-start ps-2">{{ number_format($averageRating, 1) }} ({{ $totalReviews }} Reviews)</span>
+                    <span class="text-muted small border-start ps-2">{{ number_format($averageRating, 1) }}
+                        ({{ $totalReviews }} Reviews)</span>
                 </div>
 
                 {{-- 💰 PRICE SECTION (FIXED FOR MRP UPDATE) --}}
@@ -166,11 +180,13 @@
 
                     {{-- 🔥 FIX: HTML structure update taaki JS hamesha MRP dhoond sake --}}
                     {{-- Agar MRP bada hai to dikhao, nahi to 'd-none' class se chupao --}}
-                    <span id="mrp_container" class="text-decoration-line-through text-muted fs-5 {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
+                    <span id="mrp_container"
+                        class="text-decoration-line-through text-muted fs-5 {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
                         ₹<span id="display_mrp">{{ number_format($product->mrp_price) }}</span>
                     </span>
 
-                    <span id="discount_container" class="text-danger fw-bold ms-3 bg-danger-subtle px-2 py-1 rounded small {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
+                    <span id="discount_container"
+                        class="text-danger fw-bold ms-3 bg-danger-subtle px-2 py-1 rounded small {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
                         <span id="display_discount">{{ round($product->discount) }}</span>% OFF
                     </span>
                 </div>
@@ -178,7 +194,8 @@
                 {{-- Timer --}}
                 <div class="offer-timer-box mb-4 p-2 border border-danger rounded d-inline-block bg-light">
                     <span class="text-danger fw-bold small me-2">Offer ends in:</span>
-                    <span id="countdown" class="fw-bold text-dark" style="min-width: 100px; display: inline-block;">Loading...</span>
+                    <span id="countdown" class="fw-bold text-dark"
+                        style="min-width: 100px; display: inline-block;">Loading...</span>
                 </div>
 
                 @if ($product->is_gemstone && $product->gemstoneVariants->count() > 0)
@@ -210,21 +227,23 @@
                         <div class="gem-option-group">
                             <span class="gem-option-title">Size</span>
                             <div class="gem-btn-wrapper" id="ratti_group">
-                                @foreach($product->gemstoneVariants->where('type', 'loose')->unique('ratti_size') as $idx => $gv)
+                                @foreach ($product->gemstoneVariants->where('type', 'loose')->unique('ratti_size') as $idx => $gv)
                                     <div class="gem-btn gem-ratti-btn {{ $idx === 0 ? 'active' : '' }}"
-                                         onclick="updateGemState('ratti', '{{ $gv->ratti_size }}', this)">
+                                        onclick="updateGemState('ratti', '{{ $gv->ratti_size }}', this)">
                                         {{ $gv->ratti_size }} Ratti
                                     </div>
                                 @endforeach
                             </div>
                         </div>
-                        <input type="hidden" id="sel_ratti" value="{{ $product->gemstoneVariants->where('type', 'loose')->first()->ratti_size ?? '' }}">
+                        <input type="hidden" id="sel_ratti"
+                            value="{{ $product->gemstoneVariants->where('type', 'loose')->first()->ratti_size ?? '' }}">
 
                         {{-- 3. MATERIAL (Hidden initially) --}}
                         <div class="gem-option-group" id="material_section" style="display:none;">
                             <span class="gem-option-title">Material</span>
                             <div class="gem-btn-wrapper">
-                                <div class="gem-btn active gem-mat-btn" onclick="updateGemState('material', 'silver', this)">
+                                <div class="gem-btn active gem-mat-btn"
+                                    onclick="updateGemState('material', 'silver', this)">
                                     <span class="mat-color bg-silver"></span> Silver
                                 </div>
                                 <div class="gem-btn gem-mat-btn" onclick="updateGemState('material', 'panchdhatu', this)">
@@ -240,7 +259,9 @@
                             <div class="d-flex align-items-center">
                                 <select class="form-select w-auto" name="ring_size" style="min-width: 200px;">
                                     <option value="">Select a Ring Size</option>
-                                    @for($i=10; $i<=30; $i++) <option value="{{$i}}">{{$i}}</option> @endfor
+                                    @for ($i = 10; $i <= 30; $i++)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
                                     <option value="adjustable">Free/Adjustable</option>
                                 </select>
                                 <a href="#" class="small text-primary text-decoration-underline ms-3">Size Chart</a>
@@ -248,12 +269,12 @@
                         </div>
 
                     </div>
-
                 @elseif ($product->variants->count() > 0)
                     {{-- ⚖️ STANDARD WEIGHT DROPDOWN --}}
                     <div class="mb-4 bg-light p-2 rounded border" style="max-width: 250px;">
                         <label class="fw-bold small mb-1 d-block text-dark">Select Weight:</label>
-                        <select class="form-select form-select-sm border-secondary fw-bold text-dark" id="variant_select" name="variant_id">
+                        <select class="form-select form-select-sm border-secondary fw-bold text-dark" id="variant_select"
+                            name="variant_id">
                             @foreach ($product->variants as $variant)
                                 <option value="{{ $variant->id }}" data-price="{{ $variant->selling_price }}"
                                     data-mrp="{{ $variant->mrp_price }}" data-stock="{{ $variant->quantity }}">
@@ -269,7 +290,8 @@
                 {{-- EMI Widget --}}
                 @if ($product->emi_available && $product->price > 500)
                     @php $emiPrice = ceil($product->price / 3); @endphp
-                    <div class="emi-box border rounded p-2 mb-4 d-flex align-items-center bg-white" style="max-width: 400px;">
+                    <div class="emi-box border rounded p-2 mb-4 d-flex align-items-center bg-white"
+                        style="max-width: 400px;">
                         <span class="badge bg-success me-2" style="font-size: 10px;">NEW</span>
                         <div class="flex-grow-1" style="font-size: 13px;">
                             or <strong>₹{{ $emiPrice }}/month</strong> (3 months)
@@ -281,9 +303,11 @@
 
                 {{-- Siddh Checkbox --}}
                 @if ($product->is_siddh_enabled)
-                    <div class="siddh-box p-3 border rounded mb-4" style="background-color: #fcf8f2; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)">
+                    <div class="siddh-box p-3 border rounded mb-4"
+                        style="background-color: #fcf8f2; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)">
                         <div class="form-check d-flex align-items-center">
-                            <input class="form-check-input me-3" type="checkbox" id="siddh_check" style="width: 25px; height: 25px; cursor: pointer;">
+                            <input class="form-check-input me-3" type="checkbox" id="siddh_check"
+                                style="width: 25px; height: 25px; cursor: pointer;">
                             <div>
                                 <label class="form-check-label fw-bold text-dark cursor-pointer" for="siddh_check">
                                     Get Siddh Product for Just ₹{{ number_format($product->siddh_price, 0) }}
@@ -300,61 +324,113 @@
                     <div class="mb-4">
                         <label class="fw-bold small mb-2 d-block">Quantity</label>
                         <div class="input-group" style="width: 140px;">
-                            <button class="btn btn-outline-secondary btn-sm rounded-0" onclick="updateQty('minus')"><i class="las la-minus"></i></button>
-                            <input type="text" id="qty_input" name="quantity" class="form-control text-center border-secondary fs-6 fw-bold" value="1" min="1" max="{{ $product->quantity }}" readonly>
-                            <button class="btn btn-outline-secondary btn-sm rounded-0" onclick="updateQty('plus')"><i class="las la-plus"></i></button>
+                            <button class="btn btn-outline-secondary btn-sm rounded-0" onclick="updateQty('minus')"><i
+                                    class="las la-minus"></i></button>
+                            <input type="text" id="qty_input" name="quantity"
+                                class="form-control text-center border-secondary fs-6 fw-bold" value="1"
+                                min="1" max="{{ $product->quantity }}" readonly>
+                            <button class="btn btn-outline-secondary btn-sm rounded-0" onclick="updateQty('plus')"><i
+                                    class="las la-plus"></i></button>
                         </div>
                         @if ($product->quantity < 5)
-                            <small class="text-danger fw-bold mt-1 d-block"><i class="las la-exclamation-circle"></i> Only {{ $product->quantity }} left in stock!</small>
+                            <small class="text-danger fw-bold mt-1 d-block"><i class="las la-exclamation-circle"></i> Only
+                                {{ $product->quantity }} left in stock!</small>
                         @endif
                     </div>
 
                     <div class="d-flex gap-3 mb-4">
-                        <button class="btn btn-warning w-50 py-3 fw-bold text-dark text-uppercase shadow-sm fs-6" style="border: 2px solid #ffc107;" data-id="{{ $product->id }}" onclick="addToCartFromDetail(this)">Add to Cart</button>
-                        <button class="btn btn-dark w-50 py-3 fw-bold text-uppercase shadow-sm fs-6" data-id="{{ $product->id }}" onclick="openDirectCheckout(this)">Buy Now</button>
+                        <button class="btn btn-warning w-50 py-3 fw-bold text-dark text-uppercase shadow-sm fs-6"
+                            style="border: 2px solid #ffc107;" data-id="{{ $product->id }}"
+                            onclick="addToCartFromDetail(this)">Add to Cart</button>
+                        <button class="btn btn-dark w-50 py-3 fw-bold text-uppercase shadow-sm fs-6"
+                            data-id="{{ $product->id }}" onclick="openDirectCheckout(this)">Buy Now</button>
                     </div>
                 @else
-                    <div class="alert alert-danger border-0 d-flex align-items-center mb-4" style="background-color: #ffe5e5; color: #cc0000;">
+                    <div class="alert alert-danger border-0 d-flex align-items-center mb-4"
+                        style="background-color: #ffe5e5; color: #cc0000;">
                         <i class="las la-ban fs-3 me-2"></i>
-                        <div><h6 class="fw-bold mb-0">Out of Stock</h6><small>This item is currently unavailable.</small></div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Out of Stock</h6><small>This item is currently unavailable.</small>
+                        </div>
                     </div>
                 @endif
 
                 {{-- 🚚 DELIVERY CHECKER --}}
                 <div class="delivery-check-box mb-3">
-                    <h6 class="fw-bold small mb-2 d-flex align-items-center"><i class="las la-truck fs-4 me-2 text-danger"></i> <span style="color: #000;">Get estimated delivery date</span></h6>
+                    <h6 class="fw-bold small mb-2 d-flex align-items-center"><i
+                            class="las la-truck fs-4 me-2 text-danger"></i> <span style="color: #000;">Get estimated
+                            delivery date</span></h6>
                     <div class="input-group mb-3">
-                        <span class="input-group-text bg-white border-end-0"><i class="las la-map-marker text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0 border-secondary ps-0" placeholder="Enter your pincode" id="pincodeInput" maxlength="6" style="box-shadow: none;">
-                        <button class="btn text-white fw-bold px-4" style="background-color: #198754;" onclick="checkDelivery()">Check</button>
+                        <span class="input-group-text bg-white border-end-0"><i
+                                class="las la-map-marker text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 border-secondary ps-0"
+                            placeholder="Enter your pincode" id="pincodeInput" maxlength="6" style="box-shadow: none;">
+                        <button class="btn text-white fw-bold px-4" style="background-color: #198754;"
+                            onclick="checkDelivery()">Check</button>
                     </div>
                     <div id="deliveryResult" class="small fw-bold mt-2 mb-2" style="display:none;"></div>
                 </div>
 
                 {{-- Trust Badge --}}
-                <div class="secure-box d-flex align-items-center justify-content-between p-3 rounded mb-3" style="background-color: #e8f5e9; border: 1px solid #c8e6c9;">
-                    <div class="d-flex align-items-center"><i class="las la-check-circle fs-3 text-success me-2"></i><div style="line-height: 1.2;"><div class="fw-bold text-dark" style="font-size: 13px;">100% Secure</div><div class="text-dark" style="font-size: 12px;">Payment Guarantee</div></div></div>
+                <div class="secure-box d-flex align-items-center justify-content-between p-3 rounded mb-3"
+                    style="background-color: #e8f5e9; border: 1px solid #c8e6c9;">
+                    <div class="d-flex align-items-center"><i class="las la-check-circle fs-3 text-success me-2"></i>
+                        <div style="line-height: 1.2;">
+                            <div class="fw-bold text-dark" style="font-size: 13px;">100% Secure</div>
+                            <div class="text-dark" style="font-size: 12px;">Payment Guarantee</div>
+                        </div>
+                    </div>
                     <div class="payment-icons d-flex align-items-center gap-4 flex-wrap justify-content-end">
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" height="20" alt="GPay">
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" height="20" alt="PhonePe">
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" height="20" alt="UPI">
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" alt="Mastercard">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" height="20"
+                            alt="GPay">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" height="20"
+                            alt="PhonePe">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" height="20"
+                            alt="UPI">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20"
+                            alt="Mastercard">
                     </div>
                 </div>
 
                 {{-- Accordions --}}
                 <div class="accordion accordion-flush mt-4" id="productDetailsAccordion">
                     <div class="accordion-item">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription"><i class="las la-leaf me-2 fs-5"></i> Description</button></h2>
-                        <div id="collapseDescription" class="accordion-collapse collapse" data-bs-parent="#productDetailsAccordion"><div class="accordion-body text-muted small" style="line-height: 1.6;">{!! $product->description !!}</div></div>
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fw-bold text-dark" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseDescription" aria-expanded="true">
+                                <i class="las la-leaf me-2 fs-5"></i> Description
+                            </button>
+                        </h2>
+
+                        {{-- ✅ CHANGE 2: 'show' class add kar di --}}
+                        <div id="collapseDescription" class="accordion-collapse collapse show"
+                            data-bs-parent="#productDetailsAccordion">
+                            <div class="accordion-body text-muted small" style="line-height: 1.6;">
+                                {!! $product->description !!}
+                            </div>
+                        </div>
                     </div>
                     <div class="accordion-item">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowToWear"><i class="las la-hand-holding-heart me-2 fs-5"></i> How To Wear & Recharge</button></h2>
-                        <div id="collapseHowToWear" class="accordion-collapse collapse" data-bs-parent="#productDetailsAccordion"><div class="accordion-body text-muted small" style="line-height: 1.6;"><p>Wear on DOMINANT HAND.</p></div></div>
+                        <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold text-dark"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowToWear"><i
+                                    class="las la-hand-holding-heart me-2 fs-5"></i> How To Wear & Recharge</button></h2>
+                        <div id="collapseHowToWear" class="accordion-collapse collapse"
+                            data-bs-parent="#productDetailsAccordion">
+                            <div class="accordion-body text-muted small" style="line-height: 1.6;">
+                                <p>Wear on DOMINANT HAND.</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="accordion-item">
-                        <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelivery"><i class="las la-truck me-2 fs-5"></i> Delivery</button></h2>
-                        <div id="collapseDelivery" class="accordion-collapse collapse" data-bs-parent="#productDetailsAccordion"><div class="accordion-body text-muted small" style="line-height: 1.6;"><p>Free delivery on orders above ₹299.</p></div></div>
+                        <h2 class="accordion-header"><button class="accordion-button collapsed fw-bold text-dark"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelivery"><i
+                                    class="las la-truck me-2 fs-5"></i> Delivery</button></h2>
+                        <div id="collapseDelivery" class="accordion-collapse collapse"
+                            data-bs-parent="#productDetailsAccordion">
+                            <div class="accordion-body text-muted small" style="line-height: 1.6;">
+                                <p>Free delivery on orders above ₹299.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -766,182 +842,199 @@
 @endsection
 
 @section('scripts')
-<script>
-    // 1. Slider Setup (Fixed)
-    $('.product-main-slider').slick({
-        slidesToShow: 1, slidesToScroll: 1, arrows: true, fade: true, asNavFor: '.product-thumb-slider',
-        prevArrow: '<button type="button" class="slick-prev custom-arrow main-prev"><i class="las la-angle-left"></i></button>',
-        nextArrow: '<button type="button" class="slick-next custom-arrow main-next"><i class="las la-angle-right"></i></button>'
-    });
-    $('.product-thumb-slider').slick({
-        slidesToShow: 5, slidesToScroll: 1, asNavFor: '.product-main-slider', dots: false, centerMode: false, focusOnSelect: true, arrows: false
-    });
+    <script>
+        // 1. Slider Setup (Fixed)
+        $('.product-main-slider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            fade: true,
+            asNavFor: '.product-thumb-slider',
+            prevArrow: '<button type="button" class="slick-prev custom-arrow main-prev"><i class="las la-angle-left"></i></button>',
+            nextArrow: '<button type="button" class="slick-next custom-arrow main-next"><i class="las la-angle-right"></i></button>'
+        });
+        $('.product-thumb-slider').slick({
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            asNavFor: '.product-main-slider',
+            dots: false,
+            centerMode: false,
+            focusOnSelect: true,
+            arrows: false
+        });
 
-    // 2. Quantity
-    function updateQty(action) {
-        const input = document.getElementById('qty_input');
-        let currentVal = parseInt(input.value);
-        const maxStock = parseInt(input.getAttribute('max'));
-        if (action === 'plus') {
-            if (currentVal < maxStock) input.value = currentVal + 1;
-            else alert('Maximum stock limit reached!');
-        } else if (action === 'minus') {
-            if (currentVal > 1) input.value = currentVal - 1;
+        // 2. Quantity
+        function updateQty(action) {
+            const input = document.getElementById('qty_input');
+            let currentVal = parseInt(input.value);
+            const maxStock = parseInt(input.getAttribute('max'));
+            if (action === 'plus') {
+                if (currentVal < maxStock) input.value = currentVal + 1;
+                else alert('Maximum stock limit reached!');
+            } else if (action === 'minus') {
+                if (currentVal > 1) input.value = currentVal - 1;
+            }
         }
-    }
 
-    // 3. Delivery Check (Corrected URL and Logic)
-    function checkDelivery() {
-        const pincode = document.getElementById('pincodeInput').value;
-        const resultBox = document.getElementById('deliveryResult');
+        // 3. Delivery Check (Corrected URL and Logic)
+        function checkDelivery() {
+            const pincode = document.getElementById('pincodeInput').value;
+            const resultBox = document.getElementById('deliveryResult');
 
-        if (pincode.length === 6) {
-            resultBox.style.display = 'block';
-            resultBox.className = "small text-muted fw-bold mt-2";
-            resultBox.innerText = "Checking...";
+            if (pincode.length === 6) {
+                resultBox.style.display = 'block';
+                resultBox.className = "small text-muted fw-bold mt-2";
+                resultBox.innerText = "Checking...";
 
-            // Use jQuery AJAX since you have Slick slider (jQuery is present)
-            $.ajax({
-                url: "/check-pincode-delivery/" + pincode,
-                type: "GET",
-                success: function(response) {
-                    if (response.status) {
-                        resultBox.className = "small text-success fw-bold mt-2";
-                        resultBox.innerHTML = "Free Delivery by " + response.date;
-                    } else {
+                // Use jQuery AJAX since you have Slick slider (jQuery is present)
+                $.ajax({
+                    url: "/check-pincode-delivery/" + pincode,
+                    type: "GET",
+                    success: function(response) {
+                        if (response.status) {
+                            resultBox.className = "small text-success fw-bold mt-2";
+                            resultBox.innerHTML = "Free Delivery by " + response.date;
+                        } else {
+                            resultBox.className = "small text-danger fw-bold mt-2";
+                            resultBox.innerText = response.message || "Not available";
+                        }
+                    },
+                    error: function() {
                         resultBox.className = "small text-danger fw-bold mt-2";
-                        resultBox.innerText = response.message || "Not available";
+                        resultBox.innerText = "Unable to fetch delivery date.";
                     }
-                },
-                error: function() {
-                    resultBox.className = "small text-danger fw-bold mt-2";
-                    resultBox.innerText = "Unable to fetch delivery date.";
+                });
+            } else {
+                alert('Please enter valid 6 digit pincode');
+                resultBox.style.display = 'none';
+            }
+        }
+
+        // 4. Gemstone Logic
+        function updateGemState(key, value, btn) {
+            let group = btn.parentElement;
+            group.querySelectorAll('.gem-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (key === 'type') document.getElementById('sel_type').value = value;
+            if (key === 'ratti') document.getElementById('sel_ratti').value = value;
+            if (key === 'material') document.getElementById('sel_mat').value = value;
+
+            if (key === 'type') {
+                let mat = document.getElementById('material_section');
+                let ring = document.getElementById('ring_size_section');
+                if (value === 'loose') {
+                    mat.style.display = 'none';
+                    ring.style.display = 'none';
+                } else if (value === 'ring') {
+                    mat.style.display = 'block';
+                    ring.style.display = 'block';
+                } else if (value === 'pendant') {
+                    mat.style.display = 'block';
+                    ring.style.display = 'none';
+                }
+            }
+            findGemPrice();
+        }
+
+        function findGemPrice() {
+            const type = document.getElementById('sel_type').value;
+            const ratti = document.getElementById('sel_ratti').value;
+            const mat = document.getElementById('sel_mat').value;
+            const dataDiv = document.getElementById('gem_data');
+            if (!dataDiv) return;
+            const variants = JSON.parse(dataDiv.innerText);
+
+            const match = variants.find(v => {
+                let isMatch = (v.type === type && v.ratti_size == ratti);
+                if (type !== 'loose') isMatch = isMatch && (v.material === mat);
+                return isMatch;
+            });
+
+            if (match) {
+                updatePrices(match.price, match.mrp);
+                document.getElementById('selected_variant_id').value = match.id;
+            }
+        }
+
+        // 5. Weight Variant Logic
+        const variantSelect = document.getElementById('variant_select');
+        if (variantSelect) {
+            variantSelect.addEventListener('change', function() {
+                const opt = this.options[this.selectedIndex];
+                // Ensure values are parsed correctly
+                const price = opt.getAttribute('data-price');
+                const mrp = opt.getAttribute('data-mrp');
+                updatePrices(price, mrp);
+            });
+        }
+
+        // 6. Common Price Update (FIXED)
+        function updatePrices(price, mrp) {
+            price = parseFloat(price);
+            mrp = parseFloat(mrp);
+
+            // Update Base Price hidden input
+            const baseInput = document.getElementById('base_price');
+            if (baseInput) baseInput.value = price;
+
+            // Update Selling Price
+            document.getElementById('display_price').innerText = price.toLocaleString('en-IN');
+
+            // Handle MRP and Discount Visibility
+            const mrpContainer = document.getElementById('mrp_container');
+            const discContainer = document.getElementById('discount_container');
+
+            if (mrp > price) {
+                // Show MRP and Discount
+                if (mrpContainer) {
+                    mrpContainer.classList.remove('d-none');
+                    document.getElementById('display_mrp').innerText = mrp.toLocaleString('en-IN');
+                }
+                if (discContainer) {
+                    discContainer.classList.remove('d-none');
+                    const disc = Math.round(((mrp - price) / mrp) * 100);
+                    document.getElementById('display_discount').innerText = disc;
+                }
+            } else {
+                // Hide MRP and Discount if no discount
+                if (mrpContainer) mrpContainer.classList.add('d-none');
+                if (discContainer) discContainer.classList.add('d-none');
+            }
+
+            // Trigger Siddh Recalc
+            const siddhCheck = document.getElementById('siddh_check');
+            if (siddhCheck && siddhCheck.checked) {
+                siddhCheck.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('gem_data')) findGemPrice();
+        });
+
+        // Siddh Checkbox
+        const siddhCheck = document.getElementById('siddh_check');
+        if (siddhCheck) {
+            siddhCheck.addEventListener('change', function() {
+                const currentBasePrice = parseFloat(document.getElementById('base_price').value) || 0;
+                const siddhPrice = parseFloat("{{ $product->siddh_price ?? 0 }}");
+                const displayPrice = document.getElementById('display_price');
+                const inputSiddh = document.getElementById('input_is_siddh');
+
+                if (this.checked) {
+                    let newPrice = currentBasePrice + siddhPrice;
+                    displayPrice.innerText = newPrice.toLocaleString('en-IN');
+                    inputSiddh.value = 1;
+                } else {
+                    displayPrice.innerText = currentBasePrice.toLocaleString('en-IN');
+                    inputSiddh.value = 0;
                 }
             });
-        } else {
-            alert('Please enter valid 6 digit pincode');
-            resultBox.style.display = 'none';
-        }
-    }
-
-    // 4. Gemstone Logic
-    function updateGemState(key, value, btn) {
-        let group = btn.parentElement;
-        group.querySelectorAll('.gem-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        if(key === 'type') document.getElementById('sel_type').value = value;
-        if(key === 'ratti') document.getElementById('sel_ratti').value = value;
-        if(key === 'material') document.getElementById('sel_mat').value = value;
-
-        if(key === 'type') {
-            let mat = document.getElementById('material_section');
-            let ring = document.getElementById('ring_size_section');
-            if(value === 'loose') { mat.style.display='none'; ring.style.display='none'; }
-            else if(value === 'ring') { mat.style.display='block'; ring.style.display='block'; }
-            else if(value === 'pendant') { mat.style.display='block'; ring.style.display='none'; }
-        }
-        findGemPrice();
-    }
-
-    function findGemPrice() {
-        const type = document.getElementById('sel_type').value;
-        const ratti = document.getElementById('sel_ratti').value;
-        const mat = document.getElementById('sel_mat').value;
-        const dataDiv = document.getElementById('gem_data');
-        if(!dataDiv) return;
-        const variants = JSON.parse(dataDiv.innerText);
-
-        const match = variants.find(v => {
-            let isMatch = (v.type === type && v.ratti_size == ratti);
-            if(type !== 'loose') isMatch = isMatch && (v.material === mat);
-            return isMatch;
-        });
-
-        if(match) {
-            updatePrices(match.price, match.mrp);
-            document.getElementById('selected_variant_id').value = match.id;
-        }
-    }
-
-    // 5. Weight Variant Logic
-    const variantSelect = document.getElementById('variant_select');
-    if (variantSelect) {
-        variantSelect.addEventListener('change', function() {
-            const opt = this.options[this.selectedIndex];
-            // Ensure values are parsed correctly
-            const price = opt.getAttribute('data-price');
-            const mrp = opt.getAttribute('data-mrp');
-            updatePrices(price, mrp);
-        });
-    }
-
-    // 6. Common Price Update (FIXED)
-    function updatePrices(price, mrp) {
-        price = parseFloat(price);
-        mrp = parseFloat(mrp);
-
-        // Update Base Price hidden input
-        const baseInput = document.getElementById('base_price');
-        if(baseInput) baseInput.value = price;
-
-        // Update Selling Price
-        document.getElementById('display_price').innerText = price.toLocaleString('en-IN');
-
-        // Handle MRP and Discount Visibility
-        const mrpContainer = document.getElementById('mrp_container');
-        const discContainer = document.getElementById('discount_container');
-
-        if (mrp > price) {
-            // Show MRP and Discount
-            if(mrpContainer) {
-                mrpContainer.classList.remove('d-none');
-                document.getElementById('display_mrp').innerText = mrp.toLocaleString('en-IN');
-            }
-            if(discContainer) {
-                discContainer.classList.remove('d-none');
-                const disc = Math.round(((mrp - price)/mrp)*100);
-                document.getElementById('display_discount').innerText = disc;
-            }
-        } else {
-            // Hide MRP and Discount if no discount
-            if(mrpContainer) mrpContainer.classList.add('d-none');
-            if(discContainer) discContainer.classList.add('d-none');
         }
 
-        // Trigger Siddh Recalc
-        const siddhCheck = document.getElementById('siddh_check');
-        if (siddhCheck && siddhCheck.checked) {
-            siddhCheck.dispatchEvent(new Event('change'));
-        }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        if(document.getElementById('gem_data')) findGemPrice();
-    });
-
-    // Siddh Checkbox
-    const siddhCheck = document.getElementById('siddh_check');
-    if (siddhCheck) {
-        siddhCheck.addEventListener('change', function() {
-            const currentBasePrice = parseFloat(document.getElementById('base_price').value) || 0;
-            const siddhPrice = parseFloat("{{ $product->siddh_price ?? 0 }}");
-            const displayPrice = document.getElementById('display_price');
-            const inputSiddh = document.getElementById('input_is_siddh');
-
-            if (this.checked) {
-                let newPrice = currentBasePrice + siddhPrice;
-                displayPrice.innerText = newPrice.toLocaleString('en-IN');
-                inputSiddh.value = 1;
-            } else {
-                displayPrice.innerText = currentBasePrice.toLocaleString('en-IN');
-                inputSiddh.value = 0;
-            }
-        });
-    }
-
-    // 🕒 1. FAKE DAILY TIMER (Midnight Countdown)
+        // 🕒 1. FAKE DAILY TIMER (Midnight Countdown)
         const timerDisplay = document.getElementById('countdown');
 
         if (timerDisplay) {
@@ -978,6 +1071,5 @@
             setInterval(startDailyTimer, 1000);
             startDailyTimer(); // Page load hote hi run karo
         }
-
-</script>
+    </script>
 @endsection

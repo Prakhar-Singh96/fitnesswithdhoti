@@ -249,64 +249,111 @@
 
                 {{-- 🟢 STEP 2: ADDRESS --}}
 
-                <div id="step_address" style="display: none;">
+                div id="step_address" style="display: none;">
 
-                    <div class="bg-light p-2 rounded-3 mb-3 d-flex justify-content-between align-items-center border">
-
+                    {{-- User Info Header --}}
+                    <div class="bg-light p-2 rounded-3 mb-4 d-flex align-items-center justify-content-between border">
                         <div class="d-flex align-items-center">
-
-                            <i class="las la-user-circle fs-3 me-2 text-muted"></i>
-
-                            <div>
-
-                                <small class="text-muted x-small d-block" style="line-height: 1;">LOGGED IN AS</small>
-
-                                <span class="fw-bold text-dark small" id="user_phone_display">...</span>
-
+                            <div class="bg-white p-2 rounded-circle border me-2">
+                                <i class="las la-user text-muted"></i>
                             </div>
-
+                            <div style="line-height: 1.2;">
+                                <small class="text-muted x-small d-block">LOGGED IN AS</small>
+                                <span class="fw-bold text-dark small" id="user_phone_display">
+                                    {{ Auth::user()->phone ?? 'User' }}
+                                </span>
+                            </div>
                         </div>
-
                         <i class="las la-check-circle text-success fs-4"></i>
+                    </div>
+
+                    {{-- A. Saved Address List --}}
+                    <div id="saved_address_list"
+                        style="{{ Auth::check() && Auth::user()->addresses->count() > 0 ? '' : 'display:none;' }}">
+
+                        {{-- ✅ Yahan Include karein taaki Page Load par bhi dikhe --}}
+                        @if (Auth::check())
+                            @include('frontend.includes.checkout_address_list', [
+                                'addresses' => Auth::user()->addresses,
+                            ])
+                        @endif
 
                     </div>
 
-                    <div id="saved_address_list"></div>
+                    {{-- B. New Address Form (Agar koi address nahi hai to ye by default dikhega) --}}
+                    <div id="new_address_form"
+                        style="{{ Auth::check() && Auth::user()->addresses->count() > 0 ? 'display:none;' : '' }}">
 
-                    <div id="new_address_form" style="display: none;">
-
-                        <h6 class="fw-bold mb-3">Add Delivery Address</h6>
-
-                        <input type="tel" id="chk_pincode" class="form-control mb-2" placeholder="Pincode"
-                            onkeyup="fetchCheckoutCityState()" maxlength="6">
-
-                        <div id="address_expanded" style="display:none;">
-
-                            <div class="row g-2 mb-2">
-
-                                <div class="col-6"><input type="text" id="chk_city"
-                                        class="form-control bg-light" readonly></div>
-
-                                <div class="col-6"><input type="text" id="chk_state"
-                                        class="form-control bg-light" readonly></div>
-
-                            </div>
-
-                            <input type="text" id="chk_name" class="form-control mb-2" placeholder="Full Name"
-                                value="{{ Auth::user()->name ?? '' }}">
-
-                            <input type="text" id="chk_house" class="form-control mb-2"
-                                placeholder="House No / Building">
-
-                            <input type="text" id="chk_area" class="form-control mb-2"
-                                placeholder="Area / Colony">
-
-                            <button class="btn btn-dark w-100 mt-2" onclick="saveAndContinue()">SAVE &
-
-                                PROCEED</button>
-
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Add New Address</h6>
+                            @if (Auth::check() && Auth::user()->addresses->count() > 0)
+                                <button type="button" class="btn btn-sm btn-link text-decoration-none"
+                                    onclick="$('#new_address_form').slideUp(); $('#saved_address_list').slideDown();">
+                                    Cancel
+                                </button>
+                            @endif
                         </div>
 
+                        {{-- Pincode --}}
+                        <div class="form-floating mb-3">
+                            <input type="tel" id="chk_pincode" class="form-control rounded-3 fw-bold"
+                                placeholder="Pincode" maxlength="6" onkeyup="fetchCheckoutCityState()">
+                            <label for="chk_pincode">Pincode *</label>
+                            <small id="chk_pincode_msg"
+                                class="position-absolute top-50 end-0 translate-middle-y me-3 fw-bold x-small"></small>
+                        </div>
+
+                        {{-- Expanded Fields --}}
+                        <div id="address_expanded" style="display: none;">
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <input type="text" id="chk_city" class="form-control bg-light border-0 small"
+                                        placeholder="City" readonly>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" id="chk_state" class="form-control bg-light border-0 small"
+                                        placeholder="State" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" id="chk_house" class="form-control rounded-3"
+                                    placeholder="House No">
+                                <label>Flat, House no., Building *</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" id="chk_area" class="form-control rounded-3"
+                                    placeholder="Area">
+                                <label>Area, Street, Sector *</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" id="chk_name" class="form-control rounded-3"
+                                    placeholder="Name" value="{{ Auth::user()->name ?? '' }}">
+                                <label>Full Name *</label>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="d-block x-small fw-bold text-muted text-uppercase mb-2">Save As</label>
+                                <div class="d-flex gap-2">
+                                    <input type="radio" class="btn-check" name="addr_type" id="home"
+                                        value="home" checked>
+                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill"
+                                        for="home">Home</label>
+
+                                    <input type="radio" class="btn-check" name="addr_type" id="work"
+                                        value="work">
+                                    <label class="btn btn-outline-secondary btn-sm px-3 rounded-pill"
+                                        for="work">Work</label>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-warning w-100 py-3 rounded-3 fw-bold text-white"
+                                style="background-color: #ff6f00; border: none;" onclick="saveAndContinue()">
+                                SAVE & CONTINUE
+                            </button>
+                        </div>
                     </div>
 
                 </div>

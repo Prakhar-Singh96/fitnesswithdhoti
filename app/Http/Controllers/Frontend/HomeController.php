@@ -66,17 +66,21 @@ class HomeController extends Controller
         if ($spiritualCat) {
             // Fetch SubCategories with their active products
             $showcaseSections = SubCategory::where('category_id', $spiritualCat->id)
-                ->whereIn('slug', $targetSubSlugs)
-                ->where('status', 1)
-                ->with([
-                    'category',
-                    'products' => function ($q) {
-                        $q->where('status', 1)
-                            ->latest()
-                            ->take(15); // ✅ ONLY 15 PRODUCTS
-                    }
-                ])
-                ->get();
+            ->whereIn('slug', $targetSubSlugs)
+            ->where('status', 1)
+            ->get()
+            ->map(function ($subCategory) use ($spiritualCat) {
+
+                // 🔥 HAR SUB-CATEGORY KE LIYE ALAG QUERY
+                $subCategory->products = Product::where('status', 1)
+                    ->where('sub_category_id', $subCategory->id) // ✅ MAIN FIX
+                    ->with('reviews')
+                    ->latest()
+                    ->take(5)
+                    ->get();
+
+                return $subCategory;
+            });
         }
 
 

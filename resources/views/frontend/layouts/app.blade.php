@@ -36,7 +36,7 @@
 
 
     {{-- 💡 Premium Custom Styles --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v=time()">
 
     @yield('styles')
 </head>
@@ -87,7 +87,7 @@
     @yield('scripts')
 
     {{-- 5. Custom JS (Main Logic) --}}
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}?v=time()"></script>
 
     <script>
 init__megaMenu();
@@ -219,6 +219,72 @@ initFooterAccordion();
     };
     window.csrfToken = "{{ csrf_token() }}";
 </script>
+{{-- ✅ WHATSAPP FLOATING BUTTON START --}}
+<a href="https://wa.me/917692005006?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product."
+   class="whatsapp-float"
+   target="_blank"
+   rel="noopener noreferrer">
+    <i class="lab la-whatsapp"></i>
+</a>
+
+<style>
+    /* WhatsApp Button Design */
+    .whatsapp-float {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        bottom: 25px; /* Niche se kitna upar */
+        right: 25px;  /* Right side se kitna door */
+        background-color: #25d366;
+        color: #FFF;
+        border-radius: 50px;
+        text-align: center;
+        font-size: 35px; /* Icon ka size */
+        box-shadow: 2px 2px 3px #999;
+        z-index: 9999; /* Sabse upar dikhe */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none !important;
+    }
+
+    /* Hover Effect */
+    .whatsapp-float:hover {
+        background-color: #1ebe57;
+        transform: scale(1.1); /* Thoda bada hoga hover par */
+        color: #fff;
+    }
+
+    /* Pulse Animation (Optional - Dhyan khichne ke liye) */
+    .whatsapp-float {
+        animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+        0% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+        }
+    }
+
+    /* Mobile Responsive (Mobile par thoda chhota) */
+    @media (max-width: 768px) {
+        .whatsapp-float {
+            width: 50px;
+            height: 50px;
+            bottom: 20px;
+            right: 20px;
+            font-size: 28px;
+        }
+    }
+</style>
+{{-- ❌ WHATSAPP FLOATING BUTTON END --}}
 </body>
 
 </html>

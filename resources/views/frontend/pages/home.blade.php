@@ -488,7 +488,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Rudraksh Jap Mala">
                             <div class="fav-content">
                                 <h3>Rudraksh Jap Mala</h3>
-                                <a href="{{ url('category/rudraksh/rudraksh-mala') }}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="{{ url('category/rudraksh/rudraksh-mala') }}" class="btn btn-fav-shop">Shop
+                                    now</a>
                             </div>
                         </div>
 
@@ -502,7 +503,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                         alt="Tiger Eye Stone">
                                     <div class="fav-content">
                                         <h3>Rashi Bracelet</h3>
-                                        <a href="{{ url('category/rashi-bracelet') }}" class="btn btn-fav-shop">Shop now</a>
+                                        <a href="{{ url('category/rashi-bracelet') }}" class="btn btn-fav-shop">Shop
+                                            now</a>
                                     </div>
                                 </div>
                             </div>
@@ -514,7 +516,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                         alt="Black Stone">
                                     <div class="fav-content">
                                         <h3>Spritual Stone Jewellery</h3>
-                                        <a href="{{ url('category/spritual-jewellery') }}" class="btn btn-fav-shop">Shop now</a>
+                                        <a href="{{ url('category/spritual-jewellery') }}" class="btn btn-fav-shop">Shop
+                                            now</a>
                                     </div>
                                 </div>
                             </div>
@@ -531,7 +534,8 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
                                 <h3>Karungali Mala</h3>
-                                <a href="{{ url('category/karungali/karungali-mala') }}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="{{ url('category/karungali/karungali-mala') }}" class="btn btn-fav-shop">Shop
+                                    now</a>
                             </div>
                         </div>
                     </div>
@@ -709,12 +713,35 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                             </a>
                                                         </h6>
 
+                                                        {{-- ⭐ Dynamic Rating Logic Start ⭐ --}}
+                                                        @php
+                                                            $avgRating = $product->reviews->avg('rating') ?? 0; // Average nikalo
+                                                            $reviewCount = $product->reviews->count(); // Total reviews count karo
+                                                            $fullStars = floor($avgRating); // Pura sitara (e.g. 4.5 -> 4)
+                                                            $halfStar = $avgRating - $fullStars >= 0.5; // Adha sitara check
+                                                            $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0); // Khali sitare
+                                                        @endphp
+
                                                         <div class="mb-2 text-warning small">
-                                                            <i class="las la-star"></i><i class="las la-star"></i><i
-                                                                class="las la-star"></i>
-                                                            <i class="las la-star"></i><i class="las la-star"></i>
-                                                            <span class="text-muted ms-1">(24)</span>
+                                                            {{-- Full Stars --}}
+                                                            @for ($i = 0; $i < $fullStars; $i++)
+                                                                <i class="las la-star"></i>
+                                                            @endfor
+
+                                                            {{-- Half Star --}}
+                                                            @if ($halfStar)
+                                                                <i class="las la-star-half-alt"></i>
+                                                            @endif
+
+                                                            {{-- Empty Stars --}}
+                                                            @for ($i = 0; $i < $emptyStars; $i++)
+                                                                <i class="lar la-star"></i>
+                                                            @endfor
+
+                                                            {{-- Review Count --}}
+                                                            <span class="text-muted ms-1">({{ $reviewCount }})</span>
                                                         </div>
+                                                        {{-- ⭐ Dynamic Rating Logic End ⭐ --}}
 
                                                         <div class="mb-2">
                                                             <span

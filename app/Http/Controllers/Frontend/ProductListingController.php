@@ -17,7 +17,7 @@ class ProductListingController extends Controller
     // 🟢 1. COMMON QUERY BUILDER (Updated Logic)
     private function getProductsQuery(Request $request, $context = [])
     {
-        $query = Product::where('status', 1);
+        $query = Product::where('status', 1)->with('reviews');
 
         // A. Context: Category (Primary OR Additional)
         if (isset($context['category_id'])) {
@@ -210,7 +210,7 @@ class ProductListingController extends Controller
 
     public function showAllCollection(Request $request)
     {
-        $query = Product::where('status', 1);
+        $query = Product::where('status', 1)->with('reviews');
         $pageTitle = "All Products";
         $pageDesc = "Explore our complete collection of spiritual products.";
 
