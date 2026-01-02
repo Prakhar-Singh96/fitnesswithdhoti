@@ -13,11 +13,13 @@
             width: 100%;
             /* ✅ Auto Height: Taaki pura page na dhake */
             height: auto !important;
-            max-height: 80vh; /* Screen ka 80% hi use kare */
-            z-index: 990; /* Header (z-1020) ke niche, content ke upar */
+            max-height: 80vh;
+            /* Screen ka 80% hi use kare */
+            z-index: 990;
+            /* Header (z-1020) ke niche, content ke upar */
             background-color: #fff;
             overflow-y: auto;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-top: 1px solid #f1f1f1;
         }
     }
@@ -35,7 +37,7 @@
             max-height: 70vh;
             z-index: 1010;
             border-top: 1px solid #eee;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             background-color: #fff;
             overflow-y: auto;
         }
@@ -87,16 +89,19 @@
                                     id="catDrop{{ $category->id }}" role="button" aria-expanded="false">
                                     {{ $category->name }}
                                 </a>
-                                <div class="dropdown-menu japam-mega-menu shadow-lg border-0" aria-labelledby="catDrop{{ $category->id }}">
+                                <div class="dropdown-menu japam-mega-menu shadow-lg border-0"
+                                    aria-labelledby="catDrop{{ $category->id }}">
                                     <div class="row g-0">
                                         <div class="col-4 col-lg-3">
                                             <div class="japam-sc-list">
                                                 @foreach ($category->subCategories as $sub)
-                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}" class="japam-sc-item">
+                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
+                                                        class="japam-sc-item">
                                                         {{ $sub->name }} <i class="las la-angle-right"></i>
                                                     </a>
                                                 @endforeach
-                                                <a href="{{ route('products.category', $category->slug) }}" class="japam-sc-item text-primary fw-bold">
+                                                <a href="{{ route('products.category', $category->slug) }}"
+                                                    class="japam-sc-item text-primary fw-bold">
                                                     View All {{ $category->name }} <i class="las la-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -108,8 +113,11 @@
                                                         @foreach ($category->products as $product)
                                                             <div class="col-3">
                                                                 <a href="#" class="japam-prod-card">
-                                                                    <img src="{{ asset($product->main_image) }}" class="japam-prod-img" alt="{{ $product->name }}">
-                                                                    <span class="japam-prod-title">{{ $product->name }}</span>
+                                                                    <img src="{{ asset($product->main_image) }}"
+                                                                        class="japam-prod-img"
+                                                                        alt="{{ $product->name }}">
+                                                                    <span
+                                                                        class="japam-prod-title">{{ $product->name }}</span>
                                                                 </a>
                                                             </div>
                                                         @endforeach
@@ -127,7 +135,8 @@
                             </li>
                         @else
                             <li class="nav-item me-3">
-                                <a href="{{ route('products.category', $category->slug) }}" class="nav-link text-dark fw-bold">
+                                <a href="{{ route('products.category', $category->slug) }}"
+                                    class="nav-link text-dark fw-bold">
                                     {{ $category->name }}
                                 </a>
                             </li>
@@ -148,22 +157,29 @@
                 <div class="nav-user-auth ms-4">
                     @auth
                         <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-dark text-decoration-none" role="button" data-bs-toggle="dropdown">
+                            <a href="#" class="d-flex align-items-center text-dark text-decoration-none"
+                                role="button" data-bs-toggle="dropdown">
                                 <i class="las la-user-circle fs-2"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3" style="min-width: 200px;">
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3"
+                                style="min-width: 200px;">
                                 {{-- <li class="px-3 py-2 border-bottom">
                                     <span class="small text-muted d-block">Welcome,</span>
                                     <span class="fw-bold text-dark">{{ Auth::user()->name ?? 'User' }}</span>
                                 </li> --}}
-                                <li><a class="dropdown-item py-2" href="{{ url('/orders') }}"><i class="las la-box me-2"></i> Order History</a></li>
+                                <li><a class="dropdown-item py-2" href="{{ url('/orders') }}"><i
+                                            class="las la-box me-2"></i> Order History</a></li>
                                 {{-- <li><a class="dropdown-item py-2" href="{{ url('/profile') }}"><i class="las la-user-cog me-2"></i> My Profile</a></li> --}}
-                                <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="las la-sign-out-alt me-2"></i> Logout
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf</form>
                                 </li>
                             </ul>
                         </div>
@@ -175,15 +191,21 @@
                 </div>
 
                 <div class="nav-wishlist-icon ms-4">
-                    <a href="{{ url('/wishlists') }}" title="Wishlist">
-                        <span class="icon-la lar"></span>
+                    <a href="javascript:void(0)" onclick="openWishlistModal()" class="position-relative ...">
+                        <i class="lar la-heart fs-4"></i>
+                        <span
+                            class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style="font-size: 10px;">
+                            {{ Auth::check() ? \App\Models\Wishlist::where('user_id', Auth::id())->count() : count(session('guest_wishlist', [])) }}
+                        </span>
                     </a>
                 </div>
 
                 <div class="nav-cart-box ms-4 position-relative">
                     <a href="javascript:void(0);" onclick="openSideCart()" title="Cart" class="text-dark">
                         <i class="las la-shopping-bag" style="font-size: 28px;"></i>
-                        <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        <span id="cart-badge"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                             style="font-size: 10px; {{ isset($cartGlobalCount) && $cartGlobalCount > 0 ? '' : 'display: none;' }}">
                             {{ $cartGlobalCount ?? 0 }}
                         </span>
@@ -200,8 +222,7 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="{{ asset('assets/img/logosuyagya.png') }}"
-                                        alt="Logo">
+                                    <img src="{{ asset('assets/img/logosuyagya.png') }}" alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
 
@@ -277,7 +298,8 @@
                 </div>
             </div>
 
-            <button class="navbar-toggler p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+            <button class="navbar-toggler p-0 d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
@@ -363,8 +385,13 @@
 
             {{-- ⭐ 3. Wishlist/Favorite Icon --}}
             <div class="nav-wishlist-icon ms-4">
-                <a href="{{ url('/wishlists') }}" title="Wishlist" class="position-relative">
-                    <span data-v-ef25be53="" class="icon-la lar"></span>
+                <a href="javascript:void(0)" onclick="openWishlistModal()" class="position-relative ...">
+                    <i class="lar la-heart fs-4"></i>
+                    <span
+                        class="wishlist-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style="font-size: 10px;">
+                        {{ Auth::check() ? \App\Models\Wishlist::where('user_id', Auth::id())->count() : count(session('guest_wishlist', [])) }}
+                    </span>
                 </a>
             </div>
 
@@ -490,11 +517,8 @@
         <div class="position-relative">
             <i class="las la-search position-absolute top-50 start-0 translate-middle-y ms-3 fs-4 text-muted"></i>
 
-            <input type="text"
-                class="form-control border-0 bg-light py-3 ps-5 rounded-pill fs-6 fw-bold"
-                id="live-search-input"
-                placeholder="Search for products..."
-                autocomplete="off">
+            <input type="text" class="form-control border-0 bg-light py-3 ps-5 rounded-pill fs-6 fw-bold"
+                id="live-search-input" placeholder="  Search for products..." autocomplete="off">
 
             {{-- Close Icon (Visible on both now for ease) --}}
             <i class="las la-times position-absolute top-50 end-0 translate-middle-y me-3 fs-4 cursor-pointer"

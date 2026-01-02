@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\FilterValueController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Frontend\Auth\OtpController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Frontend\ProductListingController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
@@ -83,6 +84,11 @@ Route::post('/track-order', [TrackingController::class, 'track'])->name('track.o
 // Coupon Routes
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('apply.coupon');
 Route::get('/get-coupons', [CheckoutController::class, 'getCoupons'])->name('get.coupons'); // Coupon List ke liye
+
+
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::get('/wishlist/fetch', [WishlistController::class, 'fetchWishlist'])->name('wishlist.fetch');
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {

@@ -24,7 +24,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold mb-0 text-uppercase ls-1">Filters</h6>
                         @if (request()->has('filter') || request()->has('min_price'))
-                            <a href="{{ url()->current() }}" class="text-danger x-small text-decoration-none fw-bold">Clear All</a>
+                            <a href="{{ url()->current() }}" class="text-danger x-small text-decoration-none fw-bold">Clear
+                                All</a>
                         @endif
                     </div>
 
@@ -44,17 +45,17 @@
                                 {{-- 1. Input Boxes Row --}}
                                 <div class="d-flex align-items-center gap-2 mb-3">
                                     <div class="position-relative w-100">
-                                        <span class="position-absolute text-muted small" style="left: 8px; top: 7px;">₹</span>
-                                        <input type="number" name="min_price" id="input-min"
-                                            class="price-input-box ps-3" placeholder="0"
-                                            value="{{ request('min_price') }}">
+                                        <span class="position-absolute text-muted small"
+                                            style="left: 8px; top: 7px;">₹</span>
+                                        <input type="number" name="min_price" id="input-min" class="price-input-box ps-3"
+                                            placeholder="0" value="{{ request('min_price') }}">
                                     </div>
                                     <span class="text-muted">-</span>
                                     <div class="position-relative w-100">
-                                        <span class="position-absolute text-muted small" style="left: 8px; top: 7px;">₹</span>
-                                        <input type="number" name="max_price" id="input-max"
-                                            class="price-input-box ps-3" placeholder="Max"
-                                            value="{{ request('max_price') }}">
+                                        <span class="position-absolute text-muted small"
+                                            style="left: 8px; top: 7px;">₹</span>
+                                        <input type="number" name="max_price" id="input-max" class="price-input-box ps-3"
+                                            placeholder="Max" value="{{ request('max_price') }}">
                                     </div>
                                     {{-- Go Button --}}
                                     <button type="submit" class="btn btn-dark btn-sm rounded-1 px-3">
@@ -86,8 +87,14 @@
                                                 <div>
                                                     @php
                                                         $isChecked = false;
-                                                        if (request('filter') && isset(request('filter')[$filter->id])) {
-                                                            $isChecked = in_array($value->id, request('filter')[$filter->id]);
+                                                        if (
+                                                            request('filter') &&
+                                                            isset(request('filter')[$filter->id])
+                                                        ) {
+                                                            $isChecked = in_array(
+                                                                $value->id,
+                                                                request('filter')[$filter->id],
+                                                            );
                                                         }
                                                     @endphp
                                                     <input class="form-check-input filter-checkbox shadow-none"
@@ -137,11 +144,19 @@
                                 <span><span class="text-muted fw-normal me-1">Sort by:</span> {{ $sortLabel }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-1" style="min-width: 160px;">
-                                <li><a class="dropdown-item small {{ $currentSort == 'newest' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">Newest</a></li>
-                                <li><a class="dropdown-item small {{ $currentSort == 'oldest' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}">Oldest</a></li>
-                                <li><a class="dropdown-item small {{ $currentSort == 'best-selling' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'best-selling']) }}">Best Selling</a></li>
-                                <li><a class="dropdown-item small {{ $currentSort == 'price_asc' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">Price: Low to High</a></li>
-                                <li><a class="dropdown-item small {{ $currentSort == 'price_desc' ? 'active bg-light text-dark fw-bold' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">Price: High to Low</a></li>
+                                <li><a class="dropdown-item small {{ $currentSort == 'newest' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">Newest</a></li>
+                                <li><a class="dropdown-item small {{ $currentSort == 'oldest' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}">Oldest</a></li>
+                                <li><a class="dropdown-item small {{ $currentSort == 'best-selling' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'best-selling']) }}">Best
+                                        Selling</a></li>
+                                <li><a class="dropdown-item small {{ $currentSort == 'price_asc' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'price_asc']) }}">Price: Low to
+                                        High</a></li>
+                                <li><a class="dropdown-item small {{ $currentSort == 'price_desc' ? 'active bg-light text-dark fw-bold' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'price_desc']) }}">Price: High to
+                                        Low</a></li>
                             </ul>
                         </div>
                     </div>
@@ -158,10 +173,28 @@
                                                 class="img-fluid w-100 object-fit-cover" style="aspect-ratio: 1/1;">
                                         </a>
                                         @if ($product->discount > 0)
-                                            <span class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-0 fw-normal px-2">
+                                            <span
+                                                class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-0 fw-normal px-2">
                                                 {{ round($product->discount) }}% OFF
                                             </span>
                                         @endif
+                                        <button type="button"
+                                            class="btn btn-sm btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm wishlist-btn"
+                                            onclick="toggleWishlist({{ $product->id }}, this)"
+                                            style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+
+                                            @php
+                                                // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
+                                                $isInWishlist =
+                                                    Auth::check() &&
+                                                    \App\Models\Wishlist::where('user_id', Auth::id())
+                                                        ->where('product_id', $product->id)
+                                                        ->exists();
+                                            @endphp
+
+                                            <i
+                                                class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
+                                        </button>
                                     </div>
                                     <div class="product-info text-left">
                                         <h3 class="h6 mb-1">
@@ -177,11 +210,16 @@
                                             $avgRating = $product->reviews->avg('rating') ?? 0;
                                             $reviewCount = $product->reviews->count();
                                         @endphp
-                                        <div class="text-warning d-flex align-items-center" style="font-size: 18px; margin-bottom: 6px;">
+                                        <div class="text-warning d-flex align-items-center"
+                                            style="font-size: 18px; margin-bottom: 6px;">
                                             @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= round($avgRating)) <i class="las la-star"></i>
-                                                @elseif($i - 0.5 <= $avgRating) <i class="las la-star-half-alt"></i>
-                                                @else <i class="lar la-star"></i> @endif
+                                                @if ($i <= round($avgRating))
+                                                    <i class="las la-star"></i>
+                                                @elseif($i - 0.5 <= $avgRating)
+                                                    <i class="las la-star-half-alt"></i>
+                                                @else
+                                                    <i class="lar la-star"></i>
+                                                @endif
                                             @endfor
                                             <span class="text-muted ms-1 text-dark fw-bold">({{ $reviewCount }})</span>
                                         </div>
@@ -189,10 +227,12 @@
                                         <div class="mb-2" style="text-align: left">
                                             <span class="fw-bold fs-6">₹{{ number_format($product->price, 0) }}</span>
                                             @if ($product->mrp_price > $product->price)
-                                                <span class="text-decoration-line-through text-muted ms-2 small">₹{{ number_format($product->mrp_price, 0) }}</span>
+                                                <span
+                                                    class="text-decoration-line-through text-muted ms-2 small">₹{{ number_format($product->mrp_price, 0) }}</span>
                                             @endif
                                         </div>
-                                        <button class="btn btn-earthy w-100 btn-sm" onclick="addToCart({{ $product->id }}, 1, 0, this)">
+                                        <button class="btn btn-earthy w-100 btn-sm"
+                                            onclick="addToCart({{ $product->id }}, 1, 0, this)">
                                             Add to cart
                                         </button>
                                     </div>
@@ -243,26 +283,30 @@
                     },
                     step: 100,
                     format: {
-                        to: function(value) { return Math.round(value); },
-                        from: function(value) { return Number(value); }
+                        to: function(value) {
+                            return Math.round(value);
+                        },
+                        from: function(value) {
+                            return Number(value);
+                        }
                     }
                 });
 
                 slider.noUiSlider.on('update', function(values, handle) {
                     var value = values[handle];
                     if (handle === 0) {
-                        if(inputMin) inputMin.value = value;
+                        if (inputMin) inputMin.value = value;
                     } else {
-                        if(inputMax) inputMax.value = value;
+                        if (inputMax) inputMax.value = value;
                     }
                 });
 
-                if(inputMin) {
+                if (inputMin) {
                     inputMin.addEventListener('change', function() {
                         slider.noUiSlider.set([this.value, null]);
                     });
                 }
-                if(inputMax) {
+                if (inputMax) {
                     inputMax.addEventListener('change', function() {
                         slider.noUiSlider.set([null, this.value]);
                     });

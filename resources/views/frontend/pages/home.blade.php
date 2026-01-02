@@ -104,8 +104,16 @@
                                         {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
-                                <button class="btn-wishlist">
-                                    <i class="las la-heart"></i>
+                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
+                                    @php
+                                        // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
+                                        $isInWishlist =
+                                            Auth::check() &&
+                                            \App\Models\Wishlist::where('user_id', Auth::id())
+                                                ->where('product_id', $product->id)
+                                                ->exists();
+                                    @endphp
+                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
                                 </button>
                                 <a href="{{ route('product.detail', $product->slug) }}">
                                     <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">

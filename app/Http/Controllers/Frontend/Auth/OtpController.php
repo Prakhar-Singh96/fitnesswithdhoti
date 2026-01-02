@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Frontend\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Cart;
 use App\Models\User;
+use App\Models\Wishlist;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
-use App\Services\SmsService; // 👈 1. Import Service
-use App\Models\Cart;
 use Illuminate\Support\Facades\Session;
+use App\Services\SmsService; // 👈 1. Import Service
 
 class OtpController extends Controller
 {
@@ -96,6 +97,22 @@ class OtpController extends Controller
             Cart::where('session_id', $sessionId)
                 ->whereNull('user_id') // Sirf wahi jo kisi user ke nahi hain
                 ->update(['user_id' => $user->id]);
+
+            // 🟢 STEP 2: Merge Guest Wishlist (Jo abhi naya lagana hai)
+            if (session()->has('guest_wishlist')) {
+                $guestWishlist = session()->get('guest_wishlist');
+
+                foreach ($guestWishlist as $productId) {
+                    // Duplicate check karke database me insert karo
+                    Wishlist::firstOrCreate([
+                        'user_id' => $user->id,
+                        'product_id' => $productId
+                    ]);
+                }
+
+                // DB me dalne ke baad session clear kar do
+                session()->forget('guest_wishlist');
+            }
 
             Auth::login($user);
             Cache::forget('otp_' . $phone);

@@ -1485,3 +1485,131 @@ function removeCoupon() {
     $('#final_coupon_code').val('');
 }
 
+function toggleWishlist(productId, btnElement) {
+    $.ajax({
+        url: '/wishlist/toggle',
+        type: 'POST',
+        data: {
+            product_id: productId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.status) {
+                var icon = $(btnElement).find('i');
+
+                // 1. Icon Change
+                if (response.action === 'added') {
+                    icon.removeClass('lar la-heart').addClass('las la-heart text-danger');
+                } else {
+                    icon.removeClass('las la-heart text-danger').addClass('lar la-heart');
+                }
+
+                // 2. Count Update
+                $('.wishlist-count').text(response.count);
+
+                // 3. 🟢 SHOW TOAST (Alert Hata Diya)
+                showToast(response.message);
+
+            }
+        },
+        error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+        }
+    });
+}
+
+function showToast(message) {
+    // 1. Toast Element dhundo
+    var toastEl = document.getElementById('liveToast');
+
+    // 2. Message Body dhundo (Jahan text likha hai)
+    var toastBody = document.getElementById('toast-message');
+
+    if(toastEl && toastBody) {
+        // ✅ Ye line Controller se aaye message ko HTML me daal degi
+        toastBody.innerText = message;
+
+        // Toast Show karo
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+}
+
+// 1. Open Modal & Load Data
+function openWishlistModal() {
+    // Modal Show
+    var myModal = new bootstrap.Modal(document.getElementById('wishlistModal'));
+    myModal.show();
+
+    // Show Loader, Hide Content
+    $('#wishlist-loader').show();
+    $('#wishlist-content').addClass('d-none').html('');
+    $('#wishlist-empty').addClass('d-none');
+
+    // AJAX Call to fetch items
+    $.ajax({
+        url: '/wishlist/fetch',
+        type: 'GET',
+        success: function(response) {
+            $('#wishlist-loader').hide();
+
+            if (response.empty) {
+                $('#wishlist-empty').removeClass('d-none');
+            } else {
+                $('#wishlist-content').html(response.html).removeClass('d-none');
+            }
+        },
+        error: function() {
+            $('#wishlist-loader').hide();
+            alert('Could not load wishlist.');
+        }
+    });
+}
+
+// 2. Remove Item Logic (For Popup)
+function removeFromWishlist(productId) {
+    // Toggle function hi reuse karenge remove ke liye
+    toggleWishlist(productId, null); // 'null' kyunki button element ki zarurat nahi yahan
+
+    // UI se remove karein with fade effect
+    $('.wishlist-item-' + productId).fadeOut(300, function() {
+        $(this).remove();
+        // Agar sab remove ho gaya to empty state dikhao
+        if ($('#wishlist-content').children().length <= 1) { // 1 because this one is removing
+            $('#wishlist-content').addClass('d-none');
+            $('#wishlist-empty').removeClass('d-none');
+        }
+    });
+}
+
+// 3. Move to Cart (Add to Cart + Remove from Wishlist)
+function moveToCart(productId) {
+    // 1. Sabse pehle Wishlist Modal ko dhoondh kar band karein
+    var wishlistModalEl = document.getElementById('wishlistModal');
+    var modal = bootstrap.Modal.getInstance(wishlistModalEl);
+
+    if (modal) {
+        modal.hide(); // ✅ Modal Close
+    }
+
+    // 2. Thoda wait karein (300ms) taaki animation smooth lage, phir Cart mein add karein
+    setTimeout(function() {
+        // Add to Cart Logic (Existing)
+        var dummyBtn = document.createElement('button');
+        addToCart(productId, 1, 0, dummyBtn);
+    }, 300);
+
+    // 3. Backend se Wishlist item remove karein
+    // Hum 'toggleWishlist' direct call kar rahe hain taaki DB se hat jaye
+    toggleWishlist(productId, null);
+
+    // 4. Modal ke andar se bhi element hata dein (Taaki agli baar open karne par na dikhe)
+    $('.wishlist-item-' + productId).remove();
+
+    // Check karein agar wishlist empty ho gayi to empty state set karein
+    if ($('#wishlist-content').children().length <= 1) {
+        $('#wishlist-content').addClass('d-none');
+        $('#wishlist-empty').removeClass('d-none');
+    }
+}
+

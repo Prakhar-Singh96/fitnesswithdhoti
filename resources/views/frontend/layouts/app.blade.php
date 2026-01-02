@@ -61,9 +61,25 @@
         {{-- Footer ke upar ya body tag band hone se pehle --}}
         @include('frontend.modals.checkout_modal')
 
+        @include('frontend.modals.wishlist_modal')
+
 
         {{-- ⬇️ Footer --}}
         @include('frontend.includes.footer')
+
+        {{-- 🍞 Toast Container --}}
+        <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1060;">
+            <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="toast-message">
+                        Item added to wishlist!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -90,201 +106,206 @@
     <script src="{{ asset('assets/js/custom.js') }}?v=time()"></script>
 
     <script>
-init__megaMenu();
+        init__megaMenu();
 
-function init__megaMenu() {
-    const mm = document.querySelector('aside#mega-menu--mobile');
-    if (mm) {
+        function init__megaMenu() {
+            const mm = document.querySelector('aside#mega-menu--mobile');
+            if (mm) {
 
-        const mm_container      = mm.querySelector('.mega__container');
-        const mm_screens        = mm.querySelectorAll('.mega__screen');
-        const mm_subIcons       = mm.querySelectorAll('a.btn .btn__icon');
-        const mm_subLinks       = mm.querySelectorAll('a.btn[aria-label]');
-        const mm_subLinks_icon  = `<svg width="4" height="7" viewBox="0 0 4 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.88255 3.2234C4.03915 3.37573 4.03915 3.62204 3.88255 3.77275L0.683882 6.88575C0.52728 7.03808 0.274052 7.03808 0.119117 6.88575C-0.0358184 6.73343 -0.0374844 6.48711 0.119117 6.3364L3.03457 3.50051L0.117451 0.662992C-0.0391504 0.510664 -0.0391504 0.264347 0.117451 0.113639C0.274052 -0.0370684 0.52728 -0.0386889 0.682216 0.113639L3.88255 3.2234Z" fill="#221F20"/></svg>`;
+                const mm_container = mm.querySelector('.mega__container');
+                const mm_screens = mm.querySelectorAll('.mega__screen');
+                const mm_subIcons = mm.querySelectorAll('a.btn .btn__icon');
+                const mm_subLinks = mm.querySelectorAll('a.btn[aria-label]');
+                const mm_subLinks_icon =
+                    `<svg width="4" height="7" viewBox="0 0 4 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.88255 3.2234C4.03915 3.37573 4.03915 3.62204 3.88255 3.77275L0.683882 6.88575C0.52728 7.03808 0.274052 7.03808 0.119117 6.88575C-0.0358184 6.73343 -0.0374844 6.48711 0.119117 6.3364L3.03457 3.50051L0.117451 0.662992C-0.0391504 0.510664 -0.0391504 0.264347 0.117451 0.113639C0.274052 -0.0370684 0.52728 -0.0386889 0.682216 0.113639L3.88255 3.2234Z" fill="#221F20"/></svg>`;
 
-        let mm_active_depth = parseInt(mm_container.dataset.activeDepth);
+                let mm_active_depth = parseInt(mm_container.dataset.activeDepth);
 
-        mm_screens[0].dataset.activeMenu = true;
+                mm_screens[0].dataset.activeMenu = true;
 
-        // Insert SVG Icon in each btn
-        mm_subLinks.forEach(item => {
-            const iconSpan = item.querySelector('.btn__icon');
-            if (iconSpan) iconSpan.insertAdjacentHTML("afterbegin", mm_subLinks_icon);
-        });
-
-        // Handle all back buttons in slides
-        const screenBackBtns = mm.querySelectorAll('.screen-back-btn');
-        screenBackBtns.forEach(backBtn => {
-            backBtn.addEventListener('click', (e) => {
-                if (mm_active_depth > 1) sub__handleActiveDepth(mm_screens, e, mm_container);
-            });
-        });
-
-        // Handle submenu icon click
-        mm_subIcons.forEach(icon => {
-            icon.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
-        });
-
-        // Handle entire a.btn click
-        mm_subLinks.forEach(link => {
-            link.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
-        });
-
-        // Main navigation handler
-        function sub__handleActiveDepth(screens, event, container) {
-            const target = event.currentTarget || event.target;
-
-            // Back button clicked
-            if (target.classList.contains('screen-back-btn') || target.id == "menu-back") {
-                mm_active_depth -= 1;
-                mm_container.dataset.activeDepth = mm_active_depth;
-
-                mm_screens.forEach(screen => {
-                    let dft_screen_depth = parseInt(screen.dataset.menuDepth);
-                    screen.dataset.activeMenu = false;
-                    dft_screen_depth >= mm_active_depth ? screen.classList.remove('stacked') : null;
-                    dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                // Insert SVG Icon in each btn
+                mm_subLinks.forEach(item => {
+                    const iconSpan = item.querySelector('.btn__icon');
+                    if (iconSpan) iconSpan.insertAdjacentHTML("afterbegin", mm_subLinks_icon);
                 });
 
-            } else {
-                event.preventDefault();
-                event.stopPropagation();
-
-                // Forward navigation
-                mm_active_depth += 1;
-                mm_container.dataset.activeDepth = mm_active_depth;
-
-                mm_screens.forEach(screen => {
-                    let dft_screen_depth = parseInt(screen.dataset.menuDepth);
-                    screen.dataset.activeMenu = false;
-                    dft_screen_depth < mm_active_depth ? screen.classList.add('stacked') : null;
-                    dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                // Handle all back buttons in slides
+                const screenBackBtns = mm.querySelectorAll('.screen-back-btn');
+                screenBackBtns.forEach(backBtn => {
+                    backBtn.addEventListener('click', (e) => {
+                        if (mm_active_depth > 1) sub__handleActiveDepth(mm_screens, e, mm_container);
+                    });
                 });
 
-                // Handle Sub Menus
-                let link = target.closest('a.btn') || target;
-                let link_menu = link.getAttribute('aria-label');
-                container.dataset.activeNav = link_menu;
+                // Handle submenu icon click
+                mm_subIcons.forEach(icon => {
+                    icon.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
+                });
 
-                let dft_active_screen = container.querySelector('.mega__screen[data-active-menu="true"]');
-                let dft_active_screen__navs = dft_active_screen.querySelectorAll('nav');
-                dft_active_screen__navs.forEach(nav => { nav.classList.add('hidden'); });
+                // Handle entire a.btn click
+                mm_subLinks.forEach(link => {
+                    link.addEventListener('click', (e) => sub__handleActiveDepth(mm_screens, e, mm_container));
+                });
 
-                let dft_active_nav = dft_active_screen.querySelector(`nav[aria-labelledby="${link_menu}"]`);
-                if (dft_active_nav) dft_active_nav.classList.remove('hidden');
+                // Main navigation handler
+                function sub__handleActiveDepth(screens, event, container) {
+                    const target = event.currentTarget || event.target;
+
+                    // Back button clicked
+                    if (target.classList.contains('screen-back-btn') || target.id == "menu-back") {
+                        mm_active_depth -= 1;
+                        mm_container.dataset.activeDepth = mm_active_depth;
+
+                        mm_screens.forEach(screen => {
+                            let dft_screen_depth = parseInt(screen.dataset.menuDepth);
+                            screen.dataset.activeMenu = false;
+                            dft_screen_depth >= mm_active_depth ? screen.classList.remove('stacked') : null;
+                            dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                        });
+
+                    } else {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        // Forward navigation
+                        mm_active_depth += 1;
+                        mm_container.dataset.activeDepth = mm_active_depth;
+
+                        mm_screens.forEach(screen => {
+                            let dft_screen_depth = parseInt(screen.dataset.menuDepth);
+                            screen.dataset.activeMenu = false;
+                            dft_screen_depth < mm_active_depth ? screen.classList.add('stacked') : null;
+                            dft_screen_depth == mm_active_depth ? screen.dataset.activeMenu = true : null;
+                        });
+
+                        // Handle Sub Menus
+                        let link = target.closest('a.btn') || target;
+                        let link_menu = link.getAttribute('aria-label');
+                        container.dataset.activeNav = link_menu;
+
+                        let dft_active_screen = container.querySelector('.mega__screen[data-active-menu="true"]');
+                        let dft_active_screen__navs = dft_active_screen.querySelectorAll('nav');
+                        dft_active_screen__navs.forEach(nav => {
+                            nav.classList.add('hidden');
+                        });
+
+                        let dft_active_nav = dft_active_screen.querySelector(`nav[aria-labelledby="${link_menu}"]`);
+                        if (dft_active_nav) dft_active_nav.classList.remove('hidden');
+                    }
+                }
             }
         }
-    }
-}
+    </script>
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const megaMenu = document.getElementById('mega-menu--mobile');
 
+        menuButton.addEventListener('click', () => {
+            megaMenu.classList.toggle('active'); // menu open/close
+            menuButton.classList.toggle('active'); // toggle button icon
+        });
+    </script>
+    <script>
+        function initFooterAccordion() {
+            const headings = document.querySelectorAll('h4.footer-heading');
 
+            headings.forEach(heading => {
+                heading.addEventListener('click', () => {
 
-</script>
-<script>
-const menuButton = document.getElementById('menuButton');
-const megaMenu = document.getElementById('mega-menu--mobile');
+                    // Only for mobile screens
+                    if (window.innerWidth > 767) return;
 
-menuButton.addEventListener('click', () => {
-  megaMenu.classList.toggle('active'); // menu open/close
-  menuButton.classList.toggle('active'); // toggle button icon
-});
-</script>
-<script>
-function initFooterAccordion() {
-  const headings = document.querySelectorAll('h4.footer-heading');
+                    const list = heading.nextElementSibling;
 
-  headings.forEach(heading => {
-    heading.addEventListener('click', () => {
+                    if (!list || !list.classList.contains('footer-list')) return;
 
-      // Only for mobile screens
-      if (window.innerWidth > 767) return;
-
-      const list = heading.nextElementSibling;
-
-      if (!list || !list.classList.contains('footer-list')) return;
-
-      // Toggle active class
-      heading.classList.toggle('active');
-      list.classList.toggle('active');
-    });
-  });
-}
-
-initFooterAccordion();
-</script>
-<script>
-    window.appRoutes = {
-        getCoupons: "{{ route('get.coupons') }}",
-        applyCoupon: "{{ route('apply.coupon') }}"
-    };
-    window.csrfToken = "{{ csrf_token() }}";
-</script>
-{{-- ✅ WHATSAPP FLOATING BUTTON START --}}
-<a href="https://wa.me/917692005006?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product."
-   class="whatsapp-float"
-   target="_blank"
-   rel="noopener noreferrer">
-    <i class="lab la-whatsapp"></i>
-</a>
-
-<style>
-    /* WhatsApp Button Design */
-    .whatsapp-float {
-        position: fixed;
-        width: 60px;
-        height: 60px;
-        bottom: 25px; /* Niche se kitna upar */
-        right: 25px;  /* Right side se kitna door */
-        background-color: #25d366;
-        color: #FFF;
-        border-radius: 50px;
-        text-align: center;
-        font-size: 35px; /* Icon ka size */
-        box-shadow: 2px 2px 3px #999;
-        z-index: 99; /* Sabse upar dikhe */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        text-decoration: none !important;
-    }
-
-    /* Hover Effect */
-    .whatsapp-float:hover {
-        background-color: #1ebe57;
-        transform: scale(1.1); /* Thoda bada hoga hover par */
-        color: #fff;
-    }
-
-    /* Pulse Animation (Optional - Dhyan khichne ke liye) */
-    .whatsapp-float {
-        animation: pulse-green 2s infinite;
-    }
-
-    @keyframes pulse-green {
-        0% {
-            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+                    // Toggle active class
+                    heading.classList.toggle('active');
+                    list.classList.toggle('active');
+                });
+            });
         }
-        70% {
-            box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-        }
-    }
 
-    /* Mobile Responsive (Mobile par thoda chhota) */
-    @media (max-width: 768px) {
+        initFooterAccordion();
+    </script>
+    <script>
+        window.appRoutes = {
+            getCoupons: "{{ route('get.coupons') }}",
+            applyCoupon: "{{ route('apply.coupon') }}"
+        };
+        window.csrfToken = "{{ csrf_token() }}";
+    </script>
+    {{-- ✅ WHATSAPP FLOATING BUTTON START --}}
+    <a href="https://wa.me/917692005006?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product."
+        class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="lab la-whatsapp"></i>
+    </a>
+
+    <style>
+        /* WhatsApp Button Design */
         .whatsapp-float {
-            width: 50px;
-            height: 50px;
-            bottom: 20px;
-            right: 20px;
-            font-size: 28px;
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            /* Niche se kitna upar */
+            right: 25px;
+            /* Right side se kitna door */
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 35px;
+            /* Icon ka size */
+            box-shadow: 2px 2px 3px #999;
+            z-index: 99;
+            /* Sabse upar dikhe */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
         }
-    }
-</style>
-{{-- ❌ WHATSAPP FLOATING BUTTON END --}}
+
+        /* Hover Effect */
+        .whatsapp-float:hover {
+            background-color: #1ebe57;
+            transform: scale(1.1);
+            /* Thoda bada hoga hover par */
+            color: #fff;
+        }
+
+        /* Pulse Animation (Optional - Dhyan khichne ke liye) */
+        .whatsapp-float {
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+
+        /* Mobile Responsive (Mobile par thoda chhota) */
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 28px;
+            }
+        }
+    </style>
+    {{-- ❌ WHATSAPP FLOATING BUTTON END --}}
 </body>
 
 </html>
