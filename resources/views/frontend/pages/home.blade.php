@@ -79,7 +79,7 @@
     </section>
 
     {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 featured-products-section" style="background-color: var(--light)">
+    <section class="py-3 featured-products-section" style="background-color: var(--light)">
         <div class="container">
 
             {{-- Heading --}}
@@ -115,8 +115,9 @@
                             {{-- Details Area --}}
                             <div class="product-details text-start">
                                 <a href="{{ route('product.detail', $product->slug) }}"
-                                    class="product-title text-decoration-none border-0">
-                                    {{ Str::limit($product->name, 40) }}
+                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
+                                    style="font-family: 'Merriweather', serif;">
+                                    {{ $product->name }}
                                 </a>
 
                                 <div class="d-flex align-items-center rating-row">
@@ -218,8 +219,9 @@
                             {{-- Details Area --}}
                             <div class="product-details text-start">
                                 <a href="{{ route('product.detail', $product->slug) }}"
-                                    class="product-title text-decoration-none border-0">
-                                    {{ Str::limit($product->name, 40) }}
+                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
+                                    style="font-family: 'Merriweather', serif;">
+                                    {{ $product->name }}
                                 </a>
 
                                 <div class="d-flex align-items-center rating-row">
@@ -321,8 +323,9 @@
                             {{-- Details Area --}}
                             <div class="product-details text-start">
                                 <a href="{{ route('product.detail', $product->slug) }}"
-                                    class="product-title text-decoration-none border-0">
-                                    {{ Str::limit($product->name, 40) }}
+                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
+                                    style="font-family: 'Merriweather', serif;">
+                                    {{ $product->name }}
                                 </a>
 
                                 <div class="d-flex align-items-center rating-row">
