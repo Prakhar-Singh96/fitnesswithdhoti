@@ -36,7 +36,7 @@
 
 
     {{-- 💡 Premium Custom Styles --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v=time()">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ filemtime(public_path('assets/css/custom.css')) }}">
 
     @yield('styles')
 </head>
@@ -103,7 +103,7 @@
     @yield('scripts')
 
     {{-- 5. Custom JS (Main Logic) --}}
-    <script src="{{ asset('assets/js/custom.js') }}?v=time()"></script>
+    <script src="{{ asset('assets/js/custom.js') }}?v={{ filemtime(public_path('assets/js/custom.js')) }}"></script>
 
     <script>
         init__megaMenu();

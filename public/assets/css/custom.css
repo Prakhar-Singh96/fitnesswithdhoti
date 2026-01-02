@@ -1970,7 +1970,7 @@ main {
     font-size: 13px;
     top: 50%;
     transform: translateY(-50%);
-    left: 10px !important;
+    /* left: 10px !important; */
 }
 
 /* Arrow Button */
