@@ -249,7 +249,7 @@
 
                 {{-- 🟢 STEP 2: ADDRESS --}}
 
-                div id="step_address" style="display: none;">
+                <div id="step_address" style="display: none;">
 
                     {{-- User Info Header --}}
                     <div class="bg-light p-2 rounded-3 mb-4 d-flex align-items-center justify-content-between border">

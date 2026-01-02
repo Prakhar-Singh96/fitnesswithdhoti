@@ -241,7 +241,7 @@ initFooterAccordion();
         text-align: center;
         font-size: 35px; /* Icon ka size */
         box-shadow: 2px 2px 3px #999;
-        z-index: 9999; /* Sabse upar dikhe */
+        z-index: 99; /* Sabse upar dikhe */
         display: flex;
         align-items: center;
         justify-content: center;

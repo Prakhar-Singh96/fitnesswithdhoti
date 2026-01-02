@@ -152,12 +152,12 @@
                                 <i class="las la-user-circle fs-2"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3" style="min-width: 200px;">
-                                <li class="px-3 py-2 border-bottom">
+                                {{-- <li class="px-3 py-2 border-bottom">
                                     <span class="small text-muted d-block">Welcome,</span>
                                     <span class="fw-bold text-dark">{{ Auth::user()->name ?? 'User' }}</span>
-                                </li>
+                                </li> --}}
                                 <li><a class="dropdown-item py-2" href="{{ url('/orders') }}"><i class="las la-box me-2"></i> Order History</a></li>
-                                <li><a class="dropdown-item py-2" href="{{ url('/profile') }}"><i class="las la-user-cog me-2"></i> My Profile</a></li>
+                                {{-- <li><a class="dropdown-item py-2" href="{{ url('/profile') }}"><i class="las la-user-cog me-2"></i> My Profile</a></li> --}}
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item py-2 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -200,7 +200,7 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="https://suyagya.com/public/uploads/all/ackLS169wFEfhj8jfhnb0SGblGIHug1XfDCg7WIs.webp"
+                                    <img src="{{ asset('assets/img/logosuyagya.png') }}"
                                         alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
@@ -325,20 +325,20 @@
 
                         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 rounded-3"
                             style="min-width: 200px;">
-                            <li class="px-3 py-2 border-bottom">
+                            {{-- <li class="px-3 py-2 border-bottom">
                                 <span class="small text-muted d-block">Welcome,</span>
                                 <span class="fw-bold text-dark">{{ Auth::user()->name ?? 'User' }}</span>
-                            </li>
+                            </li> --}}
                             <li>
                                 <a class="dropdown-item py-2" href="{{ url('/orders') }}">
                                     <i class="las la-box me-2"></i> Order History
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a class="dropdown-item py-2" href="{{ url('/profile') }}">
                                     <i class="las la-user-cog me-2"></i> My Profile
                                 </a>
-                            </li>
+                            </li> --}}
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
