@@ -228,7 +228,7 @@
                         <p class="mb-1">
                             <i class="las la-envelope me-2" style="font-size:1.1rem;"></i>
                             <a href="mailto:support@suyagya.com" class="text-white"
-                                style="opacity: 1;">support@suyagya.com</a>
+                                style="opacity: 1;">info@suyagya.com</a>
                         </p>
 
                         <p class="mt-2">
@@ -248,7 +248,7 @@
                     {{-- <li><a href="{{ url('best-sellers') }}">Best Sellers</a></li> --}}
                     <li><a href="{{ url('contact-us') }}">Contact Us</a></li>
                     <li><a href="{{ url('about-us') }}">About Us</a></li>
-                    <li><a href="{{ url('faqs') }}">FAQs</a></li>
+                    <li><a href="{{ route('frontend.faq') }}">FAQs</a></li>
                 </ul>
             </div>
 

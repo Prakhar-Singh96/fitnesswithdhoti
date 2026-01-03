@@ -216,8 +216,16 @@
                                         {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
-                                <button class="btn-wishlist">
-                                    <i class="las la-heart"></i>
+                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
+                                    @php
+                                        // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
+                                        $isInWishlist =
+                                            Auth::check() &&
+                                            \App\Models\Wishlist::where('user_id', Auth::id())
+                                                ->where('product_id', $product->id)
+                                                ->exists();
+                                    @endphp
+                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
                                 </button>
                                 <a href="{{ route('product.detail', $product->slug) }}">
                                     <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">
@@ -320,8 +328,16 @@
                                         {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
-                                <button class="btn-wishlist">
-                                    <i class="las la-heart"></i>
+                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
+                                    @php
+                                        // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
+                                        $isInWishlist =
+                                            Auth::check() &&
+                                            \App\Models\Wishlist::where('user_id', Auth::id())
+                                                ->where('product_id', $product->id)
+                                                ->exists();
+                                    @endphp
+                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
                                 </button>
                                 <a href="{{ route('product.detail', $product->slug) }}">
                                     <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}">
@@ -959,207 +975,49 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
         </div>
     </section> --}}
 
-    <section class="py-3 faq-section"> {{-- Earthy Background --}}
-        <div class="container">
+    @php
+        $faqs = $homeSettings->faq_content ?? [];
+        $chunks = array_chunk($faqs, ceil(count($faqs) / 2));
+        $leftFaqs = $chunks[0] ?? [];
+        $rightFaqs = $chunks[1] ?? [];
+    @endphp
 
-            {{-- 1. Fancy Heading (Light Box on Dark BG) --}}
-            <div class="d-flex justify-content-center mb-5">
-                <div class="fancy-heading-box" style="background-color: #FFFBF2;">
-                    <h2 class="m-0">FAQs</h2>
-                </div>
-            </div>
+    @if (count($faqs) > 0)
+        <section class="py-3 faq-section" style="background-color: #f7f1de;">
+            <div class="container">
 
-            <div class="row">
-                @php
-                    $faqs = [
-                        [
-                            'q' => 'What makes Suyagya jewelry unique?',
-                            'a' =>
-                                'Our jewelry is handcrafted using authentic beads and 92.5 sterling silver, ensuring spiritual energy and durability.',
-                        ],
-                        [
-                            'q' => 'Are Suyagya Rudraksha beads genuine and certified?',
-                            'a' =>
-                                'Yes, every Rudraksha bead is lab-tested and comes with an authenticity certificate.',
-                        ],
-                        [
-                            'q' => 'Can I buy jewelry for kids and women too?',
-                            'a' =>
-                                'Absolutely! We have a wide range of lightweight and adjustable designs suitable for everyone.',
-                        ],
-                        [
-                            'q' => 'Why does the color of Rudraksha & Silver change?',
-                            'a' =>
-                                'Silver naturally oxidizes over time, and Rudraksha may darken due to body oils, which is a natural process.',
-                        ],
-                        [
-                            'q' => 'Is Suyagya’s silver capping made of genuine silver?',
-                            'a' => 'Yes, we strictly use 92.5 Sterling Silver for all our capping and chains.',
-                        ],
-                        [
-                            'q' => 'Why is Suyagya better than other brands?',
-                            'a' =>
-                                'We prioritize spiritual authenticity, premium craftsmanship, and verified materials over mass production.',
-                        ],
-                        [
-                            'q' => 'How do Karungali and Black Rudraksha differ?',
-                            'a' =>
-                                'While both Karungali and Black Rudraksha have protective spiritual qualities, Karungali is a type of sacred wood, offering durability and natural energy, whereas Black Rudraksha is a bead from the Rudraksha tree, prized for its unique metaphysical benefits.',
-                        ],
-                        [
-                            'q' => 'Why wear Karungali by Suyagya?',
-                            'a' =>
-                                'Our Karungali is sourced from mature ebony trees and crafted to retain its natural electromagnetic properties.',
-                        ],
-                    ];
-                @endphp
-
-                {{-- Left Column (First Half) --}}
-                <div class="col-lg-6">
-                    <div class="accordion" id="faqAccordionLeft">
-                        @foreach (array_slice($faqs, 0, 4) as $key => $faq)
-                            <div class="faq-item mb-3">
-                                <h2 class="accordion-header" id="headingL{{ $key }}">
-                                    <button class="accordion-button collapsed faq-btn" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseL{{ $key }}"
-                                        aria-expanded="false">
-                                        {{ $faq['q'] }}
-                                    </button>
-                                </h2>
-                                <div id="collapseL{{ $key }}" class="accordion-collapse collapse"
-                                    data-bs-parent="#faqAccordionLeft">
-                                    <div class="accordion-body faq-answer">
-                                        {{ $faq['a'] }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                {{-- 1. Fancy Heading --}}
+                <div class="d-flex justify-content-center mb-5">
+                    <div class="fancy-heading-box"
+                        style="background-color: #FFFBF2; padding: 10px 30px; border: 1px solid #ddd;">
+                        <h2 class="m-0 font-heading fw-bold">FAQs</h2>
                     </div>
                 </div>
 
-                {{-- Right Column (Second Half) --}}
-                <div class="col-lg-6">
-                    <div class="accordion" id="faqAccordionRight">
-                        @foreach (array_slice($faqs, 4) as $key => $faq)
-                            <div class="faq-item mb-3">
-                                <h2 class="accordion-header" id="headingR{{ $key }}">
-                                    <button class="accordion-button collapsed faq-btn" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseR{{ $key }}"
-                                        aria-expanded="false">
-                                        {{ $faq['q'] }}
-                                    </button>
-                                </h2>
-                                <div id="collapseR{{ $key }}" class="accordion-collapse collapse"
-                                    data-bs-parent="#faqAccordionRight">
-                                    <div class="accordion-body faq-answer">
-                                        {{ $faq['a'] }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                <div class="row">
+                    {{-- Left Column --}}
+                    <div class="col-lg-6 mb-3 mb-lg-0">
+                        @include('frontend.includes.faq_accordion', [
+                            'faqs' => $leftFaqs,
+                            'idSuffix' => 'home_left',
+                        ])
+                    </div>
+
+                    {{-- Right Column --}}
+                    <div class="col-lg-6">
+                        @include('frontend.includes.faq_accordion', [
+                            'faqs' => $rightFaqs,
+                            'idSuffix' => 'home_right',
+                        ])
                     </div>
                 </div>
 
             </div>
+        </section>
+    @endif
 
-        </div>
-    </section>
-
-    <section class="py-3 brand-story-section" style="background-color: #f7f1de;">
-        <div class="container">
-
-            <div class="accordion" id="brandStoryAccordion">
-                <div class="accordion-item bg-transparent border-0 border-bottom border-dark">
-
-                    {{-- 1. The Clickable Header --}}
-                    <h2 class="accordion-header" id="headingStory">
-                        <button class="accordion-button collapsed bg-transparent shadow-none text-dark fw-bold fs-5 px-0"
-                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseStory"
-                            aria-expanded="false" aria-controls="collapseStory">
-                            Suyagya - India's Best Spiritual Jewelry Brand
-                        </button>
-                    </h2>
-
-                    {{-- 2. The Expandable Content (Text from Image 1) --}}
-                    <div id="collapseStory" class="accordion-collapse collapse" aria-labelledby="headingStory"
-                        data-bs-parent="#brandStoryAccordion">
-                        <div class="accordion-body px-0 pt-4 brand-story-content text-secondary">
-
-                            <p>At Suyagya, we celebrate the age-old art of jewelry-making while interweaving it with
-                                contemporary designs that resonate with today's generation. Our collections are a medley of
-                                tradition, spirituality, and modernity.</p>
-
-                            <h4 class="mt-4 text-dark fw-bold">1. Men Jewelry Collection</h4>
-                            <p>For the modern man who values tradition, our Men Jewelry Collection strikes the perfect
-                                balance between style and spirituality.</p>
-                            <ul>
-                                <li><strong>Rudraksha Mala:</strong> Embrace the spiritual essence with our authentic
-                                    Rudraksha Malas.</li>
-                                <li><strong>Rudraksha Pendant:</strong> A symbol of spirituality and wellbeing, our
-                                    Rudraksha Pendants meld authenticity with style.</li>
-                                <li><strong>Adiyogi Pendant:</strong> Celebrate the essence of spiritual awakening with our
-                                    intricately designed Adiyogi Pendants.</li>
-                                <li><strong>Rudraksha Bracelet:</strong> Infuse your everyday style with a touch of divinity
-                                    with our range of Rudraksha bracelets.</li>
-                            </ul>
-
-                            <h4 class="mt-4 text-dark fw-bold">2. Women Jewelry Collection</h4>
-                            <p>Elegance, tradition, and style converge in our Women Jewelry Collection, catering to the
-                                multifaceted women of today.</p>
-                            <ul>
-                                <li><strong>Necklace Set for Women:</strong> From ornate sets for special occasions to
-                                    minimalistic designs for daily wear.</li>
-                                <li><strong>Women Mangalsutra:</strong> A symbol of marital bliss, our Mangalsutras blend
-                                    tradition with modern designs.</li>
-                                <li><strong>Women Bracelets:</strong> A melange of tradition and contemporary designs,
-                                    perfect for gracing a woman's delicate wrist.</li>
-                                <li><strong>Anklets for Women:</strong> Adorn your feet with our range of silver anklets,
-                                    from traditional ghungroo designs to contemporary styles.</li>
-                            </ul>
-
-                            <h4 class="mt-4 text-dark fw-bold">3. Kids Jewelry Collection</h4>
-                            <p>Cherish the innocent milestones of childhood with our endearing Kids Jewelry Collection.</p>
-                            <ul>
-                                <li><strong>Baby Bracelet:</strong> Gentle, safe, and crafted with love, our baby bracelets
-                                    are perfect keepsakes.</li>
-                                <li><strong>Kids Nazariya:</strong> Let every tiny step jingle with joy with our traditional
-                                    and skin-friendly Nazariyas.</li>
-                            </ul>
-
-                            <h4 class="mt-4 text-dark fw-bold">4. Stone Malas & Bracelets</h4>
-                            <p>Discover the natural beauty and craftsmanship of our Stone Mala Collection, featuring
-                                intricately designed malas crafted from high-quality natural stones.</p>
-                            <ul>
-                                <li><strong>Karungali Stone Mala:</strong> Made from Ebony Wood (Karungali), these malas
-                                    exude bold elegance.</li>
-                                <li><strong>Sphatik Stone Mala:</strong> Featuring Crystal Beads (Sphatik), these malas
-                                    offer a sleek and polished look.</li>
-                            </ul>
-
-                            <h3 class="mt-5 text-dark fw-bold">The Suyagya Promise: Unwavering Quality, Authenticity, and
-                                Trust</h3>
-
-                            <h5 class="mt-3 text-dark fw-bold">1. Uncompromised Quality:</h5>
-                            <p>Every jewelry piece at Suyagya undergoes rigorous quality checks to ensure it stands true to
-                                the high standards we've set for ourselves.</p>
-
-                            <h5 class="mt-3 text-dark fw-bold">2. Authenticity Assured:</h5>
-                            <p>With the flood of counterfeit products in the market, we understand the concerns about
-                                authenticity. At Suyagya, our promise is genuine, and so are our products.</p>
-
-                            <h5 class="mt-3 text-dark fw-bold">3. Features Tailored for You:</h5>
-                            <p>At Suyagya, customization is at the heart of what we do. Recognizing the uniqueness of every
-                                individual.</p>
-
-                            <h5 class="mt-3 text-dark fw-bold">4. Building Trust, One Piece at a Time:</h5>
-                            <p>Trust is the cornerstone of Suyagya's ethos. And we strive, day in and day out, to fortify
-                                this trust.</p>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
+    @include('frontend.includes.brand_story', [
+        'storyTitle' => $homeSettings->story_title ?? 'Suyagya - India\'s Best Spiritual Jewelry Brand',
+        'storyContent' => $homeSettings->story_content ?? '',
+    ])
 @endsection

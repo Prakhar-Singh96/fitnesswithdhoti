@@ -45,7 +45,7 @@ class ProductController extends Controller
             'discount' => 'nullable|numeric|min:0|max:100',
             'quantity' => 'required|integer',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_images.*' => 'nullable|mimes:jpeg,png,jpg,webp,mp4,mov,avi,webm|max:51200',
 
             // Gemstone Fields
             'is_gemstone' => 'nullable|boolean',
@@ -72,6 +72,13 @@ class ProductController extends Controller
             } else {
                 $sellingPrice = $mrp;
                 $discount = 0;
+            }
+
+            if ($request->has('faqs')) {
+                // Array values reset karke JSON encode karo
+                $data['faq_content'] = array_values($request->faqs);
+            } else {
+                $data['faq_content'] = null;
             }
 
             $data['price'] = round($sellingPrice, 2);
@@ -241,6 +248,15 @@ class ProductController extends Controller
                 $sellingPrice = $mrp;
                 $discount = 0;
             }
+
+
+            if ($request->has('faqs')) {
+                // Array values reset karke JSON encode karo
+                $data['faq_content'] = array_values($request->faqs);
+            } else {
+                $data['faq_content'] = null;
+            }
+
             $data['price'] = round($sellingPrice, 2);
             $data['discount'] = round($discount, 2);
 

@@ -192,6 +192,59 @@
                                     class="form-control" name="og_image"></div>
                         </div>
                     </div>
+
+                    {{-- 6. Brand Story (Dynamic for this product) --}}
+                    <div class="card mb-4">
+                        <h5 class="card-header">Product Story / Q&A</h5>
+                        <div class="card-body">
+                            <div class="alert alert-secondary small">
+                                If left empty, the Category's story will be shown.
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Story Title</label>
+                                <input type="text" class="form-control" name="story_title"
+                                    value="{{ isset($product) ? $product->story_title : old('story_title') }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Story Content</label>
+                                <textarea class="form-control" id="story_editor" name="story_content">{{ isset($product) ? $product->story_content : old('story_content') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ❓ FAQ SECTION (REPEATER) --}}
+                    <div class="card mb-4">
+                        <h5 class="card-header d-flex justify-content-between align-items-center">
+                            <span>Product FAQs</span>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="addFaqRow()">
+                                <i class="bx bx-plus"></i> Add Question
+                            </button>
+                        </h5>
+                        <div class="card-body">
+                            <div id="faq-container">
+                                {{-- EDIT PAGE LOGIC: Existing FAQs --}}
+                                @if (isset($product) && !empty($product->faq_content))
+                                    @foreach ($product->faq_content as $index => $faq)
+                                        <div class="faq-row border rounded p-3 mb-3 position-relative bg-light">
+                                            <button type="button"
+                                                class="btn btn-danger btn-xs position-absolute top-0 end-0 m-2"
+                                                onclick="this.closest('.faq-row').remove()">×</button>
+                                            <div class="mb-2">
+                                                <label class="form-label small fw-bold">Question</label>
+                                                <input type="text" name="faqs[{{ $index }}][question]"
+                                                    class="form-control" value="{{ $faq['question'] }}" required>
+                                            </div>
+                                            <div>
+                                                <label class="form-label small fw-bold">Answer</label>
+                                                <textarea name="faqs[{{ $index }}][answer]" class="form-control" rows="2" required>{{ $faq['answer'] }}</textarea>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <small class="text-muted">These FAQs will appear on the Product Detail Page.</small>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- RIGHT COLUMN --}}
@@ -327,8 +380,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
         // CKEditor & Slug
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
+        ClassicEditor.create(document.querySelector('#editor'), {
                 ckfinder: {
                     // Token hata diya hai, simple URL rakhein
                     uploadUrl: "{{ route('admin.product.upload_image') }}"
@@ -337,6 +389,17 @@
             .catch(error => {
                 console.error(error);
             });
+
+
+        // NEW: Story Editor
+        ClassicEditor.create(document.querySelector('#story_editor'), {
+            toolbar: ['heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList',
+                'blockQuote'
+            ], // Thoda simple toolbar rakh sakte hain
+        }).catch(error => {
+            console.error(error);
+        });
+
         document.getElementById('name').addEventListener('input', function() {
             let slug = this.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g,
                 '-');
@@ -575,7 +638,7 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
 
-                // Prevent duplicates (optional check by name/size)
+                // Prevent duplicates
                 let isDuplicate = false;
                 for (let j = 0; j < dt.files.length; j++) {
                     if (dt.files[j].name === file.name && dt.files[j].size === file.size) {
@@ -590,23 +653,40 @@
                     // Create Preview Element
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        // Generate unique ID for this item based on file name (sanitized)
+                        // Generate unique ID
                         const fileId = file.name.replace(/[^a-zA-Z0-9]/g, '');
 
-                        const html = `
-                        <div class="col-md-6" id="preview-${fileId}">
-                            <div class="d-flex align-items-center border p-2 rounded position-relative bg-white">
-                                <img src="${e.target.result}" width="60" height="60" class="object-fit-cover rounded me-3">
-                                <div class="flex-grow-1">
-                                    <small class="text-muted d-block text-truncate" style="max-width: 150px;">${file.name}</small>
-                                    <input type="text" name="gallery_alts[]" class="form-control form-control-sm mt-1" placeholder="Alt Text">
-                                </div>
-                                <button type="button" class="btn btn-danger btn-sm ms-2 p-1" onclick="removeFile('${file.name}', '${fileId}')" style="line-height: 1;">
-                                    <i class="bx bx-x fs-5"></i>
-                                </button>
-                            </div>
-                        </div>
+                        // 🔥 CHECK FILE TYPE (Image vs Video)
+                        let mediaHtml = '';
+                        if (file.type.startsWith('image/')) {
+                            mediaHtml =
+                                `<img src="${e.target.result}" width="60" height="60" class="object-fit-cover rounded me-3">`;
+                        } else if (file.type.startsWith('video/')) {
+                            mediaHtml = `
+                        <video width="60" height="60" class="object-fit-cover rounded me-3 bg-black" muted>
+                            <source src="${e.target.result}" type="${file.type}">
+                        </video>
                     `;
+                        } else {
+                            // Fallback for unknown file types
+                            mediaHtml =
+                                `<div class="d-flex align-items-center justify-content-center bg-light rounded me-3" style="width:60px; height:60px;"><i class="bx bx-file fs-3"></i></div>`;
+                        }
+
+                        const html = `
+                <div class="col-md-6" id="preview-${fileId}">
+                    <div class="d-flex align-items-center border p-2 rounded position-relative bg-white">
+                        ${mediaHtml}  {{-- 👈 Inserted Media Here --}}
+                        <div class="flex-grow-1">
+                            <small class="text-muted d-block text-truncate" style="max-width: 150px;">${file.name}</small>
+                            <input type="text" name="gallery_alts[]" class="form-control form-control-sm mt-1" placeholder="Alt Text">
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm ms-2 p-1" onclick="removeFile('${file.name}', '${fileId}')" style="line-height: 1;">
+                            <i class="bx bx-x fs-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
                         container.insertAdjacentHTML('beforeend', html);
                     }
                     reader.readAsDataURL(file);
@@ -689,6 +769,26 @@
             } else {
                 subSelect.html('<option value="">Select Sub Category</option>');
             }
+        }
+
+        let faqIndex = 1000; // High number to avoid conflicts
+        function addFaqRow() {
+            const container = document.getElementById('faq-container');
+            const html = `
+            <div class="faq-row border rounded p-3 mb-3 position-relative bg-light">
+                <button type="button" class="btn btn-danger btn-xs position-absolute top-0 end-0 m-2" onclick="this.closest('.faq-row').remove()">×</button>
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Question</label>
+                    <input type="text" name="faqs[${faqIndex}][question]" class="form-control" placeholder="e.g. Is this original?" required>
+                </div>
+                <div>
+                    <label class="form-label small fw-bold">Answer</label>
+                    <textarea name="faqs[${faqIndex}][answer]" class="form-control" rows="2" placeholder="Yes, it comes with a lab certificate." required></textarea>
+                </div>
+            </div>
+        `;
+            container.insertAdjacentHTML('beforeend', html);
+            faqIndex++;
         }
     </script>
 @endsection

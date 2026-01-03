@@ -22,6 +22,9 @@ class SubCategory extends Model
         'meta_description',
         'meta_keywords',
 
+        'story_title',
+        'story_content',
+
         'og_title',
         'og_description',
         'og_image',

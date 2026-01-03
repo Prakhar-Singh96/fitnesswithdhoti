@@ -256,8 +256,25 @@
         </div>
     </div>
 
-    {{-- Other Sections --}}
-    @yield('other_sections')
+    @php
+        $dTitle = '';
+        $dContent = '';
+
+        // Logic: Agar SubCategory set hai to uska data, nahi to Category ka data
+        if (isset($subCategory) && !empty($subCategory->story_title)) {
+            $dTitle = $subCategory->story_title;
+            $dContent = $subCategory->story_content;
+        } elseif (isset($category) && !empty($category->story_title)) {
+            $dTitle = $category->story_title;
+            $dContent = $category->story_content;
+        }
+    @endphp
+
+    {{-- Include Partial --}}
+    @include('frontend.includes.brand_story', [
+        'storyTitle' => $dTitle,
+        'storyContent' => $dContent,
+    ])
 
 @endsection
 

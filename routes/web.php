@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FilterController;
+use App\Http\Controllers\Frontend\FaqController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Frontend\CartController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\LogisticController;
 use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\SearchController;
+use App\Http\Controllers\Admin\GeneralFaqController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\FilterValueController;
 use App\Http\Controllers\Admin\SubCategoryController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\Frontend\Auth\OtpController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\HomePageSettingController;
 use App\Http\Controllers\Frontend\ProductListingController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
@@ -89,6 +92,7 @@ Route::get('/get-coupons', [CheckoutController::class, 'getCoupons'])->name('get
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 Route::get('/wishlist/fetch', [WishlistController::class, 'fetchWishlist'])->name('wishlist.fetch');
+Route::get('/faqs', [FaqController::class, 'index'])->name('frontend.faq');
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {
@@ -154,6 +158,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('reviews/status/{id}', [AdminReviewController::class, 'toggleStatus'])->name('reviews.toggle');
 
         Route::resource('coupons', CouponController::class);
+
+        Route::get('/home-page-settings', [HomePageSettingController::class, 'edit'])->name('home.settings');
+        Route::post('/home-page-settings', [HomePageSettingController::class, 'update'])->name('home.settings.update');
+
+        // General FAQs CRUD
+        Route::resource('/general-faqs', GeneralFaqController::class);
 
         // Admin Middleware Group ke andar
         Route::group(['prefix' => 'logistic', 'as' => 'logistic.'], function () {

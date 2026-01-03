@@ -48,6 +48,10 @@ class Product extends Model
         'weight',
         'is_gemstone',
 
+        'story_title',
+        'story_content',
+        'faq_content',
+
         'status',
         'is_featured',    // ✅ New
         'is_best_seller', // ✅ New
@@ -60,6 +64,7 @@ class Product extends Model
     protected $casts = [
         'offer_end_time' => 'datetime', // Date object me convert karega
         'is_siddh_enabled' => 'boolean',
+        'faq_content' => 'array', // 👈 Ye line add karein
 
         // 🆕 New Casts
         'emi_available' => 'boolean', // 1 ko true, 0 ko false samjhega

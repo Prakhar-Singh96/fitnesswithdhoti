@@ -236,5 +236,34 @@
             </ul>
         </li>
 
+        {{-- 👇👇 YAHAN ADD KAREIN 👇👇 --}}
+        <li class="menu-item {{ request()->routeIs('admin.home.settings') ? 'active' : '' }}">
+            <a href="{{ route('admin.home.settings') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i> {{-- Cog Icon for Settings --}}
+                <div data-i18n="Home Settings">Home Page Settings</div>
+            </a>
+        </li>
+
+        <li
+            class="menu-item {{ request()->is('admin/general-faqs*') || request()->is('admin/index*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-filter-alt"></i>
+                <div>General FAQs</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ route('admin.general-faqs.index') }}" class="menu-link">
+                        General FAQs List
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="{{ route('admin.general-faqs.create') }}" class="menu-link">
+                        Add General FAQs
+                    </a>
+                </li>
+            </ul>
+        </li>
+
     </ul>
 </aside>

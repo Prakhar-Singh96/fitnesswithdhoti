@@ -112,7 +112,7 @@
                                                     @if ($category->products->count() > 0)
                                                         @foreach ($category->products as $product)
                                                             <div class="col-3">
-                                                                <a href="#" class="japam-prod-card">
+                                                                <a href="{{ route('product.detail', $product->slug) }}" class="japam-prod-card">
                                                                     <img src="{{ asset($product->main_image) }}"
                                                                         class="japam-prod-img"
                                                                         alt="{{ $product->name }}">
