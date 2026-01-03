@@ -6,10 +6,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="is-logged-in" content="{{ Auth::check() ? '1' : '0' }}">
-    <title>@yield('title', 'Suyagya | Authentic Spiritual Products')</title>
 
     {{-- Favicon, Meta Tags, etc. --}}
-    {{-- ... (Keep existing meta tags from original HTML) ... --}}
+    {{-- 🔥 DYNAMIC SEO LOGIC START 🔥 --}}
+    @php
+        // 1. Default Values (Fallback)
+        $metaTitle = 'Suyagya - Authentic Spiritual Jewelry & Rudraksha';
+        $metaDesc = 'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
+        $metaKeys = 'rudraksha, gemstones, spiritual jewelry, mala, suyagya';
+        $ogImage = asset('assets/images/logo.png'); // Default Logo URL
+        $currentUrl = url()->current();
+
+        // 2. Agar PRODUCT Detail Page hai
+        if (Route::is('product.detail') && !empty($product)) {
+            // Priority: Meta Title DB se lo, agar khali hai to Product Name use karo
+            $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Suyagya';
+
+            // Priority: Meta Desc DB se lo, agar khali hai to Description ka short version lo
+            $metaDesc = !empty($product->meta_description) ? $product->meta_description : Str::limit(strip_tags($product->description), 160);
+
+            $metaKeys = $product->meta_keywords ?? $metaKeys;
+            if($product->og_image) {
+                $ogImage = asset($product->og_image);
+            }
+        }
+
+        // 3. Agar CATEGORY Page hai
+        elseif (Route::is('products.category') && !empty($category)) {
+            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Suyagya';
+            $metaDesc = !empty($category->meta_description) ? $category->meta_description : 'Explore our exclusive collection of ' . $category->name;
+            $metaKeys = $category->meta_keywords ?? $metaKeys;
+            if($category->og_image) {
+                $ogImage = asset($category->og_image);
+            }
+        }
+
+        // 4. Agar SUB-CATEGORY Page hai
+        elseif (Route::is('products.subcategory') && !empty($subCategory)) {
+            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Suyagya';
+            $metaDesc = !empty($subCategory->meta_description) ? $subCategory->meta_description : 'Best quality ' . $subCategory->name . ' available online.';
+            $metaKeys = $subCategory->meta_keywords ?? $metaKeys;
+        }
+
+        // 5. Agar HOME Page hai (check via route name or variable)
+        // Note: HomeController me humne $homeSettings pass kiya tha
+        elseif (isset($homeSettings) && !empty($homeSettings)) {
+            $metaTitle = $homeSettings->meta_title ?? $metaTitle;
+            $metaDesc = $homeSettings->meta_description ?? $metaDesc;
+            $metaKeys = $homeSettings->meta_keywords ?? $metaKeys;
+            if($homeSettings->og_image) {
+                $ogImage = asset($homeSettings->og_image);
+            }
+        }
+    @endphp
+    {{-- 🔥 DYNAMIC SEO LOGIC END 🔥 --}}
+
+    {{-- ✅ PRIMARY META TAGS --}}
+    <title>{{ $metaTitle }}</title>
+    <meta name="description" content="{{ $metaDesc }}">
+    <meta name="keywords" content="{{ $metaKeys }}">
+    <meta name="author" content="Suyagya">
+    <link rel="canonical" href="{{ $currentUrl }}" />
+
+    {{-- ✅ OPEN GRAPH / FACEBOOK / WHATSAPP --}}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ $metaTitle }}" />
+    <meta property="og:description" content="{{ $metaDesc }}" />
+    <meta property="og:image" content="{{ $ogImage }}" />
+    <meta property="og:url" content="{{ $currentUrl }}" />
+    <meta property="og:site_name" content="Suyagya" />
+
+    {{-- ✅ TWITTER CARD --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $metaTitle }}">
+    <meta name="twitter:description" content="{{ $metaDesc }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+
+    {{-- ✅ 3. SCHEMA MARKUP (YAHAN HAI SCHEMA) --}}
+    {{-- Ye line us dusri file ko load kar rahi hai --}}
+    @include('frontend.includes.schema')
+
+    {{-- ✅ FAVICON --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
 
     {{-- 🔗 CSS Files --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
