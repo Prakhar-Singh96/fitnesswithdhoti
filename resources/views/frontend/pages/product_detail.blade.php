@@ -111,10 +111,10 @@
         }
 
         /* Mobile Adjustments */
-        @media (max-width: 768px) {
+        /* @media (max-width: 768px) {
             .product-slider-container {
-                height: auto !important; /* Let height adapt */
-                aspect-ratio: 1 / 1; /* Make it square on mobile (common for e-com) */
+                height: 455px !important;
+                aspect-ratio: 1 / 1;
                 width: 100%;
             }
 
@@ -122,13 +122,13 @@
             .product-slider-container video {
                 width: 100%;
                 height: 100%;
-                object-fit: cover; /* Fill the square container on mobile */
+                object-fit: cover;
             }
 
             .product-images {
                 top: 0 !important;
             }
-        }
+        } */
     </style>
 @endsection
 
