@@ -44,28 +44,23 @@
 
                     <div id="heroSlider">
                         @if (isset($banners) && count($banners) > 0)
-                            @foreach ($banners as $key => $banner)
+                            @foreach ($banners as $banner)
                                 <div>
+                                    {{-- Link Logic: Agar link hai to <a> tag lagaye --}}
                                     <a href="{{ $banner->link ?? '#' }}" class="d-block">
                                         <picture>
-                                            {{-- ⚡ LCP FIX: First slide loads Eagerly, others Lazy --}}
-                                            @php
-                                                $loading = $key === 0 ? 'eager' : 'lazy';
-                                                $fetchPriority = $key === 0 ? 'high' : 'auto';
-                                            @endphp
-
+                                            {{-- Mobile Image Logic: Check if exists, else use desktop image --}}
                                             @if ($banner->mobile_image)
-                                                <source media="(max-width: 767px)" srcset="{{ asset($banner->mobile_image) }}">
+                                                <source media="(max-width: 767px)"
+                                                    srcset="{{ asset($banner->mobile_image) }}">
                                             @else
-                                                <source media="(max-width: 767px)" srcset="{{ asset($banner->desktop_image) }}">
+                                                <source media="(max-width: 767px)"
+                                                    srcset="{{ asset($banner->desktop_image) }}">
                                             @endif
 
-                                            <img class="bnanner-img w-100"
-                                                 src="{{ asset($banner->desktop_image) }}"
-                                                 alt="Suyagya Offer {{ $key + 1 }}"
-                                                 width="1920" height="600"
-                                                 loading="{{ $loading }}"
-                                                 fetchpriority="{{ $fetchPriority }}">
+                                            {{-- Desktop Image (Main) --}}
+                                            <img class="bnanner-img w-100" src="{{ asset($banner->desktop_image) }}"
+                                                alt="Banner">
                                         </picture>
                                     </a>
                                 </div>

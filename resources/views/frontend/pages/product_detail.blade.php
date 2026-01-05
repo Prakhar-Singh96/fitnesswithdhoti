@@ -92,6 +92,43 @@
         .bg-panch {
             background-color: #d4af37;
         }
+
+        /* 📱 RESPONSIVE SLIDER FIX */
+        .product-slider-container {
+            height: 622px; /* Fixed height for Desktop */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            overflow: hidden; /* Prevent spillover */
+        }
+
+        .product-slider-container img,
+        .product-slider-container video {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Default for Desktop */
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .product-slider-container {
+                height: auto !important; /* Let height adapt */
+                aspect-ratio: 1 / 1; /* Make it square on mobile (common for e-com) */
+                width: 100%;
+            }
+
+            .product-slider-container img,
+            .product-slider-container video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Fill the square container on mobile */
+            }
+
+            .product-images {
+                top: 0 !important;
+            }
+        }
     </style>
 @endsection
 
@@ -150,9 +187,9 @@
                     {{-- 1. MAIN BIG SLIDER --}}
                     <div class="product-main-slider mb-3">
                         {{-- Main Image (Assuming it's always an image) --}}
-                        <div class="d-flex align-items-center justify-content-center bg-white" style="height: 622px;">
+                        <div class="product-slider-container">
                             <img src="{{ asset($product->main_image) }}" class="img-fluid w-100 h-100 object-fit-contain"
-                                alt="{{ $product->main_image_alt ?? $product->name }}" fetchpriority="high">
+                                alt="{{ $product->main_image_alt ?? $product->name }}">
                         </div>
 
                         {{-- Gallery Loop --}}
@@ -163,12 +200,11 @@
                                     $isVideo = in_array(strtolower($extension), ['mp4', 'mov', 'avi', 'webm']);
                                 @endphp
 
-                                <div class="d-flex align-items-center justify-content-center bg-white"
-                                    style="height: 622px;">
+                                <div class="product-slider-container">
                                     @if ($isVideo)
                                         {{-- 🎥 VIDEO PLAYER (Main Slider) --}}
                                         <video width="100%" height="100%" controls
-                                            style="object-fit: contain; max-height: 622px;">
+                                            style="object-fit: contain; max-height: 100%;"> {{-- Changed max-height to 100% --}}
                                             <source src="{{ asset($img->image) }}" type="video/{{ $extension }}">
                                             Your browser does not support the video tag.
                                         </video>
