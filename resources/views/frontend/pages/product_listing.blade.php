@@ -169,7 +169,7 @@
                                 <div class="product-card h-100 position-relative">
                                     <div class="img-box mb-3 position-relative overflow-hidden rounded-0">
                                         <a href="{{ route('product.detail', $product->slug) }}">
-                                            <img src="{{ asset($product->main_image) }}" alt="{{ $product->name }}"
+                                            <img src="{{ asset($product->main_image) }}" alt="{{ $product->main_image_alt ?? $product->name }}"
                                                 class="img-fluid w-100 object-fit-cover" style="aspect-ratio: 1/1;">
                                         </a>
                                         @if ($product->discount > 0)

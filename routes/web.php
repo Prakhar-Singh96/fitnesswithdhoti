@@ -237,3 +237,19 @@ Route::get('/run-seeder', function () {
 
     return 'Seeder Run Successfully! Admin created.';
 });
+
+// 🚀 SEO: Manual Sitemap Generator Route
+Route::get('/update-sitemap', function () {
+    // 🔒 Security Check: Ye key change kar lena
+    if (request('key') != 'suyagya_seo_secret_2025') {
+        abort(403, 'Unauthorized access!');
+    }
+
+    // 🛠️ Command Run
+    try {
+        \Illuminate\Support\Facades\Artisan::call('sitemap:generate');
+        return '✅ Sitemap Generated Successfully! Check public/sitemap.xml';
+    } catch (\Exception $e) {
+        return '❌ Error: ' . $e->getMessage();
+    }
+});

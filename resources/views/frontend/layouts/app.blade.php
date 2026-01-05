@@ -6,13 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="is-logged-in" content="{{ Auth::check() ? '1' : '0' }}">
+    {{-- 📊 1. Google Analytics (GA4) --}}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6ECDBEM0VJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-6ECDBEM0VJ');
+    </script>
 
     {{-- Favicon, Meta Tags, etc. --}}
     {{-- 🔥 DYNAMIC SEO LOGIC START 🔥 --}}
     @php
         // 1. Default Values (Fallback)
         $metaTitle = 'Suyagya - Authentic Spiritual Jewelry & Rudraksha';
-        $metaDesc = 'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
+        $metaDesc =
+            'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
         $metaKeys = 'rudraksha, gemstones, spiritual jewelry, mala, suyagya';
         $ogImage = asset('assets/images/logo.png'); // Default Logo URL
         $currentUrl = url()->current();
@@ -23,28 +32,38 @@
             $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Suyagya';
 
             // Priority: Meta Desc DB se lo, agar khali hai to Description ka short version lo
-            $metaDesc = !empty($product->meta_description) ? $product->meta_description : Str::limit(strip_tags($product->description), 160);
+            $metaDesc = !empty($product->meta_description)
+                ? $product->meta_description
+                : Str::limit(strip_tags($product->description), 160);
 
             $metaKeys = $product->meta_keywords ?? $metaKeys;
-            if($product->og_image) {
+            if ($product->og_image) {
                 $ogImage = asset($product->og_image);
             }
         }
 
         // 3. Agar CATEGORY Page hai
         elseif (Route::is('products.category') && !empty($category)) {
-            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Suyagya';
-            $metaDesc = !empty($category->meta_description) ? $category->meta_description : 'Explore our exclusive collection of ' . $category->name;
+            $metaTitle = !empty($category->meta_title)
+                ? $category->meta_title
+                : $category->name . ' Collection | Suyagya';
+            $metaDesc = !empty($category->meta_description)
+                ? $category->meta_description
+                : 'Explore our exclusive collection of ' . $category->name;
             $metaKeys = $category->meta_keywords ?? $metaKeys;
-            if($category->og_image) {
+            if ($category->og_image) {
                 $ogImage = asset($category->og_image);
             }
         }
 
         // 4. Agar SUB-CATEGORY Page hai
         elseif (Route::is('products.subcategory') && !empty($subCategory)) {
-            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Suyagya';
-            $metaDesc = !empty($subCategory->meta_description) ? $subCategory->meta_description : 'Best quality ' . $subCategory->name . ' available online.';
+            $metaTitle = !empty($subCategory->meta_title)
+                ? $subCategory->meta_title
+                : $subCategory->name . ' | Suyagya';
+            $metaDesc = !empty($subCategory->meta_description)
+                ? $subCategory->meta_description
+                : 'Best quality ' . $subCategory->name . ' available online.';
             $metaKeys = $subCategory->meta_keywords ?? $metaKeys;
         }
 
@@ -54,7 +73,7 @@
             $metaTitle = $homeSettings->meta_title ?? $metaTitle;
             $metaDesc = $homeSettings->meta_description ?? $metaDesc;
             $metaKeys = $homeSettings->meta_keywords ?? $metaKeys;
-            if($homeSettings->og_image) {
+            if ($homeSettings->og_image) {
                 $ogImage = asset($homeSettings->og_image);
             }
         }
@@ -114,7 +133,8 @@
 
 
     {{-- 💡 Premium Custom Styles --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}?v={{ filemtime(public_path('assets/css/custom.css')) }}">
+    <link rel="stylesheet"
+        href="{{ asset('assets/css/custom.css') }}?v={{ filemtime(public_path('assets/css/custom.css')) }}">
 
     @yield('styles')
 </head>

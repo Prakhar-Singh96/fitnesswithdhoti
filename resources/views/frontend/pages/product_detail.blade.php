@@ -98,14 +98,30 @@
 
 @section('content')
 
-    {{-- Breadcrumb --}}
+    {{-- 🍞 2. OPTIMIZED BREADCRUMBS (Home > Category > Product) --}}
     <div class="py-2 border-bottom mb-4">
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
-                    </li>
-                    <li class="breadcrumb-item active text-dark">{{ $product->name }}</li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a></li>
+
+                    @if($product->category)
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('products.category', $product->category->slug) }}" class="text-muted text-decoration-none">
+                                {{ $product->category->name }}
+                            </a>
+                        </li>
+                    @endif
+
+                    @if($product->subCategory)
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('products.subcategory', ['cat_slug' => $product->category->slug, 'sub_slug' => $product->subCategory->slug]) }}" class="text-muted text-decoration-none">
+                                {{ $product->subCategory->name }}
+                            </a>
+                        </li>
+                    @endif
+
+                    <li class="breadcrumb-item active text-dark" aria-current="page">{{ $product->name }}</li>
                 </ol>
             </nav>
         </div>
@@ -136,7 +152,7 @@
                         {{-- Main Image (Assuming it's always an image) --}}
                         <div class="d-flex align-items-center justify-content-center bg-white" style="height: 622px;">
                             <img src="{{ asset($product->main_image) }}" class="img-fluid w-100 h-100 object-fit-contain"
-                                alt="{{ $product->name }}">
+                                alt="{{ $product->main_image_alt ?? $product->name }}" fetchpriority="high">
                         </div>
 
                         {{-- Gallery Loop --}}
@@ -159,7 +175,8 @@
                                     @else
                                         {{-- 🖼️ IMAGE --}}
                                         <img src="{{ asset($img->image) }}" class="img-fluid w-100 h-100 object-fit-contain"
-                                            alt="{{ $img->alt ?? $product->name }}">
+                                            alt="{{ $img->alt ?? $product->name . ' - View ' . $loop->iteration }}"
+                                             loading="lazy">
                                     @endif
                                 </div>
                             @endforeach
@@ -171,7 +188,7 @@
                         {{-- Main Image Thumb --}}
                         <div class="mx-1">
                             <div class="border rounded overflow-hidden" style="height: 80px; cursor: pointer;">
-                                <img src="{{ asset($product->main_image) }}" class="w-100 h-100 object-fit-cover">
+                                <img src="{{ asset($product->main_image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $product->main_image_alt ?? $product->name }} thumbnail">
                             </div>
                         </div>
 
@@ -202,7 +219,7 @@
                                             </div>
                                         @else
                                             {{-- 🖼️ Image Thumb --}}
-                                            <img src="{{ asset($img->image) }}" class="w-100 h-100 object-fit-cover">
+                                            <img src="{{ asset($img->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $img->alt ?? $product->name }} thumbnail">
                                         @endif
                                     </div>
                                 </div>
@@ -631,7 +648,7 @@
                                     class="d-block overflow-hidden bg-light ratio ratio-1x1">
                                     <img src="{{ asset($related->main_image) }}"
                                         class="card-img-top w-100 h-100 object-fit-cover product-img-hover"
-                                        alt="{{ $related->name }}">
+                                        alt="{{ $related->main_image_alt ?? $related->name}}">
                                 </a>
 
                                 {{-- Card Body --}}
@@ -688,7 +705,7 @@
                                 <a class="d-block" href="{{ url('category/' . $category['slug']) }}">
                                     <div class="mega-icon mx-auto mb-2">
                                         <img src="{{ asset($category->icon_image) }}" class="img-fluid"
-                                            alt="{{ $category['name'] }}">
+                                            alt="{{ $category['icon_alt'] ?? $category['name'] }}">
                                     </div>
                                     <span class="small fw-semibold text-dark">{{ $category['name'] }}</span>
                                 </a>

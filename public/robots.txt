@@ -1,2 +1,48 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# 🛑 1. Backend & Panels (Security)
+Disallow: /admin/
+Disallow: /seller/
+
+# 🛑 2. System Commands (Very Important to hide)
+Disallow: /run-migration
+Disallow: /clear-cache
+Disallow: /run-seeder
+
+# 🛑 3. Shopping Process (No SEO Value)
+Disallow: /cart
+Disallow: /checkout
+Disallow: /wishlist
+Disallow: /add-to-cart
+Disallow: /apply-coupon
+Disallow: /get-coupons
+
+# 🛑 4. User Account & Private Data
+Disallow: /profile
+Disallow: /orders
+Disallow: /track-order
+Disallow: /my-account
+
+# 🛑 5. Authentication
+Disallow: /login
+Disallow: /register
+Disallow: /send-otp
+Disallow: /login-with-otp
+Disallow: /logout
+Disallow: /password/
+
+# 🛑 6. AJAX & Internal APIs (Google doesn't need these)
+Disallow: /ajax-search
+Disallow: /check-pincode-delivery/
+Disallow: /reviews/submit
+Disallow: /reviews/filter
+Disallow: /cart/update-quantity
+Disallow: /cart/side-cart-html
+
+# 🛑 7. Internal Search Results (SEO Best Practice)
+# Google को आपकी 'Category Pages' चाहिए, 'Search Result Pages' नहीं।
+Disallow: /search
+
+# ✅ Sitemap Location
+Sitemap: https://suyagya.com/sitemap.xml
