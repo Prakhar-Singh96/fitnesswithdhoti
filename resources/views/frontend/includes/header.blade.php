@@ -222,7 +222,7 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="{{ asset('assets/img/logosuyagya.png') }}" alt="Logo">
+                                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
 
@@ -329,7 +329,7 @@
         </div>
         <div class="HeaderCenter">
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
-                <img src="{{ asset('assets/img/logo.png') }}" alt="Suyagya" height="50">
+                <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" height="50">
             </a>
         </div>
         <div class="HeaderRight">

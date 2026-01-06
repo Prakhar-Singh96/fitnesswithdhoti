@@ -23,7 +23,7 @@
         $metaDesc =
             'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
         $metaKeys = 'rudraksha, gemstones, spiritual jewelry, mala, suyagya';
-        $ogImage = asset('assets/images/logo.png'); // Default Logo URL
+        $ogImage = asset('assets/img/suyagyalogomobile.webp'); // Default Logo URL
         $currentUrl = url()->current();
 
         // 2. Agar PRODUCT Detail Page hai

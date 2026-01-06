@@ -95,40 +95,43 @@
 
         /* 📱 RESPONSIVE SLIDER FIX */
         .product-slider-container {
-            height: 622px; /* Fixed height for Desktop */
+            height: 622px;
+            /* Fixed height for Desktop */
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: #fff;
-            overflow: hidden; /* Prevent spillover */
+            overflow: hidden;
+            /* Prevent spillover */
         }
 
         .product-slider-container img,
         .product-slider-container video {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* Default for Desktop */
+            object-fit: contain;
+            /* Default for Desktop */
         }
 
         /* Mobile Adjustments */
         /* @media (max-width: 768px) {
-            .product-slider-container {
-                height: 455px !important;
-                aspect-ratio: 1 / 1;
-                width: 100%;
-            }
+                    .product-slider-container {
+                        height: 455px !important;
+                        aspect-ratio: 1 / 1;
+                        width: 100%;
+                    }
 
-            .product-slider-container img,
-            .product-slider-container video {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+                    .product-slider-container img,
+                    .product-slider-container video {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
 
-            .product-images {
-                top: 0 !important;
-            }
-        } */
+                    .product-images {
+                        top: 0 !important;
+                    }
+                } */
     </style>
 @endsection
 
@@ -140,19 +143,22 @@
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
+                    </li>
 
-                    @if($product->category)
+                    @if ($product->category)
                         <li class="breadcrumb-item">
-                            <a href="{{ route('products.category', $product->category->slug) }}" class="text-muted text-decoration-none">
+                            <a href="{{ route('products.category', $product->category->slug) }}"
+                                class="text-muted text-decoration-none">
                                 {{ $product->category->name }}
                             </a>
                         </li>
                     @endif
 
-                    @if($product->subCategory)
+                    @if ($product->subCategory)
                         <li class="breadcrumb-item">
-                            <a href="{{ route('products.subcategory', ['cat_slug' => $product->category->slug, 'sub_slug' => $product->subCategory->slug]) }}" class="text-muted text-decoration-none">
+                            <a href="{{ route('products.subcategory', ['cat_slug' => $product->category->slug, 'sub_slug' => $product->subCategory->slug]) }}"
+                                class="text-muted text-decoration-none">
                                 {{ $product->subCategory->name }}
                             </a>
                         </li>
@@ -210,9 +216,10 @@
                                         </video>
                                     @else
                                         {{-- 🖼️ IMAGE --}}
-                                        <img src="{{ asset($img->image) }}" class="img-fluid w-100 h-100 object-fit-contain"
+                                        <img src="{{ asset($img->image) }}"
+                                            class="img-fluid w-100 h-100 object-fit-contain"
                                             alt="{{ $img->alt ?? $product->name . ' - View ' . $loop->iteration }}"
-                                             loading="lazy">
+                                            loading="lazy">
                                     @endif
                                 </div>
                             @endforeach
@@ -224,7 +231,8 @@
                         {{-- Main Image Thumb --}}
                         <div class="mx-1">
                             <div class="border rounded overflow-hidden" style="height: 80px; cursor: pointer;">
-                                <img src="{{ asset($product->main_image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $product->main_image_alt ?? $product->name }} thumbnail">
+                                <img src="{{ asset($product->main_image) }}" class="w-100 h-100 object-fit-cover"
+                                    alt="{{ $product->main_image_alt ?? $product->name }} thumbnail">
                             </div>
                         </div>
 
@@ -255,7 +263,8 @@
                                             </div>
                                         @else
                                             {{-- 🖼️ Image Thumb --}}
-                                            <img src="{{ asset($img->image) }}" class="w-100 h-100 object-fit-cover" alt="{{ $img->alt ?? $product->name }} thumbnail">
+                                            <img src="{{ asset($img->image) }}" class="w-100 h-100 object-fit-cover"
+                                                alt="{{ $img->alt ?? $product->name }} thumbnail">
                                         @endif
                                     </div>
                                 </div>
@@ -407,13 +416,12 @@
 
 
                 {{-- EMI Widget --}}
-                @if ($product->emi_available && $product->price > 500)
-                    @php $emiPrice = ceil($product->price / 3); @endphp
+                @if ($product->emi_available && $product->price > 1100)
                     <div class="emi-box border rounded p-2 mb-4 d-flex align-items-center bg-white"
                         style="max-width: 400px;">
                         <span class="badge bg-success me-2" style="font-size: 10px;">NEW</span>
                         <div class="flex-grow-1" style="font-size: 13px;">
-                            or <strong>₹{{ $emiPrice }}/month</strong> (3 months)
+                            or <strong>₹<span id="emi_amount"></span>/month</strong> (3 months)
                             <span class="badge bg-warning text-dark ms-1" style="font-size: 10px;">0% Interest</span>
                             <div class="text-muted" style="font-size: 11px;">UPI & Cards Accepted | No Extra Cost</div>
                         </div>
@@ -684,7 +692,7 @@
                                     class="d-block overflow-hidden bg-light ratio ratio-1x1">
                                     <img src="{{ asset($related->main_image) }}"
                                         class="card-img-top w-100 h-100 object-fit-cover product-img-hover"
-                                        alt="{{ $related->main_image_alt ?? $related->name}}">
+                                        alt="{{ $related->main_image_alt ?? $related->name }}">
                                 </a>
 
                                 {{-- Card Body --}}
@@ -1011,6 +1019,12 @@
                     displayPrice.innerText = currentBasePrice.toLocaleString('en-IN');
                     inputSiddh.value = 0;
                 }
+
+                // 1. Update the Price Display
+                displayPrice.innerText = finalPrice.toLocaleString('en-IN');
+
+                // 2. Recalculate EMI with the new price (Use setTimeout to ensure DOM is ready)
+                setTimeout(calculateEMI, 50);
             });
         }
 
@@ -1051,5 +1065,60 @@
             setInterval(startDailyTimer, 1000);
             startDailyTimer(); // Page load hote hi run karo
         }
+
+        // --------------------------------------------------------
+        // 🏦 DYNAMIC EMI CALCULATOR (No Cost EMI Logic)
+        // --------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateEMI(); // Page load hote hi calculate karein
+        });
+
+        function calculateEMI() {
+            // 1. Current Price uthao
+            let priceElement = document.getElementById('display_price');
+            if (!priceElement) return;
+
+            // Comma hata kar number banao (e.g. "1,499" -> 1499)
+            let currentPrice = parseFloat(priceElement.innerText.replace(/,/g, ''));
+
+            // 2. Minimum Amount Check (Razorpay EMI usually starts from ₹3000 or ₹5000, check your setting)
+            // Agar product sasta hai (e.g. ₹500), to EMI box hide kar do
+            let emiContainer = document.querySelector('.emi-box');
+
+            if (currentPrice < 1100) {
+                // Agar price 3000 se kam hai to EMI box chupao (Optional logic)
+                if (emiContainer) emiContainer.style.display = 'none';
+                return;
+            } else {
+                if (emiContainer) emiContainer.style.display = 'flex';
+            }
+
+            // 3. Calculation (Price / 3 Months)
+            // Math.ceil() use kiya taaki points na aayen (e.g. 499.33 -> 500)
+            let emi3Months = Math.ceil(currentPrice / 3);
+
+            // 4. Update HTML
+            let emiText = document.getElementById('emi_amount'); // Apne HTML me ye ID add karna mat bhulna inside emi-box
+            if (emiText) {
+                emiText.innerText = emi3Months.toLocaleString('en-IN');
+            } else {
+                // Fallback: Agar ID nahi mili to console me batao
+                console.warn('Element with id "emi_amount" not found inside EMI box.');
+            }
+        }
+
+        // 🔄 Jab bhi Price update ho (Variant/Siddh change), EMI bhi update karo
+        // Hum purane 'updatePrices' function ko "Hook" kar rahe hain
+        const originalUpdatePrices = window.updatePrices;
+
+        window.updatePrices = function(price, mrp) {
+            // Pehle original function chalne do
+            if (typeof originalUpdatePrices === 'function') {
+                originalUpdatePrices(price, mrp);
+            }
+
+            // Phir EMI calculate karo
+            setTimeout(calculateEMI, 100);
+        };
     </script>
 @endsection
