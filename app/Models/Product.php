@@ -31,6 +31,8 @@ class Product extends Model
 
         'main_image',
         'main_image_alt',
+        'product_main_image',
+        'product_main_image_alt',
 
         'offer_end_time',
         'is_siddh_enabled',
@@ -106,15 +108,15 @@ class Product extends Model
     {
         // 'product_additional_categories' table use karega
         return $this->belongsToMany(Category::class, 'product_additional_categories', 'product_id', 'category_id')
-                    ->withPivot('sub_category_id') // Pivot se sub-category id bhi milegi
-                    ->withTimestamps();
+            ->withPivot('sub_category_id') // Pivot se sub-category id bhi milegi
+            ->withTimestamps();
     }
 
     // ✅ 4. NEW: Additional SubCategories Relationship (Direct Access ke liye)
     public function additionalSubCategories()
     {
         return $this->belongsToMany(SubCategory::class, 'product_additional_categories', 'product_id', 'sub_category_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     // ✅ NEW: Reviews Relationship

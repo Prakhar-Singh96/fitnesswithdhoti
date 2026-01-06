@@ -65,6 +65,16 @@
                                 <input type="text" class="form-control form-control-sm" name="main_image_alt"
                                     value="{{ old('main_image_alt', $product->main_image_alt) }}" placeholder="Alt Text">
                             </div>
+                            <div class="mb-4 border p-3 rounded">
+                                <label class="form-label fw-bold">Update product Main Image</label>
+                                @if ($product->product_main_image)
+                                    <div class="mb-2"><img src="{{ asset($product->product_main_image) }}" width="80"
+                                            class="rounded border"></div>
+                                @endif
+                                <input type="file" class="form-control mb-2" name="product_main_image">
+                                <input type="text" class="form-control form-control-sm" name="product_main_image_alt"
+                                    value="{{ old('main_image_alt', $product->product_main_image_alt) }}" placeholder="Alt Text">
+                            </div>
 
                             <hr>
 

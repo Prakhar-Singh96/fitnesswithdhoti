@@ -45,6 +45,7 @@ class ProductController extends Controller
             'discount' => 'nullable|numeric|min:0|max:100',
             'quantity' => 'required|integer',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'product_main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery_images.*' => 'nullable|mimes:jpeg,png,jpg,webp,mp4,mov,avi,webm|max:51200',
 
             // Gemstone Fields
@@ -55,7 +56,7 @@ class ProductController extends Controller
             DB::beginTransaction();
 
             // B. Save Product Basic Info
-            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            $data = $request->except(['product_main_image','main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
 
             // --- Price Calculation Logic ---
             $mrp = $request->mrp_price;
@@ -86,6 +87,7 @@ class ProductController extends Controller
 
             // Image Upload
             $data['main_image'] = uploadImage($request, 'main_image', 'uploads/products/main');
+            $data['product_main_image'] = uploadImage($request, 'product_main_image', 'uploads/products/main/product');
             $data['og_image'] = uploadImage($request, 'og_image', 'uploads/products/og');
 
             // Checkboxes
@@ -230,7 +232,7 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = $request->except(['main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            $data = $request->except(['product_main_image','main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
 
             // --- Price Logic ---
             $mrp = $request->mrp_price;
@@ -274,6 +276,11 @@ class ProductController extends Controller
             if ($request->hasFile('main_image')) {
                 deleteImage($product->main_image);
                 $data['main_image'] = uploadImage($request, 'main_image', 'uploads/products/main');
+            }
+
+            if ($request->hasFile('product_main_image')) {
+                deleteImage($product->main_image);
+                $data['product_main_image'] = uploadImage($request, 'product_main_image', 'uploads/products/main/product');
             }
             if ($request->hasFile('og_image')) {
                 deleteImage($product->og_image);

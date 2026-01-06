@@ -76,7 +76,7 @@
     <nav class="navbar navbar-expand-lg py-0">
         <div class="container-fluid px-3">
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
-                <img src="{{ asset('assets/img/logo.png') }}" alt="Suyagya" height="50">
+                <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" height="50">
             </a>
 
             <div class="collapse navbar-collapse justify-content-center" id="mainMenu">

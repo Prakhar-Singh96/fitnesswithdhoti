@@ -51,9 +51,15 @@
                         <h5 class="card-header">Images</h5>
                         <div class="card-body">
                             <div class="mb-4 border p-3 rounded">
-                                <label class="form-label fw-bold">Main Image <span class="text-danger">*</span></label>
+                                <label class="form-label fw-bold">small Main Image <span class="text-danger">*</span></label>
                                 <input type="file" class="form-control mb-2" name="main_image" required>
                                 <input type="text" class="form-control form-control-sm" name="main_image_alt"
+                                    placeholder="Alt Text (SEO)">
+                            </div>
+                            <div class="mb-4 border p-3 rounded">
+                                <label class="form-label fw-bold">Product Main Image <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control mb-2" name="product_main_image" required>
+                                <input type="text" class="form-control form-control-sm" name="product_main_image_alt"
                                     placeholder="Alt Text (SEO)">
                             </div>
                             <hr>

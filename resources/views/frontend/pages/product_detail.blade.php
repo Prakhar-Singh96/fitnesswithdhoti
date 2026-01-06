@@ -194,8 +194,8 @@
                     <div class="product-main-slider mb-3">
                         {{-- Main Image (Assuming it's always an image) --}}
                         <div class="product-slider-container">
-                            <img src="{{ asset($product->main_image) }}" class="img-fluid w-100 h-100 object-fit-contain"
-                                alt="{{ $product->main_image_alt ?? $product->name }}">
+                            <img src="{{ asset($product->product_main_image) }}" class="img-fluid w-100 h-100 object-fit-contain"
+                                alt="{{ $product->product_main_image_alt ?? $product->name }}">
                         </div>
 
                         {{-- Gallery Loop --}}
@@ -231,8 +231,8 @@
                         {{-- Main Image Thumb --}}
                         <div class="mx-1">
                             <div class="border rounded overflow-hidden" style="height: 80px; cursor: pointer;">
-                                <img src="{{ asset($product->main_image) }}" class="w-100 h-100 object-fit-cover"
-                                    alt="{{ $product->main_image_alt ?? $product->name }} thumbnail">
+                                <img src="{{ asset($product->product_main_image) }}" class="w-100 h-100 object-fit-cover"
+                                    alt="{{ $product->product_main_image_alt ?? $product->name }} thumbnail">
                             </div>
                         </div>
 
