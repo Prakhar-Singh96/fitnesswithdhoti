@@ -20,102 +20,114 @@
 
             {{-- SIDEBAR --}}
             <div class="col-lg-3 mb-4">
-                <div class="filter-sidebar pe-lg-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold mb-0 text-uppercase ls-1">Filters</h6>
-                        @if (request()->has('filter') || request()->has('min_price'))
-                            <a href="{{ url()->current() }}" class="text-danger x-small text-decoration-none fw-bold">Clear
-                                All</a>
-                        @endif
-                    </div>
 
-                    <form id="filterForm" action="" method="GET">
-                        @if (request('sort'))
-                            <input type="hidden" name="sort" value="{{ request('sort') }}">
-                        @endif
+                {{-- 📱 Mobile Filter Toggle Button --}}
+                {{--
+                     👉 CHANGES MADE:
+                     1. Removed 'w-100' (taaki full width na rhe).
+                     2. Added 'mx-auto' (taaki button center me aa jaye).
+                     3. Added inline style 'max-width: 600px; width: 100%;' (taaki upar wale text ke barabar choda ho).
+                --}}
+                <button class="btn btn-outline-dark d-lg-none mb-3 d-flex justify-content-between align-items-center"
+                        style="width: 40%;"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mobileFilterCollapse"
+                        aria-expanded="false"
+                        aria-controls="mobileFilterCollapse">
+                    <span class="fw-bold"><i class="las la-filter me-1"></i> Show Filters</span>
+                    <i class="las la-angle-down"></i>
+                </button>
 
-                        {{-- ✅ PRICE FILTER (Loop se Bahar - Always Visible) --}}
-                        <div class="filter-group border-bottom py-3">
-                            <a class="d-flex justify-content-between align-items-center text-dark text-decoration-none fw-bold mb-3"
-                                data-bs-toggle="collapse" href="#collapsePrice" role="button">
-                                Price <i class="las la-angle-down"></i>
-                            </a>
+                {{-- Sidebar Container (Desktop: Always visible, Mobile: Hidden/Collapsible) --}}
+                <div class="collapse d-lg-block" id="mobileFilterCollapse">
 
-                            <div class="collapse show" id="collapsePrice">
-                                {{-- 1. Input Boxes Row --}}
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <div class="position-relative w-100">
-                                        <span class="position-absolute text-muted small"
-                                            style="left: 8px; top: 7px;">₹</span>
-                                        <input type="number" name="min_price" id="input-min" class="price-input-box ps-3"
-                                            placeholder="0" value="{{ request('min_price') }}">
-                                    </div>
-                                    <span class="text-muted">-</span>
-                                    <div class="position-relative w-100">
-                                        <span class="position-absolute text-muted small"
-                                            style="left: 8px; top: 7px;">₹</span>
-                                        <input type="number" name="max_price" id="input-max" class="price-input-box ps-3"
-                                            placeholder="Max" value="{{ request('max_price') }}">
-                                    </div>
-                                    {{-- Go Button --}}
-                                    <button type="submit" class="btn btn-dark btn-sm rounded-1 px-3">
-                                        <i class="las la-angle-right"></i>
-                                    </button>
-                                </div>
+                    {{-- STYLING FOR DESKTOP CARD LOOK --}}
+                    <div class="filter-sidebar bg-white border rounded p-3">
 
-                                {{-- 2. Range Slider --}}
-                                <div class="px-2 pb-2">
-                                    <div id="price-slider"></div>
-                                </div>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            {{-- Hide 'Filters' text on mobile, Show on Desktop --}}
+                            <h6 class="fw-bold mb-0 text-uppercase ls-1 d-none d-lg-block">Filters</h6>
+
+                            @if (request()->has('filter') || request()->has('min_price'))
+                                {{-- Align Clear All to right on mobile --}}
+                                <a href="{{ url()->current() }}" class="text-danger x-small text-decoration-none fw-bold ms-auto ms-lg-0">Clear All</a>
+                            @endif
                         </div>
-                        {{-- ✅ PRICE FILTER END --}}
 
+                        <form id="filterForm" action="" method="GET">
+                            @if (request('sort'))
+                                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                            @endif
 
-                        {{-- 🟢 DYNAMIC FILTERS (Loop Starts Here) --}}
-                        @foreach ($filters as $filter)
+                            {{-- Price Filter --}}
                             <div class="filter-group border-bottom py-3">
-                                <a class="d-flex justify-content-between align-items-center text-dark text-decoration-none fw-bold mb-2"
-                                    data-bs-toggle="collapse" href="#collapse{{ $filter->id }}" role="button">
-                                    {{ $filter->name }}
-                                    <i class="las la-angle-down"></i>
+                                <a class="d-flex justify-content-between align-items-center text-dark text-decoration-none fw-bold mb-3"
+                                    data-bs-toggle="collapse" href="#collapsePrice" role="button">
+                                    Price <i class="las la-angle-down"></i>
                                 </a>
-                                <div class="collapse show" id="collapse{{ $filter->id }}">
-                                    <div class="filter-options mt-2">
-                                        @foreach ($filter->filterValues as $value)
-                                            <div class="form-check mb-1 d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    @php
-                                                        $isChecked = false;
-                                                        if (
-                                                            request('filter') &&
-                                                            isset(request('filter')[$filter->id])
-                                                        ) {
-                                                            $isChecked = in_array(
-                                                                $value->id,
-                                                                request('filter')[$filter->id],
-                                                            );
-                                                        }
-                                                    @endphp
-                                                    <input class="form-check-input filter-checkbox shadow-none"
-                                                        type="checkbox" name="filter[{{ $filter->id }}][]"
-                                                        value="{{ $value->id }}" id="val_{{ $value->id }}"
-                                                        {{ $isChecked ? 'checked' : '' }} onchange="this.form.submit()">
-                                                    <label class="form-check-label text-muted small ms-1"
-                                                        for="val_{{ $value->id }}">
-                                                        {{ $value->value }}
-                                                    </label>
-                                                </div>
-                                                <span class="text-muted x-small">({{ $value->products_count }})</span>
-                                            </div>
-                                        @endforeach
+
+                                <div class="collapse show" id="collapsePrice">
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <div class="position-relative w-100">
+                                            <span class="position-absolute text-muted small" style="left: 8px; top: 7px;">₹</span>
+                                            <input type="number" name="min_price" id="input-min" class="price-input-box ps-3"
+                                                placeholder="0" value="{{ request('min_price') }}">
+                                        </div>
+                                        <span class="text-muted">-</span>
+                                        <div class="position-relative w-100">
+                                            <span class="position-absolute text-muted small" style="left: 8px; top: 7px;">₹</span>
+                                            <input type="number" name="max_price" id="input-max" class="price-input-box ps-3"
+                                                placeholder="Max" value="{{ request('max_price') }}">
+                                        </div>
+                                        <button type="submit" class="btn btn-dark btn-sm rounded-1 px-3">
+                                            <i class="las la-angle-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="px-2 pb-2">
+                                        <div id="price-slider"></div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                        {{-- 🟢 DYNAMIC FILTERS END --}}
 
-                    </form>
+                            {{-- Dynamic Filters --}}
+                            @foreach ($filters as $filter)
+                                <div class="filter-group border-bottom py-3">
+                                    <a class="d-flex justify-content-between align-items-center text-dark text-decoration-none fw-bold mb-2"
+                                        data-bs-toggle="collapse" href="#collapse{{ $filter->id }}" role="button">
+                                        {{ $filter->name }}
+                                        <i class="las la-angle-down"></i>
+                                    </a>
+                                    <div class="collapse show" id="collapse{{ $filter->id }}">
+                                        <div class="filter-options mt-2">
+                                            @foreach ($filter->filterValues as $value)
+                                                <div class="form-check mb-1 d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        @php
+                                                            $isChecked = false;
+                                                            if (request('filter') && isset(request('filter')[$filter->id])) {
+                                                                $isChecked = in_array($value->id, request('filter')[$filter->id]);
+                                                            }
+                                                        @endphp
+                                                        <input class="form-check-input filter-checkbox shadow-none"
+                                                            type="checkbox" name="filter[{{ $filter->id }}][]"
+                                                            value="{{ $value->id }}" id="val_{{ $value->id }}"
+                                                            {{ $isChecked ? 'checked' : '' }} onchange="this.form.submit()">
+                                                        <label class="form-check-label text-muted small ms-1"
+                                                            for="val_{{ $value->id }}">
+                                                            {{ $value->value }}
+                                                        </label>
+                                                    </div>
+                                                    <span class="text-muted x-small">({{ $value->products_count }})</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                        </form>
+                    </div>
                 </div>
             </div>
 
