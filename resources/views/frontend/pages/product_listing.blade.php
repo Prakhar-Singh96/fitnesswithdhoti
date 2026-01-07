@@ -43,7 +43,7 @@
                 <div class="collapse d-lg-block" id="mobileFilterCollapse">
 
                     {{-- STYLING FOR DESKTOP CARD LOOK --}}
-                    <div class="filter-sidebar bg-white border rounded p-3">
+                    <div class="filter-sidebar border rounded p-3">
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             {{-- Hide 'Filters' text on mobile, Show on Desktop --}}
