@@ -106,7 +106,7 @@
     @include('frontend.includes.schema')
 
     {{-- ✅ FAVICON --}}
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 
     {{-- 🔗 CSS Files --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

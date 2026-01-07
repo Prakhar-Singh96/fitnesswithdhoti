@@ -50,7 +50,7 @@
         align-items: center;
         white-space: nowrap;
         /* Speed control: 40s for smooth slow motion */
-        animation: prinjal-scroll 40s linear infinite;
+        animation: prinjal-scroll 20s linear infinite;
     }
 
     /* Hover karne par ruk jaye (Optional) */
@@ -121,19 +121,19 @@
         {{-- Maine yahan items ko 3 baar repeat kiya hai taaki screen bhar jaye --}}
 
         <div class="d-flex" style="background-color: #c19a6b;">
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
             <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
 
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
             <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
 
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
@@ -144,19 +144,19 @@
         {{-- EXACT SAME COPY for Seamless Effect --}}
 
         <div class="d-flex" style="background-color: #c19a6b;">
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
             <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
 
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
             <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
 
-            <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span>
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
             <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
             <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
             <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
@@ -404,22 +404,54 @@
 {{-- Mobile Header (Separate Block) --}}
 <div class="Mobile-Header sticky-top" style="background: #fff; z-index: 1020;">
     {{-- ✅ NEW TOP INFO BAR (Mobile - Fixed with Marquee Tag) --}}
-    <div class="d-none d-lg-block marquee-wrapper">
-        <div class="marquee-content">
-            {{-- SET 1: Original Content --}}
-            <span class="marquee-item"><i class="las la-undo-alt me-1"></i> 10 Days Easy Return</span>
-            <span class="marquee-item"><i class="las la-percent me-1"></i> 5% off on Prepaid Orders</span>
-            <span class="marquee-item"><i class="las la-shield-alt me-1"></i> 100% Secure Payment Guarantee</span>
-            <span class="marquee-item"><i class="las la-truck me-1"></i> Free delivery across India</span>
-            <span class="marquee-item"><i class="las la-certificate me-1"></i> Authenticity Certificate</span>
+    <div class="prinjal-scroll-container">
 
-            {{-- SET 2: Duplicate Content (For Seamless Loop) --}}
-            <span class="marquee-item"><i class="las la-undo-alt me-1"></i> 10 Days Easy Return</span>
-            <span class="marquee-item"><i class="las la-percent me-1"></i> 5% off on Prepaid Orders</span>
-            <span class="marquee-item"><i class="las la-shield-alt me-1"></i> 100% Secure Payment Guarantee</span>
-            <span class="marquee-item"><i class="las la-truck me-1"></i> Free delivery across India</span>
-            <span class="marquee-item"><i class="las la-certificate me-1"></i> Authenticity Certificate</span>
+        {{-- 🔥 PART 1: ORIGINAL CONTENT (Loop 1, 2, 3) --}}
+        {{-- Maine yahan items ko 3 baar repeat kiya hai taaki screen bhar jaye --}}
+
+        <div class="d-flex" style="background-color: #c19a6b;">
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
+
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
+
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
         </div>
+
+        {{-- 🔥 PART 2: DUPLICATE CONTENT (Loop 4, 5, 6) --}}
+        {{-- EXACT SAME COPY for Seamless Effect --}}
+
+        <div class="d-flex" style="background-color: #c19a6b;">
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
+
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
+
+            {{-- <span class="announcement-item"><i class="las la-undo-alt"></i> 10 Days Easy Return</span> --}}
+            <span class="announcement-item"><i class="las la-percent"></i> 5% off on Prepaid</span>
+            <span class="announcement-item"><i class="las la-shield-alt"></i> 100% Secure Payment</span>
+            <span class="announcement-item"><i class="las la-truck"></i> Free Delivery India</span>
+            <span class="announcement-item"><i class="las la-certificate"></i> Authenticity Certified</span>
+        </div>
+
     </div>
     <div class="mobileHeader">
         <div class="HeaderLeft">
