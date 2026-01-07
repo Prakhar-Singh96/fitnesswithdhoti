@@ -222,7 +222,7 @@
 
                         <p class="mb-1">
                             <i class="las la-phone me-2" style="font-size:1.1rem;"></i>
-                            +91 9716 77 1960
+                            +91 7692 005 006
                         </p>
 
                         <p class="mb-1">

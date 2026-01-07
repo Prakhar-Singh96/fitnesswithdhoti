@@ -511,7 +511,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                         {{-- 1. Wide Image (Top Left) - Rudraksha Jap Mala --}}
                         <div class="fav-card wide mb-3">
                             {{-- Using your uploaded image: image_08a5ae.jpg --}}
-                            <img src="{{ asset('uploads/home/fav/rudarask_mala.png') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/rudarask_mala.webp') }}" class="img-fluid"
                                 alt="Rudraksh Jap Mala">
                             <div class="fav-content">
                                 <h3>Rudraksh Jap Mala</h3>
@@ -801,7 +801,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
             @endforeach
         @endif
     </div>
-    <section class="ratings-bar-section">
+    {{-- <section class="ratings-bar-section">
         <div class="container">
             <div class="row justify-content-center text-center">
                 <div class="col-lg-8">
@@ -810,7 +810,6 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                         <h3 class="text-white fw-bold m-0 mb-2">Join Over 50,000 Happy Customers.</h3>
 
                         <div class="d-flex justify-content-center align-items-center gap-2">
-                            {{-- Stars --}}
                             <div class="stars-row">
                                 <i class="las la-star"></i>
                                 <i class="las la-star"></i>
@@ -819,7 +818,6 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                                 <i class="las la-star-half-alt"></i>
                             </div>
 
-                            {{-- Text --}}
                             <span class="text-white fw-600 fs-16">Rated 4.7/5 1,500 Reviews</span>
                         </div>
                     </div>
@@ -827,7 +825,7 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <section class="py-3 testimonial-section" style="background-color: #f7f1de;">
         <div class="container">

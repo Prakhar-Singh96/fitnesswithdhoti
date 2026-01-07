@@ -42,7 +42,7 @@ header {
 .navbar {
     /* Ensures the navbar itself doesn't have an unwanted border,
        and that the logo area is clean */
-    background-color: var(--primary) !important;
+    background-color: var(--light) !important;
     padding: 0 !important;
 }
 
