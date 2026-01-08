@@ -243,11 +243,11 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <h4 class="footer-heading">Quick Links</h4>
                 <ul class="footer-list">
-                    <li><a href="{{ url('shops/create') }}">Become a Seller</a></li>
+                    {{-- <li><a href="{{ url('shops/create') }}">Become a Seller</a></li> --}}
                     <li><a href="{{ route('track.order') }}">Track Your Order</a></li>
                     {{-- <li><a href="{{ url('best-sellers') }}">Best Sellers</a></li> --}}
-                    <li><a href="{{ url('contact-us') }}">Contact Us</a></li>
-                    <li><a href="{{ url('about-us') }}">About Us</a></li>
+                    <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ route('about') }}">About Us</a></li>
                     <li><a href="{{ route('frontend.faq') }}">FAQs</a></li>
                 </ul>
             </div>
