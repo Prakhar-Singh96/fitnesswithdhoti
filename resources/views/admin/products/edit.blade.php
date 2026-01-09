@@ -73,7 +73,8 @@
                                 @endif
                                 <input type="file" class="form-control mb-2" name="product_main_image">
                                 <input type="text" class="form-control form-control-sm" name="product_main_image_alt"
-                                    value="{{ old('main_image_alt', $product->product_main_image_alt) }}" placeholder="Alt Text">
+                                    value="{{ old('product_main_image_alt', $product->product_main_image_alt) }}"
+                                    placeholder="Alt Text">
                             </div>
 
                             <hr>
@@ -146,8 +147,8 @@
                             class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
                             <h5 class="mb-0 text-white">Product Configuration</h5>
                             <div class="form-check form-switch m-0">
-                                <input class="form-check-input bg-white" type="checkbox" id="is_gemstone" name="is_gemstone"
-                                    value="1" {{ $product->is_gemstone ? 'checked' : '' }}
+                                <input class="form-check-input bg-white" type="checkbox" id="is_gemstone"
+                                    name="is_gemstone" value="1" {{ $product->is_gemstone ? 'checked' : '' }}
                                     onchange="toggleConfigMode()" style="cursor: pointer;">
                                 <label class="form-check-label text-white fw-bold ms-2" for="is_gemstone"
                                     style="cursor: pointer;">Gemstone Mode</label>
@@ -354,10 +355,24 @@
                             <div class="mb-3">
                                 <label class="form-label" for="meta_keywords">Meta Keywords</label>
                                 <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
-                                    value="{{ old('meta_keywords') }}" placeholder="keyword1, keyword2, keyword3">
+                                    value="{{ $product->meta_keywords }}" placeholder="keyword1, keyword2, keyword3">
                             </div>
-                            <div class="mb-3"><label class="form-label">Update OG Image</label><input type="file"
-                                    class="form-control" name="og_image"></div>
+                            <div class="mb-3">
+                                <label class="form-label">Update OG Image</label>
+
+                                {{-- 1. File Input (Remove value attribute) --}}
+                                <input type="file" class="form-control" name="og_image">
+
+                                {{-- 2. Check if image exists in DB, then show preview --}}
+                                @if (!empty($product->og_image))
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current Image:</small><br>
+                                        {{-- Image path ko asset() ke andar daalein --}}
+                                        <img src="{{ asset($product->og_image) }}" alt="OG Image"
+                                            style="width: 120px; height: auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;">
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
 

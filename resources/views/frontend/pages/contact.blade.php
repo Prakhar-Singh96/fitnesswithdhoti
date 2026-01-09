@@ -19,15 +19,15 @@
             <h3 class="mb-4" style="font-family: 'Merriweather', serif;">Reach Us Directly</h3>
 
             <div class="mb-4">
-                <h6 class="fw-bold text-uppercase small text-muted mb-1">Suyagya Enterprise</h6>
-                <p class="text-muted mb-1">1st Floor, Perth Shopping Center,</p>
-                <p class="text-muted mb-1">Kantheriya Hanuman Road,</p>
-                <p class="text-muted mb-1">Palanpur - 385001.</p>
+                <h6 class="fw-bold text-uppercase small text-muted mb-1">Suyagya</h6>
+                <p class="text-muted mb-1">J-3/356, DDA,</p>
+                <p class="text-muted mb-1">Kalkaji, India</p>
+                <p class="text-muted mb-1">New Delhi - 110019.</p>
             </div>
 
             <div class="mb-4">
-                <p class="mb-1"><strong class="text-dark">Email Id:</strong> <a href="mailto:support@suyagya.com" class="text-decoration-none text-muted">support@suyagya.com</a></p>
-                <p class="mb-1"><strong class="text-dark">Phone no:</strong> <a href="tel:+919876543210" class="text-decoration-none text-muted">+91 98765 43210</a></p>
+                <p class="mb-1"><strong class="text-dark">Email Id:</strong> <a href="mailto:info@suyagya.com" class="text-decoration-none text-muted">support@suyagya.com</a></p>
+                <p class="mb-1"><strong class="text-dark">Phone no:</strong> <a href="tel:+917692005006" class="text-decoration-none text-muted">+91 7692 005 006</a></p>
             </div>
         </div>
 
