@@ -23,7 +23,7 @@
         $metaDesc =
             'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
         $metaKeys = 'rudraksha, gemstones, spiritual jewelry, mala, suyagya';
-        $ogImage = asset('assets/img/suyagyalogomobile.webp'); // Default Logo URL
+        $ogImage = asset('og-images/default-og.jpg');
         $currentUrl = url()->current();
 
         // 2. Agar PRODUCT Detail Page hai
@@ -37,10 +37,15 @@
                 : Str::limit(strip_tags($product->description), 160);
 
             $metaKeys = $product->meta_keywords ?? $metaKeys;
-            if ($product->og_image) {
+            if (!empty($product->og_image)) {
                 $ogImage = asset($product->og_image);
+            } elseif (!empty($product->product_main_image)) {
+                $ogImage = asset($product->product_main_image);
+            } else {
+                $ogImage = asset('og-images/default-og.jpg');
             }
         }
+
 
         // 3. Agar CATEGORY Page hai
         elseif (Route::is('products.category') && !empty($category)) {
@@ -92,6 +97,8 @@
     <meta property="og:title" content="{{ $metaTitle }}" />
     <meta property="og:description" content="{{ $metaDesc }}" />
     <meta property="og:image" content="{{ $ogImage }}" />
+    <!--<meta property="og:image:width" content="1200" />-->
+    <!--<meta property="og:image:height" content="630" />-->
     <meta property="og:url" content="{{ $currentUrl }}" />
     <meta property="og:site_name" content="Suyagya" />
 

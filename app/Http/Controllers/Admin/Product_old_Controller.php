@@ -9,11 +9,10 @@ use App\Models\SubCategory;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant;
-use App\Models\GemstoneVariant;
+use App\Models\GemstoneVariant; // 👈 Import Gemstone Model
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image; // 👈 Make sure this is imported
 
 class ProductController extends Controller
 {
@@ -42,15 +41,22 @@ class ProductController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug',
             'category_id' => 'required|exists:categories,id',
             'mrp_price' => 'required|numeric|min:0',
-            'product_main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // Validation
+            'price' => 'nullable|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'quantity' => 'required|integer',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'product_main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery_images.*' => 'nullable|mimes:jpeg,png,jpg,webp,mp4,mov,avi,webm|max:51200',
+
+            // Gemstone Fields
+            'is_gemstone' => 'nullable|boolean',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->except(['product_main_image', 'main_image', 'og_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            // B. Save Product Basic Info
+            $data = $request->except(['product_main_image','main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
 
             // --- Price Calculation Logic ---
             $mrp = $request->mrp_price;
@@ -70,6 +76,7 @@ class ProductController extends Controller
             }
 
             if ($request->has('faqs')) {
+                // Array values reset karke JSON encode karo
                 $data['faq_content'] = array_values($request->faqs);
             } else {
                 $data['faq_content'] = null;
@@ -78,47 +85,39 @@ class ProductController extends Controller
             $data['price'] = round($sellingPrice, 2);
             $data['discount'] = round($discount, 2);
 
-            // =========================================================
-            // 🖼️ IMAGE UPLOAD & RESIZE LOGIC (Updated)
-            // =========================================================
+            // Image Upload
+            $data['main_image'] = uploadImage($request, 'main_image', 'uploads/products/main');
+            $data['product_main_image'] = uploadImage($request, 'product_main_image', 'uploads/products/main/product');
+            $data['og_image'] = uploadImage($request, 'og_image', 'uploads/products/og');
 
-            // 1. Product Detail Image (600x600)
-            if ($request->hasFile('product_main_image')) {
-                $file = $request->file('product_main_image');
-                $data['product_main_image'] = $this->uploadAndResize($file, 'uploads/products/main/product', 600, 600);
 
-                // 🚀 AUTO OG GENERATION: Agar OG image upload nahi ki, to isiko use karein
-                if (!$request->hasFile('og_image')) {
-                    // Same file, but resized to 1200x630 specifically for Facebook
-                    $data['og_image'] = $this->uploadAndResize($file, 'uploads/products/og', 1200, 630);
-                }
-            }
-
-            // 2. Listing/Home Image (310x310)
-            if ($request->hasFile('main_image')) {
-                $data['main_image'] = $this->uploadAndResize($request->file('main_image'), 'uploads/products/main', 310, 310);
-            }
-
-            // 3. Manual OG Image (1200x630) - Agar user ne alag se upload ki
-            if ($request->hasFile('og_image')) {
-                $data['og_image'] = $this->uploadAndResize($request->file('og_image'), 'uploads/products/og', 1200, 630);
-            }
-
-            // =========================================================
-
+            // Checkboxes
             $data['is_siddh_enabled'] = $request->has('is_siddh_enabled') ? 1 : 0;
             $data['siddh_price'] = $request->siddh_price ?? 0;
             $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
+
+            // 💎 Gemstone specific fields
             $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
 
             $product = Product::create($data);
 
-            // Save Additional Categories
+            // =========================================================
+            // 🔗 SAVE ADDITIONAL CATEGORIES (Pivot Table)
+            // =========================================================
             if ($request->has('additional_cats')) {
+                $syncData = [];
+
                 foreach ($request->additional_cats as $item) {
+                    // Sirf tab add karein jab Category select ho
                     if (!empty($item['category_id'])) {
+                        // Hum structure bana rahe hain: [category_id => ['sub_category_id' => id]]
+                        // Isse pivot table me extra column 'sub_category_id' bhi bhar jayega
+
+                        // Note: Agar ek hi category multiple baar select ho gayi to override ho jayegi,
+                        // isliye hum index ko ignore karke unique ID use karte hain, par attach best hai yahan.
+
                         $product->additionalCategories()->attach($item['category_id'], [
                             'sub_category_id' => $item['sub_category_id'] ?? null
                         ]);
@@ -126,16 +125,19 @@ class ProductController extends Controller
                 }
             }
 
-            // Variants Logic (Gemstone or Normal)
+            // =========================================================
+            // 💎 IF GEMSTONE: SAVE GEMSTONE VARIANTS
+            // =========================================================
             if ($data['is_gemstone'] == 1) {
                 if ($request->has('gem_variants')) {
                     foreach ($request->gem_variants as $gem) {
+                        // Type & Price are required
                         if (!empty($gem['type']) && !empty($gem['price'])) {
                             GemstoneVariant::create([
                                 'product_id' => $product->id,
-                                'type' => $gem['type'],
+                                'type' => $gem['type'], // ring, pendant, loose
                                 'ratti_size' => $gem['ratti'] ?? null,
-                                'material' => $gem['material'] ?? null,
+                                'material' => $gem['material'] ?? null, // silver, panchdhatu
                                 'ring_size' => $gem['ring_size'] ?? null,
                                 'price' => $gem['price'],
                                 'mrp' => $gem['mrp'] ?? $gem['price'],
@@ -143,9 +145,14 @@ class ProductController extends Controller
                             ]);
                         }
                     }
+                    // Auto-sync Main Price (Lowest Gemstone Price)
                     $this->syncMainProductWithGemstones($product);
                 }
-            } else {
+            }
+            // =========================================================
+            // ⚖️ ELSE: SAVE NORMAL WEIGHT VARIANTS
+            // =========================================================
+            else {
                 if ($request->has('variants')) {
                     $hasVariants = false;
                     foreach ($request->variants as $variant) {
@@ -167,7 +174,7 @@ class ProductController extends Controller
                 }
             }
 
-            // Gallery Images (Normal Upload - No Resize needed or can be added)
+            // Gallery Images
             if ($request->hasFile('gallery_images')) {
                 $alts = $request->gallery_alts ?? [];
                 foreach ($request->file('gallery_images') as $index => $file) {
@@ -181,6 +188,7 @@ class ProductController extends Controller
                 }
             }
 
+            // Sync Filters
             if ($request->has('filter_values')) {
                 $product->filterValues()->sync($request->filter_values);
             }
@@ -196,7 +204,10 @@ class ProductController extends Controller
     // 4. Show Edit Form
     public function edit($id)
     {
+        // Load both relations: variants AND gemstoneVariants
+        // 👇 yahan 'additionalCategories' add karein
         $product = Product::with(['images', 'filterValues', 'variants', 'gemstoneVariants', 'additionalCategories'])->findOrFail($id);
+
         $categories = Category::where('status', 1)->get();
         $subCategories = SubCategory::where('category_id', $product->category_id)->get();
         $filters = Filter::with('filterValues')->get();
@@ -215,12 +226,14 @@ class ProductController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug,' . $id,
             'category_id' => 'required|exists:categories,id',
             'mrp_price' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = $request->except(['product_main_image', 'main_image', 'og_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
+            $data = $request->except(['product_main_image','main_image', 'gallery_images', 'filter_values', 'variants', 'gem_variants']);
 
             // --- Price Logic ---
             $mrp = $request->mrp_price;
@@ -239,7 +252,9 @@ class ProductController extends Controller
                 $discount = 0;
             }
 
+
             if ($request->has('faqs')) {
+                // Array values reset karke JSON encode karo
                 $data['faq_content'] = array_values($request->faqs);
             } else {
                 $data['faq_content'] = null;
@@ -248,73 +263,62 @@ class ProductController extends Controller
             $data['price'] = round($sellingPrice, 2);
             $data['discount'] = round($discount, 2);
 
+            // Checkboxes
             $data['is_siddh_enabled'] = $request->has('is_siddh_enabled') ? 1 : 0;
             $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
+
+            // Gemstone fields
             $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
+            // Note: If checkbox unchecked, these will act as 0 or old value if not present in request (handled by update)
 
-            // =========================================================
-            // 🖼️ IMAGE UPDATE LOGIC (With Auto OG Generation)
-            // =========================================================
-
-            // 1. Product Main Image (600x600)
-            if ($request->hasFile('product_main_image')) {
-                // Delete Old
-                if($product->product_main_image && File::exists(public_path($product->product_main_image))) {
-                    File::delete(public_path($product->product_main_image));
-                }
-
-                $file = $request->file('product_main_image');
-                $data['product_main_image'] = $this->uploadAndResize($file, 'uploads/products/main/product', 600, 600);
-
-                // 🚀 AUTO OG UPDATE: Agar naya main image dala hai, aur OG explicitly nahi dala
-                if (!$request->hasFile('og_image')) {
-                    // Purana OG delete karo
-                    if($product->og_image && File::exists(public_path($product->og_image))) {
-                        File::delete(public_path($product->og_image));
-                    }
-                    // Naya banao 1200x630
-                    $data['og_image'] = $this->uploadAndResize($file, 'uploads/products/og', 1200, 630);
-                }
-            }
-
-            // 2. Listing Image (310x310)
+            // Images Logic
             if ($request->hasFile('main_image')) {
-                if($product->main_image && File::exists(public_path($product->main_image))) {
-                    File::delete(public_path($product->main_image));
-                }
-                $data['main_image'] = $this->uploadAndResize($request->file('main_image'), 'uploads/products/main', 310, 310);
+                deleteImage($product->main_image);
+                $data['main_image'] = uploadImage($request, 'main_image', 'uploads/products/main');
             }
 
-            // 3. OG Image Manual Update (1200x630)
+            if ($request->hasFile('product_main_image')) {
+                deleteImage($product->main_image);
+                $data['product_main_image'] = uploadImage($request, 'product_main_image', 'uploads/products/main/product');
+            }
             if ($request->hasFile('og_image')) {
-                if($product->og_image && File::exists(public_path($product->og_image))) {
-                    File::delete(public_path($product->og_image));
-                }
-                $data['og_image'] = $this->uploadAndResize($request->file('og_image'), 'uploads/products/og', 1200, 630);
+                deleteImage($product->og_image);
+                $data['og_image'] = uploadImage($request, 'og_image', 'uploads/products/og');
             }
 
             $product->update($data);
 
-            // Update Categories
+            // =========================================================
+            // 🔗 UPDATE ADDITIONAL CATEGORIES (Sync)
+            // =========================================================
             if ($request->has('additional_cats')) {
                 $syncData = [];
                 foreach ($request->additional_cats as $item) {
                     if (!empty($item['category_id'])) {
+                        // Array Key me Category ID dalne se duplicate hat jayenge
+                        // Value me Pivot table ka data (sub_category_id)
                         $syncData[$item['category_id']] = [
                             'sub_category_id' => $item['sub_category_id'] ?? null
                         ];
                     }
                 }
+                // Sync purane hata kar naye dal deta hai
                 $product->additionalCategories()->sync($syncData);
             } else {
+                // Agar user ne sab rows delete kar di, to DB se bhi hata do
                 $product->additionalCategories()->detach();
             }
 
-            // Variant Updates
+            // =========================================================
+            // 💎 IF GEMSTONE: UPDATE GEMSTONE VARIANTS
+            // =========================================================
             if ($product->is_gemstone) {
+                // Clear old normal variants if any
                 $product->variants()->delete();
+
+                // Clear old gem variants and re-create (simplest way)
                 $product->gemstoneVariants()->delete();
 
                 if ($request->has('gem_variants')) {
@@ -334,8 +338,15 @@ class ProductController extends Controller
                     }
                     $this->syncMainProductWithGemstones($product);
                 }
-            } else {
+            }
+            // =========================================================
+            // ⚖️ ELSE: UPDATE NORMAL VARIANTS
+            // =========================================================
+            else {
+                // Clear old gem variants if any
                 $product->gemstoneVariants()->delete();
+
+                // Clear and recreate normal variants
                 $product->variants()->delete();
 
                 if ($request->has('variants')) {
@@ -378,6 +389,7 @@ class ProductController extends Controller
                 }
             }
 
+            // Filters
             if ($request->has('filter_values')) {
                 $product->filterValues()->sync($request->filter_values);
             } else {
@@ -396,28 +408,16 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::with('images')->findOrFail($id);
-
-        if($product->main_image && File::exists(public_path($product->main_image))) {
-            File::delete(public_path($product->main_image));
-        }
-        if($product->product_main_image && File::exists(public_path($product->product_main_image))) {
-            File::delete(public_path($product->product_main_image));
-        }
-        if($product->og_image && File::exists(public_path($product->og_image))) {
-            File::delete(public_path($product->og_image));
-        }
-
+        deleteImage($product->main_image);
+        deleteImage($product->og_image);
         foreach ($product->images as $img) {
-            if(File::exists(public_path($img->image))) {
-                File::delete(public_path($img->image));
-            }
+            deleteImage($img->image);
             $img->delete();
         }
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
     }
 
-    // ... (getSubCategories, deleteGalleryImage, etc. same as before) ...
     function getSubCategories($categoryId)
     {
         $subs = SubCategory::where('category_id', $categoryId)->where('status', 1)->get();
@@ -427,14 +427,11 @@ class ProductController extends Controller
     function deleteGalleryImage($id)
     {
         $img = ProductImage::findOrFail($id);
-        if(File::exists(public_path($img->image))) {
-            File::delete(public_path($img->image));
-        }
+        deleteImage($img->image);
         $img->delete();
         return response()->json(['success' => true]);
     }
 
-    // ... (syncMainProductWithVariants, syncMainProductWithGemstones, uploadCkImage - SAME AS BEFORE) ...
     // 🔥 Helper 1: Sync Normal Variants
     private function syncMainProductWithVariants($product)
     {
@@ -464,9 +461,12 @@ class ProductController extends Controller
 
         if ($gems->count() > 0) {
             $totalQty = $gems->sum('quantity');
+
+            // Find lowest price among all gem variants
             $minGem = $gems->sortBy('price')->first();
 
             if ($minGem) {
+                // Calculate discount if MRP > Price
                 $discount = 0;
                 if ($minGem->mrp > 0 && $minGem->mrp > $minGem->price) {
                     $discount = (($minGem->mrp - $minGem->price) / $minGem->mrp) * 100;
@@ -482,62 +482,47 @@ class ProductController extends Controller
         }
     }
 
-    // ✅ CKEditor Image Upload Handler
+    // ✅ CKEditor Image Upload Handler (Updated)
     public function uploadCkImage(Request $request)
     {
         try {
+            // 1. Check if file is present
             if ($request->hasFile('upload')) {
+
                 $file = $request->file('upload');
+
+                // 2. Generate Unique Filename
                 $originName = $file->getClientOriginalName();
                 $fileName = pathinfo($originName, PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = $fileName . '_' . time() . '.' . $extension;
+
+                // 3. Define Path
                 $destinationPath = public_path('uploads/description');
 
+                // 4. Check & Create Directory
                 if (!File::exists($destinationPath)) {
                     File::makeDirectory($destinationPath, 0755, true, true);
                 }
+
+                // 5. Move File
                 $file->move($destinationPath, $newFileName);
+
+                // 6. Generate URL
                 $url = asset('uploads/description/' . $newFileName);
 
+                // ✅ SUCCESS RESPONSE (CKEditor format)
                 return response()->json([
                     'uploaded' => 1,
                     'fileName' => $newFileName,
                     'url' => $url
                 ]);
             }
+
             return response()->json(['error' => ['message' => 'No file found in request']], 400);
         } catch (\Exception $e) {
+            // ❌ ERROR RESPONSE (Taaki wo popup me HTML code na dikhaye)
             return response()->json(['error' => ['message' => $e->getMessage()]], 500);
         }
-    }
-
-    // =======================================================
-    // 🔥 NEW HELPER: Upload & Resize (Intervention Image)
-    // =======================================================
-    private function uploadAndResize($file, $path, $width, $height)
-    {
-        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $destinationPath = public_path($path);
-
-        if (!File::exists($destinationPath)) {
-            File::makeDirectory($destinationPath, 0755, true, true);
-        }
-
-        // 1. Create Image Instance
-        $img = Image::make($file->getRealPath());
-
-        // 2. Resize with Aspect Ratio (Image Chapti nahi hogi)
-        $img->resize($width, $height, function ($constraint) {
-            $constraint->aspectRatio();
-        });
-
-        // 3. Resize Canvas (Agar size match nahi hua to White Background add karega)
-        $img->resizeCanvas($width, $height, 'center', false, '#ffffff');
-
-        // 4. Save
-        $img->save($destinationPath . '/' . $filename, 80); // 80% Quality
-
-        return $path . '/' . $filename;
     }
 }
