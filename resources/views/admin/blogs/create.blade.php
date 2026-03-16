@@ -112,7 +112,7 @@
         ClassicEditor.create(document.querySelector('#editor'), {
             ckfinder: {
                 uploadUrl: "{{ route('admin.product.upload_image') }}"
-            } // Reuse existing upload route
+            }
         }).catch(error => console.error(error));
 
         // Auto Slug

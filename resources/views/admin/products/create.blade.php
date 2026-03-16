@@ -481,9 +481,10 @@
 
         // NEW: Story Editor
         ClassicEditor.create(document.querySelector('#story_editor'), {
-            toolbar: ['heading', '|', 'bold', 'italic', 'bulletedList', 'numberedList',
-                'blockQuote'
-            ], // Thoda simple toolbar rakh sakte hain
+            ckfinder: {
+                // Token hata diya hai, simple URL rakhein
+                uploadUrl: "{{ route('admin.product.upload_image') }}"
+            }
         }).catch(error => {
             console.error(error);
         });
