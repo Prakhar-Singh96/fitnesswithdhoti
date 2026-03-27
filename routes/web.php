@@ -13,10 +13,10 @@ use App\Http\Controllers\Admin\FilterController;
 use App\Http\Controllers\Admin\FilterValueController;
 use App\Http\Controllers\Admin\GeneralFaqController;
 use App\Http\Controllers\Admin\HomePageSettingController;
+use App\Http\Controllers\Admin\IPLAdminController;
 use App\Http\Controllers\Admin\LogisticController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Frontend\RssController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RedirectController;
 use App\Http\Controllers\Admin\SubCategoryController;
@@ -33,6 +33,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\ProductListingController;
 use App\Http\Controllers\Frontend\ReviewController;
+use App\Http\Controllers\Frontend\RssController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\Frontend\UserController;
@@ -254,6 +255,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Cancel
             Route::post('/cancel/{id}', [LogisticController::class, 'cancelShipment'])->name('cancel');
+        });
+
+        Route::prefix('ipl')->name('ipl.')->group(function () {
+            // टीमों की लिस्ट देखने और नया ऐड करने के लिए (Add & List)
+            Route::get('/', [IPLAdminController::class, 'index'])->name('index');
+
+            // नई टीम को डेटाबेस में स्टोर करने के लिए
+            Route::post('/store', [IPLAdminController::class, 'store'])->name('store');
+
+            // मैच खत्म होने के बाद विनर डिक्लेयर करके कूपन एक्टिवेट करने के लिए
+            Route::post('/declare-winner', [IPLAdminController::class, 'declareWinner'])->name('declare_winner');
+
+            // किसी टीम को लिस्ट से हटाने के लिए
+            Route::get('/delete/{id}', [IPLAdminController::class, 'destroy'])->name('delete');
         });
 
         // 💰 Wallet & Cashback Management

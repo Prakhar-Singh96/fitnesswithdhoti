@@ -179,6 +179,19 @@
                         </div>
                     </div>
 
+                    <div class="card mb-4">
+                        <h5 class="card-header">Video Content</h5>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">YouTube Video Link</label>
+                                <input type="url" name="youtube_link" class="form-control"
+                                    value="{{ old('youtube_link', $product->youtube_link ?? '') }}"
+                                    placeholder="https://www.youtube.com/watch?v=xxxx">
+                                <small class="text-muted">यूट्यूब से पूरा URL कॉपी करके यहाँ पेस्ट करें।</small>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- 3. 🔥 CONFIGURATION SECTION (EDIT MODE) 🔥 --}}
                     <div class="card mb-4 border-primary">
                         <div

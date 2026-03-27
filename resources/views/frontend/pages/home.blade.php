@@ -96,16 +96,16 @@
                         <div class="product-card-minimal">
 
                             {{-- Image Area --}}
-                            <div class="img-box">
+                            <div class="img-box position-relative"> {{-- position-relative zaroori hai --}}
                                 @if ($product->discount > 0)
                                     <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
                                         style="z-index: 2;">
                                         {{ round($product->discount) }}% OFF
                                     </span>
                                 @endif
+
                                 <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
                                     @php
-                                        // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
                                         $isInWishlist =
                                             Auth::check() &&
                                             \App\Models\Wishlist::where('user_id', Auth::id())
@@ -114,11 +114,47 @@
                                     @endphp
                                     <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
                                 </button>
+
+                                {{-- 🔗 Product Image --}}
                                 <a href="{{ route('product.detail', $product->slug) }}">
                                     <img src="{{ asset($product->main_image) }}"
                                         alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
                                         height="600" loading="lazy">
                                 </a>
+
+                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+                                @if ($product->youtube_link)
+                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
+                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
+                                        style="z-index: 3;">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#videoModal{{ $product->id }}"
+                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
+                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
+                                            <i class="las la-play fs-4"></i>
+                                        </a>
+                                    </div>
+
+                                    {{-- Modal for this specific product (Shorts Optimized) --}}
+                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+                                            <div class="modal-content bg-transparent border-0">
+                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="ratio"
+                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
+                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
+                                                            allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             {{-- Details Area --}}
@@ -129,31 +165,33 @@
                                     {{ $product->name }}
                                 </a>
 
-                                <div class="d-flex align-items-center rating-row">
-                                    @php
-                                        // ✅ Safe Logic: Check karein ki reviews exist karte hain ya nahi
-                                        $avgRating = 0;
-                                        $reviewCount = 0;
+                                {{-- ⭐ Rating and 🎥 Video in SAME LINE --}}
+                                <div class="d-flex align-items-center justify-content-start rating-row mb-1">
 
-                                        if ($product->relationLoaded('reviews') && $product->reviews) {
-                                            $avgRating = $product->reviews->avg('rating');
-                                            $reviewCount = $product->reviews->count();
-                                        }
+                                    {{-- Left: Stars --}}
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $avgRating = 0;
+                                            $reviewCount = 0;
+                                            if ($product->relationLoaded('reviews') && $product->reviews) {
+                                                $avgRating = $product->reviews->avg('rating');
+                                                $reviewCount = $product->reviews->count();
+                                            }
+                                            $fullStars = round($avgRating);
+                                        @endphp
 
-                                        $fullStars = round($avgRating);
-                                    @endphp
-
-                                    <span class="stars text-warning">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= $fullStars)
-                                                <i class="las la-star"></i>
-                                            @else
-                                                <i class="lar la-star"></i>
-                                            @endif
-                                        @endfor
-                                    </span>
-
-                                    <span class="review-count text-muted small ms-1">({{ $reviewCount }})</span>
+                                        <span class="stars text-warning" style="font-size: 13px;">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $fullStars)
+                                                    <i class="las la-star"></i>
+                                                @else
+                                                    <i class="lar la-star"></i>
+                                                @endif
+                                            @endfor
+                                        </span>
+                                        <span class="review-count text-muted ms-1"
+                                            style="font-size: 11px;">({{ $reviewCount }})</span>
+                                    </div>
                                 </div>
 
                                 <div class="price-row">

@@ -174,6 +174,22 @@
             </ul>
         </li>
 
+        {{-- 🏏 IPL OFFER MODULE --}}
+        <li class="menu-item {{ request()->is('admin/ipl*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-trophy"></i> {{-- Trophy Icon for IPL --}}
+                <div data-i18n="IPL Offer">IPL Offer</div>
+            </a>
+            <ul class="menu-sub">
+                {{-- Team List & Add Team (Ek hi page par hai) --}}
+                <li class="menu-item {{ request()->routeIs('admin.ipl.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.ipl.index') }}" class="menu-link">
+                        <div data-i18n="Teams & Winner">Manage Teams & Winner</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         {{-- ✨ NEW LOGISTIC MODULE HERE ✨ --}}
         <li class="menu-item {{ request()->is('admin/logistic*') ? 'active' : '' }}">
             <a href="{{ route('admin.logistic.index') }}" class="menu-link">

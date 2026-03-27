@@ -35,6 +35,7 @@ class Product extends Model
         'main_image_alt',
         'product_main_image',
         'product_main_image_alt',
+        'youtube_link',
 
         'offer_end_time',
         'is_siddh_enabled',

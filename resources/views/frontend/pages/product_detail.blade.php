@@ -527,7 +527,11 @@
                                                 <source src="{{ asset($img->image) }}" type="video/{{ $extension }}">
                                             </video>
                                             {{-- Fake overlay to catch click for lightbox --}}
-                                            <div class="position-absolute top-0 start-0 w-100 h-100"></div>
+                                            <div
+                                                class="position-absolute top-50 start-50 translate-middle pointer-events-none">
+                                                <i class="las la-play-circle text-white"
+                                                    style="font-size: 100px; opacity: 0.8; text-shadow: 0 0 5px rgba(0,0,0,0.5);"></i>
+                                            </div>
                                         </a>
                                     @else
                                         {{-- Image (Zoom + Lightbox) --}}

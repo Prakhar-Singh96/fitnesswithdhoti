@@ -132,6 +132,24 @@ class ProductController extends Controller
             $data['astro_benefits'] = $request->astro_benefits;
             $data['sort_order'] = $request->sort_order ?? 0;
 
+            if ($request->filled('youtube_link')) {
+                $url = $request->youtube_link;
+
+                if (strpos($url, 'youtube.com/shorts/') !== false) {
+                    // Agar link Shorts wala hai: https://www.youtube.com/shorts/MRmB_RWs22U
+                    $data['youtube_link'] = str_replace('youtube.com/shorts/', 'youtube.com/embed/', $url);
+                } elseif (strpos($url, 'watch?v=') !== false) {
+                    // Agar normal link hai: https://www.youtube.com/watch?v=xxxx
+                    $data['youtube_link'] = str_replace('watch?v=', 'embed/', $url);
+                } elseif (strpos($url, 'youtu.be/') !== false) {
+                    // Agar mobile share link hai: https://youtu.be/xxxx
+                    $videoId = substr(parse_url($url, PHP_URL_PATH), 1);
+                    $data['youtube_link'] = 'https://www.youtube.com/embed/' . $videoId;
+                } else {
+                    $data['youtube_link'] = $url;
+                }
+            }
+
             $product = Product::create($data);
 
             // Save Additional Categories
@@ -290,44 +308,52 @@ class ProductController extends Controller
             // =========================================================
 
             // 1. Product Main Image (600x600)
+            // 1. Product Main Image Handling
             if ($request->hasFile('product_main_image')) {
-                // Delete Old
+                // पुरानी फाइल तभी डिलीट होगी जब नई फाइल अपलोड होगी
                 if ($product->product_main_image && File::exists(public_path($product->product_main_image))) {
                     File::delete(public_path($product->product_main_image));
                 }
-
-                $file = $request->file('product_main_image');
-                $product->product_main_image = $this->uploadAndResize($file, 'uploads/products/main/product', 1080, 1080);
-
-                // 🚀 AUTO OG UPDATE: Agar naya main image dala hai, aur OG explicitly nahi dala
-                if (!$request->hasFile('og_image')) {
-                    // Purana OG delete karo
-                    if ($product->og_image && File::exists(public_path($product->og_image))) {
-                        File::delete(public_path($product->og_image));
-                    }
-                    // Naya banao 1200x630
-                    $product->og_image = $this->uploadAndResize($file, 'uploads/products/og', 1200, 630);
-                }
+                // सिर्फ product_main_image को अपडेट करें
+                $data['product_main_image'] = $this->uploadAndResize($request->file('product_main_image'), 'uploads/products/main/product', 1080, 1080);
             }
 
-            // 2. Listing Image (310x310)
+            // 2. Listing Image Handling
             if ($request->hasFile('main_image')) {
                 if ($product->main_image && File::exists(public_path($product->main_image))) {
                     File::delete(public_path($product->main_image));
                 }
-                $product->main_image = $this->uploadAndResize($request->file('main_image'), 'uploads/products/main', 600, 600);
+                $data['main_image'] = $this->uploadAndResize($request->file('main_image'), 'uploads/products/main', 600, 600);
             }
 
-            // 3. OG Image Manual Update (1200x630)
+            // 3. Independent OG Image Handling (इसे रहने दें ताकि मैन्युअल अपडेट काम करे)
             if ($request->hasFile('og_image')) {
                 if ($product->og_image && File::exists(public_path($product->og_image))) {
                     File::delete(public_path($product->og_image));
                 }
-                $product->og_image = $this->uploadAndResize($request->file('og_image'), 'uploads/products/og', 1200, 630);
+                $data['og_image'] = $this->uploadAndResize($request->file('og_image'), 'uploads/products/og', 1200, 630);
             }
 
-            $product->fill($data);
-            $product->save(); // 👈 यहाँ इमेज पाथ सुरक्षित रहेंगे
+            if ($request->filled('youtube_link')) {
+                $url = $request->youtube_link;
+
+                if (strpos($url, 'youtube.com/shorts/') !== false) {
+                    // Agar link Shorts wala hai: https://www.youtube.com/shorts/MRmB_RWs22U
+                    $data['youtube_link'] = str_replace('youtube.com/shorts/', 'youtube.com/embed/', $url);
+                } elseif (strpos($url, 'watch?v=') !== false) {
+                    // Agar normal link hai: https://www.youtube.com/watch?v=xxxx
+                    $data['youtube_link'] = str_replace('watch?v=', 'embed/', $url);
+                } elseif (strpos($url, 'youtu.be/') !== false) {
+                    // Agar mobile share link hai: https://youtu.be/xxxx
+                    $videoId = substr(parse_url($url, PHP_URL_PATH), 1);
+                    $data['youtube_link'] = 'https://www.youtube.com/embed/' . $videoId;
+                } else {
+                    $data['youtube_link'] = $url;
+                }
+            }
+
+            // ✅ अब अपडेट करो
+            $product->update($data);
 
             // Update Categories
             if ($request->has('additional_cats')) {

@@ -53,16 +53,23 @@ $(document).ready(function () {
     }
 
     if ($('#heroSlider').length) {
-        $('#heroSlider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 1500,
-            infinite: true,
-            arrows: false, // Hide Previous & Next buttons
-            dots: false
-        });
-    }
+    $('#heroSlider').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000, // 👈 6 second रुकने का समय (Astrotalk जैसा)
+        speed: 1000,         // 👈 1 second स्लाइड होने की रफ़्तार (Smooth Slide)
+
+        fade: false,          // 👈 इसको FALSE करें ताकि 'खिसकने' वाला इफ़ेक्ट आए (Astrotalk में खिसकता है)
+
+        infinite: true,
+        arrows: false,
+        dots: false,
+        cssEase: 'ease-in-out', // 👈 स्लाइड स्मूथली शुरू और ख़त्म होगी
+        pauseOnHover: false,
+        rtl: false            // 👈 पक्का करें कि ये FALSE हो (ताकि Right to Left जाए)
+    });
+}
 });
 
 // Initialize intl-tel-input
@@ -2563,6 +2570,10 @@ $('#referral_code_input').on('change', function() {
             $('#referral_code_input').removeClass('is-invalid').addClass('is-valid');
         }
     });
+});
+
+$('.modal').on('hidden.bs.modal', function () {
+    $(this).find('iframe').attr('src', $(this).find('iframe').attr('src'));
 });
 
 
