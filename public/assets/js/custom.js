@@ -1293,99 +1293,89 @@ function getAreaPart(fullAddr) {
 // 💳 PROCESS PAYMENT (Place Order)
 // 💳 PROCESS PAYMENT (Place Order)
 function processPayment() {
+    // 1. सबसे पहले अमाउंट और मेथड चेक करें
+    let totalToPayStr = $('#bill_final_total').text().replace(/[^\d.]/g, '');
+    let totalToPay = parseFloat(totalToPayStr) || 0;
+    let currentMethod = $('input[name="payment_method"]:checked').val();
+
+    // 🛑 COD LIMIT CHECK: अगर 3000 से ऊपर है तो पेमेंट प्रोसेस ही न होने दें
+    if (currentMethod === 'COD' && totalToPay > 3000) {
+        Swal.fire({
+            icon: 'error',
+            title: 'COD Not Allowed',
+            text: 'Cash on Delivery is only available for orders up to ₹3,000. Please pay online to place this order.',
+            confirmButtonColor: '#ff6f00'
+        });
+        return false; // यहीं रुक जाएं
+    }
+
     var btn = $('#btn_place_order');
     btn.prop('disabled', true).text('Processing...');
 
-    // 1. Hidden inputs update (Optional, but good for sync)
+    // 2. Hidden inputs update
     $('#final_coupon_code').val(appliedCouponCode);
     $('#final_gaming_coupon_code').val(appliedGamingCode);
 
-    // 🚀 REFERRAL CODE SYNC: ऊपर वाले बॉक्स से वैल्यू यहाँ पक्की करें
     let referralCode = $('#referral_code_input').val() || null;
-
     let ringSize = $('#ring_size_input').val() || null;
-    let variantID = $('#final_variant_id').val() || null;// 👈 यह ज़रूर भेजें
-    let  variantWeight = $('#final_weight').val() || null;
-    let currentMethod = $('input[name="payment_method"]:checked').val();
+    let variantID = $('#final_variant_id').val() || null;
+    let variantWeight = $('#final_weight').val() || null;
+
     if (currentMethod === 'RAZORPAY') {
-        prepaidDiscount = 25; // 🛡️ सुरक्षा कवच: पेमेंट के समय पक्का करें कि ₹25 ही कट रहे हैं
+        prepaidDiscount = 25;
     } else {
         prepaidDiscount = 0;
     }
 
-    // 3. चेक करें कि फाइनल बिल कितना बना है
-    let totalToPayStr = $('#bill_final_total').text().replace(/[^\d.]/g, '');
-    let totalToPay = parseFloat(totalToPayStr) || 0;
-
-    // 4. 🔥 मास्टर लॉजिक: अगर बिल 0 है तो 'WALLET' भेजें, वरना जो यूजर ने चुना है
+    // 3. मास्टर लॉजिक: अगर बिल 0 है तो 'WALLET' भेजें
     let finalPaymentMethod = (totalToPay === 0) ? 'WALLET' : currentMethod;
 
-    // 2. Form Data Collect
+    // 4. Form Data Collect
     var formData = {
         _token: $('meta[name="csrf-token"]').attr('content'),
-        payment_method: finalPaymentMethod, // 👈 अब यहाँ सही वैल्यू जाएगी
+        payment_method: finalPaymentMethod,
         buy_mode: $('#final_buy_mode').val(),
         product_id: $('#final_product_id').val(),
         quantity: $('#final_quantity').val(),
         is_siddh: $('#final_is_siddh').val(),
         address_id: $('#final_address_id').val(),
-
-        // ✅ ये कॉलम्स बैकएंड (Controller) में इस्तेमाल होंगे
         ring_size: ringSize,
         variant_id: variantID,
         weight: variantWeight,
         coupon_code: appliedCouponCode,
         gaming_coupon_code: appliedGamingCode,
-
-        // ✅ REFERRAL CODE यहाँ जोड़ें ताकि Controller को मिले
         referral_code: referralCode,
         use_coins: $('#final_use_coins').val(),
         prepaid_discount: prepaidDiscount
     };
 
+    // 5. AJAX Post
     $.post("/checkout/place-order", formData, function (res) {
-
-
-        // 🚀 ERROR HANDLING: अगर बैकएंड से 'status: false' आता है
+        // ... (बाकी सारा Razorpay और Success/Error logic वैसा ही रहेगा) ...
         if (res.status === false) {
-            // बटन को वापस ठीक करें
             btn.prop('disabled', false).text('Place Order');
-
-            // ❌ लाल रंग में मैसेज दिखाएँ और इनपुट को हाईलाइट करें
-            $('#referral_err_msg').text(res.message); // Span में मैसेज डालें
-            $('#referral_code_input').addClass('is-invalid').focus(); // बॉर्डर लाल करें
-
-            return; // आगे न बढ़ें, यहीं रुक जाएँ
-        } else {
-            // अगर कोड सही है, तो पुराना एरर साफ़ कर दें
-            $('#referral_err_msg').text('');
-            $('#referral_code_input').removeClass('is-invalid');
+            $('#referral_err_msg').text(res.message);
+            $('#referral_code_input').addClass('is-invalid').focus();
+            return;
         }
 
         if (res.status === 'razorpay') {
-            // 🟣 OPEN RAZORPAY MODAL
             var options = {
                 "key": res.key,
-                "amount": res.amount, // Backend se ab sahi (discounted) amount aayega
+                "amount": res.amount,
                 "currency": "INR",
                 "name": res.name,
                 "description": res.description,
                 "image": res.image,
                 "order_id": res.rzp_order_id,
                 "handler": function (response) {
-                    // Payment Success -> Verify on Server
                     verifyServerPayment(response, res.order_id);
                 },
                 "prefill": res.prefill,
                 "theme": { "color": "#ff6f00" },
                 "modal": {
                     "ondismiss": function () {
-                        console.log('Razorpay Modal Closed. Starting Cancel Process...');
-
-                        // Disable button again
                         btn.prop('disabled', true).text('Cancelling...');
-
-                        // 🔥 Updated Code with Error Handling
                         $.ajax({
                             url: "/checkout/cancel-order",
                             type: "POST",
@@ -1394,17 +1384,9 @@ function processPayment() {
                                 order_id: res.order_id
                             },
                             success: function (response) {
-                                console.log('Server Response:', response);
                                 window.location.href = "/orders";
                             },
                             error: function (xhr, status, error) {
-                                // 🔥 Agar error aya to yahan dikhega
-                                console.error("Cancel Failed:", error);
-                                console.error("Response:", xhr.responseText);
-
-                                alert("Error cancelling order: " + xhr.status + " " + error);
-
-                                // Error ke baad bhi redirect kar do taaki user phase na rahe
                                 window.location.href = "/orders";
                             }
                         });
@@ -1415,7 +1397,6 @@ function processPayment() {
             rzp1.open();
 
         } else if (res.status === 'success') {
-            // 🟢 COD Success
             window.location.href = "/orders";
         } else {
             alert(res.message);
@@ -2252,6 +2233,22 @@ function handlePaymentMethodChange(method) {
     // अगर बिल 0 है और यूजर स्विच ऑन कर चुका है, तो क्लिक डिसेबल रखें
     if (totalToPay === 0 && $('#use_coins_switch').is(':checked')) {
         console.log("Total is 0, skipping method change logic.");
+        return;
+    }
+
+    // 🛑 COD LIMIT CHECK: अगर अमाउंट 3000 से ज्यादा है
+    if (method === 'COD' && currentCartTotal > 3000) {
+        Swal.fire({
+            title: 'COD Not Available',
+            text: 'Cash on Delivery is only available for orders up to ₹3,000. For orders above this, please use Online Payment.',
+            icon: 'warning',
+            confirmButtonColor: '#ff6f00',
+            confirmButtonText: 'Pay Online'
+        });
+
+        // वापस Razorpay पर स्विच करें
+        $('#rzp').prop('checked', true);
+        handlePaymentMethodChange('RAZORPAY');
         return;
     }
 

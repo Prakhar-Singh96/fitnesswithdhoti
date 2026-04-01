@@ -278,9 +278,9 @@
     </div>
 
     {{-- 🎉 GAMIFICATION MODAL --}}
-    @if (Cookie::get('lucky_draw_played') === null)
+    {{-- @if (Cookie::get('lucky_draw_played') === null)
         @include('frontend.modals.game_modal')
-    @endif
+    @endif --}}
 
 
     <div id="chat-launcher" onclick="toggleChat()" class="astro-bounce"
@@ -463,20 +463,20 @@
     </style>
 
     {{-- ✅ WHATSAPP FLOATING BUTTON START --}}
-    <a href="https://wa.me/917692005006?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product."
+    <a href="https://wa.me/918920471151?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product."
         class="whatsapp-float" target="_blank" rel="noopener noreferrer">
         <i class="lab la-whatsapp"></i>
     </a>
     {{-- ❌ WHATSAPP FLOATING BUTTON END --}}
 
     {{-- 🎁 FLOATING LUCKY DRAW ICON --}}
-    <div id="luckyFloatingIcon" class="lucky-float-btn" onclick="reopenLuckyDraw()"
+    {{-- <div id="luckyFloatingIcon" class="lucky-float-btn" onclick="reopenLuckyDraw()"
         style="display: none; left: 20px; right: auto;">
         <div class="icon-pulse">
             <i class="las la-gift"></i>
         </div>
         <span class="lucky-text">Win Prize</span>
-    </div>
+    </div> --}}
 
     {{-- CSS for Floating Buttons (Game & Whatsapp) --}}
     <style>
@@ -631,6 +631,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- 🚀 OPTIMIZED SCRIPTS LOADER (GTM & Razorpay) --}}
     <script>
@@ -677,6 +678,7 @@
 
     @yield('scripts')
     <script src="{{ asset('assets/js/custom.js') }}?v={{ filemtime(public_path('assets/js/custom.js')) }}"></script>
+
 
     {{-- Menu & Lucky Draw Scripts --}}
     <script>

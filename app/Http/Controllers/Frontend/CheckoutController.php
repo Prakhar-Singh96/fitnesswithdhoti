@@ -367,6 +367,14 @@ class CheckoutController extends Controller
         }
         $finalTotal = max(0, round($finalTotal));
 
+        // 🛑 COD LIMIT CHECK (नया हिस्सा)
+        if ($request->payment_method == 'COD' && $finalTotal > 3000) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Cash on Delivery (COD) is only available for orders up to ₹3,000. Your current total is ₹' . number_format($finalTotal) . '. Please use Online Payment to proceed.'
+            ]);
+        }
+
         // 4. CREATE ORDER
         $order = Order::create([
             'order_number'     => 'ORD-' . strtoupper(Str::random(10)),
