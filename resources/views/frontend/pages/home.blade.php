@@ -92,6 +92,7 @@
             <div class="row g-4">
 
                 @foreach ($featuredProducts as $product)
+
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product-card-minimal">
 
@@ -200,12 +201,17 @@
                                         <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
                                     @endif
                                 </div>
-
-                                {{-- Add to Cart --}}
-                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                    data-id="{{ $product->id }}">
-                                    Add to Cart
-                                </button>
+                                @if ($product->quantity > 0)
+                                    {{-- Add to Cart --}}
+                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                        data-id="{{ $product->id }}">
+                                        Add to Cart
+                                    </button>
+                                @else
+                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
+                                        Out of Stock
+                                    </button>
+                                @endif
                             </div>
 
                         </div>
@@ -315,11 +321,17 @@
                                     @endif
                                 </div>
 
-                                {{-- Add to Cart --}}
-                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                    data-id="{{ $product->id }}">
-                                    Add to Cart
-                                </button>
+                                @if ($product->quantity > 0)
+                                    {{-- Add to Cart --}}
+                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                        data-id="{{ $product->id }}">
+                                        Add to Cart
+                                    </button>
+                                @else
+                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
+                                        Out of Stock
+                                    </button>
+                                @endif
                             </div>
 
                         </div>
@@ -428,12 +440,17 @@
                                         <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
                                     @endif
                                 </div>
-
-                                {{-- Add to Cart --}}
-                                <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                    data-id="{{ $product->id }}">
-                                    Add to Cart
-                                </button>
+                                @if ($product->quantity > 0)
+                                    {{-- Add to Cart --}}
+                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                        data-id="{{ $product->id }}">
+                                        Add to Cart
+                                    </button>
+                                @else
+                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
+                                        Out of Stock
+                                    </button>
+                                @endif
                             </div>
 
                         </div>
