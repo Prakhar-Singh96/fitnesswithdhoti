@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- 💎 1. CATEGORY SCROLL SECTION --}}
-    <section class="py-4 bg-white shadow-sm">
+    <section class="py-2 bg-white shadow-sm">
         <div class="container">
 
             {{-- Slider Container --}}

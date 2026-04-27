@@ -13,12 +13,12 @@
 
         /* 💎 GEMSTONE CONFIGURATOR STYLES (AstroTalk Style) */
         /* .gem-config-container {
-                                                                                                                    border: 1px solid #eee;
-                                                                                                                    padding: 15px;
-                                                                                                                    border-radius: 8px;
-                                                                                                                    margin-bottom: 20px;
-                                                                                                                    background-color: #f7f1de;
-                                                                                                                } */
+                                                                                                                                            border: 1px solid #eee;
+                                                                                                                                            padding: 15px;
+                                                                                                                                            border-radius: 8px;
+                                                                                                                                            margin-bottom: 20px;
+                                                                                                                                            background-color: #f7f1de;
+                                                                                                                                        } */
 
         .gem-option-group {
             margin-bottom: 15px;
@@ -281,6 +281,28 @@
 
             /* मोबाइल पर साइज नंबर बड़ा दिखे */
         }
+
+        /* 🖊️ Custom Tilted Strike-through */
+        .mrp-diagonal-cut {
+            position: relative;
+            display: inline-block;
+            padding: 0 2px;
+        }
+
+        .mrp-diagonal-cut::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1.5px;
+            /* लाइन की मोटाई */
+            background-color: #6c757d;
+            /* लाइन का रंग (muted gray) */
+            transform: rotate(-15deg);
+            /* 👈 यही लाइन को तिरछा (Tilted) करेगा */
+            transform-origin: center;
+        }
     </style>
     <style>
         /* 💎 Premium Modal Enhancements */
@@ -439,6 +461,121 @@
             background: #522e03;
         }
     </style>
+    <style>
+/* 💎 PREMIUM PRODUCT PAGE CSS */
+.product-title-premium {
+    font-family: 'Merriweather', serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #2c3e50;
+    letter-spacing: -0.5px;
+}
+
+.review-text-premium {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+}
+
+.selling-price-premium {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #000;
+}
+
+.mrp-diagonal-cut-premium {
+    position: relative;
+    font-size: 1.2rem;
+    color: #999;
+}
+.mrp-diagonal-cut-premium::after {
+    content: "";
+    position: absolute;
+    left: -2px; top: 50%;
+    width: 105%; height: 1.5px;
+    background: #ff4d4d;
+    transform: rotate(-12deg);
+}
+
+.discount-badge-premium {
+    background: #fff0f0;
+    color: #ff4d4d;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.promo-container-premium {
+    background: #fdfaf4;
+    border: 1px solid #f1e0c5;
+    border-radius: 7px;
+    margin: -1px;
+}
+
+.timer-dot {
+    width: 8px; height: 8px;
+    background: #ff4d4d;
+    border-radius: 50%;
+}
+
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.lowest-price-strip-premium {
+    background: #eef6ff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px dashed #1a73e8;
+}
+
+.quantity-selector-premium {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: 50px;
+    overflow: hidden;
+}
+.quantity-selector-premium button {
+    background: none; border: none;
+    width: 40px; height: 100%;
+    font-size: 18px; color: #555;
+}
+.quantity-selector-premium input {
+    width: 100%; border: none; text-align: center;
+    font-weight: bold; font-size: 16px;
+}
+
+.btn-cart-premium {
+    height: 50px;
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+    font-weight: 800;
+    border-radius: 8px;
+}
+
+.btn-buy-premium {
+    height: 55px;
+    background: #ff6f00; /* Suyagya Brand Color */
+    color: #fff;
+    font-weight: 800;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(255, 111, 0, 0.3);
+    margin-top: 10px;
+}
+
+div#razorpay-affordability-widget {
+    margin: -2px;
+}
+
+.x-small { font-size: 10px; letter-spacing: 1px; }
+</style>
 @endsection
 
 
@@ -602,7 +739,7 @@
                 </h1>
 
                 {{-- Rating --}}
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-center mb-2">
                     <div class="text-warning small me-2">
                         @for ($i = 1; $i <= 5; $i++)
                             @if ($i <= round($averageRating))
@@ -619,18 +756,18 @@
                 </div>
 
                 {{-- 💰 PRICE SECTION (FIXED FOR MRP UPDATE) --}}
-                <div class="mb-3 d-flex align-items-baseline">
+                {{-- 💰 PRICE SECTION --}}
+                <div class="mb-2 d-flex align-items-baseline">
                     <input type="hidden" id="base_price" value="{{ $product->price }}">
 
-                    <span class="fs-2 fw-bold text-dark me-2">
+                    <span class="fs-4 fw-bold text-dark me-2">
                         ₹<span id="display_price">{{ number_format($product->price) }}</span>
                     </span>
 
-                    {{-- 🔥 FIX: HTML structure update taaki JS hamesha MRP dhoond sake --}}
-                    {{-- Agar MRP bada hai to dikhao, nahi to 'd-none' class se chupao --}}
+                    {{-- 🔥 Tilted Cut MRP --}}
                     <span id="mrp_container"
-                        class="text-decoration-line-through text-muted fs-5 {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
-                        ₹<span id="display_mrp">{{ number_format($product->mrp_price) }}</span>
+                        class="mrp-diagonal-cut-premium {{ $product->mrp_price > $product->price ? '' : 'd-none' }}">
+                        <span id="display_mrp">{{ number_format($product->mrp_price) }}</span>
                     </span>
 
                     <span id="discount_container"
@@ -640,10 +777,32 @@
                 </div>
 
                 {{-- Timer --}}
-                <div class="offer-timer-box mb-4 p-2 border border-danger rounded d-inline-block bg-light">
+                {{-- <div class="offer-timer-box mb-2 p-2 border border-danger rounded d-inline-block bg-light">
                     <span class="text-danger fw-bold small me-2">Offer ends in:</span>
                     <span id="countdown" class="fw-bold text-dark"
                         style="min-width: 100px; display: inline-block;">Loading...</span>
+                </div> --}}
+                {{-- 4. Offers & Timer Section (Grouped) --}}
+                <div class="promo-container-premium p-3 mb-2">
+                    {{-- Timer --}}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="timer-dot animate-pulse me-2"></div>
+                        <span class="text-danger fw-bold small me-2">Offer ends in:</span>
+                        <span id="countdown" class="fw-bold font-monospace text-dark">--h : --m : --s</span>
+                    </div>
+
+                    {{-- Lowest Price Trigger --}}
+                    @if ($lowestPrice < $product->price)
+                        <div class="lowest-price-strip-premium d-flex align-items-center justify-content-between"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasOffers">
+                            <div class="d-flex align-items-center">
+                                <div class="offer-icon-mini me-2"><i class="las la-percentage"></i></div>
+                                <span class="fw-bold" style="font-size: 13px; color: #1a73e8;">Get this as low as
+                                    ₹{{ number_format($lowestPrice, 0) }}</span>
+                            </div>
+                            <i class="las la-angle-right small"></i>
+                        </div>
+                    @endif
                 </div>
 
                 @if ($product->is_gemstone && $product->gemstoneVariants->count() > 0)
@@ -759,7 +918,7 @@
                     </div>
                 @elseif ($product->variants->count() > 0)
                     {{-- STANDARD WEIGHT DROPDOWN (No Change) --}}
-                    <div class="mb-4 bg-light p-2 rounded border" style="max-width: 250px;">
+                    <div class="mb-2 bg-light p-2 rounded border" style="max-width: 250px;">
                         <label class="fw-bold small mb-1 d-block text-dark">Select Weight:</label>
                         <select class="form-select form-select-sm border-secondary fw-bold text-dark" id="variant_select"
                             name="variant_id">
@@ -795,7 +954,7 @@
 
                 {{-- Siddh Checkbox --}}
                 @if ($product->is_siddh_enabled)
-                    <div class="siddh-box p-3 border rounded mb-4"
+                    <div class="siddh-box p-1 border rounded mb-2"
                         style="background-color: #fcf8f2; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1)">
                         <div class="form-check d-flex align-items-center">
                             <input class="form-check-input me-3" type="checkbox" id="siddh_check"
@@ -813,7 +972,7 @@
 
                 {{-- Buttons --}}
                 @if ($product->quantity > 0)
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <label class="fw-bold small mb-2 d-block">Quantity</label>
                         <div class="input-group" style="width: 140px;">
                             <button class="btn btn-outline-secondary btn-sm rounded-0" onclick="updateQty('minus')"><i
@@ -1118,6 +1277,82 @@
                     @endif
                 </div>
 
+            </div>
+            <div class="col-lg-6 ps-lg-5">
+                {{-- 1. Category & Name --}}
+                <div class="mb-2">
+                    <span class="text-uppercase text-muted fw-bold tracking-wider"
+                        style="font-size: 11px; letter-spacing: 1.5px;">
+                        {{ $product->category->name ?? 'Collection' }}
+                    </span>
+                    <h1 class="product-title-premium mt-1 mb-2">{{ $product->name }}</h1>
+                </div>
+
+                {{-- 2. Rating & Reviews --}}
+                <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-light">
+                    <div class="text-warning small me-2">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="{{ $i <= round($averageRating) ? 'las la-star' : 'lar la-star' }}"></i>
+                        @endfor
+                    </div>
+                    <span class="review-text-premium">{{ number_format($averageRating, 1) }} | {{ $totalReviews }}
+                        Reviews</span>
+                </div>
+
+                {{-- 3. Price Section --}}
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="selling-price-premium">₹{{ number_format($product->price) }}</span>
+
+                        @if ($product->mrp_price > $product->price)
+                            <span class="mrp-diagonal-cut-premium">₹{{ number_format($product->mrp_price) }}</span>
+                            <span class="discount-badge-premium">{{ round($product->discount) }}% OFF</span>
+                        @endif
+                    </div>
+                    <p class="text-muted small mt-1">Inclusive of all taxes</p>
+                </div>
+
+                {{-- 5. Siddh & Gemstone Logic (Keeping your logic same but CSS changed) --}}
+                {{-- ... (यहाँ आपका Gemstone/Variant Selector का पुराना Logic रहेगा, बस उसे CSS से क्लीन करना है) ... --}}
+
+                {{-- 6. Add to Cart & Buy Now (Japam Style) --}}
+                <div class="sticky-action-container mt-5">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-5">
+                            <div class="quantity-selector-premium">
+                                <button type="button" onclick="updateQty('minus')"><i class="las la-minus"></i></button>
+                                <input type="text" id="qty_input" value="1" readonly>
+                                <button type="button" onclick="updateQty('plus')"><i class="las la-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-7">
+                            <button class="btn btn-cart-premium w-100" onclick="addToCartFromDetail(this)">
+                                <i class="las la-shopping-bag me-2"></i> ADD TO CART
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-buy-premium w-100" onclick="openDirectCheckout(this)">
+                                BUY IT NOW
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 7. Trust Elements (Clean Icons) --}}
+                <div class="d-flex justify-content-around border-top border-bottom py-3 mt-5">
+                    <div class="text-center">
+                        <i class="las la-certificate fs-3 text-muted"></i>
+                        <p class="x-small fw-bold mt-1 mb-0">CERTIFIED</p>
+                    </div>
+                    <div class="text-center border-start border-end px-4">
+                        <i class="las la-truck fs-3 text-muted"></i>
+                        <p class="x-small fw-bold mt-1 mb-0">FREE SHIPPING</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="las la-undo-alt fs-3 text-muted"></i>
+                        <p class="x-small fw-bold mt-1 mb-0">EASY RETURN</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1577,6 +1812,73 @@
                     </button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasOffers" aria-labelledby="offcanvasOffersLabel"
+        style="width: 380px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasOffersLabel">All Offers & Coupons</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body bg-light">
+
+            {{-- Special Offers Section --}}
+            <div class="mb-4">
+                <h6 class="fw-bold small text-uppercase text-muted mb-3">Special Offers</h6>
+                <div class="card border-0 shadow-sm mb-2">
+                    <div class="card-body p-3 d-flex align-items-center gap-3">
+                        <div class="bg-primary-subtle p-2 rounded-circle text-primary">
+                            <i class="las la-percent fs-4"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-bold small">Prepaid Order Discount</p>
+                            <small class="text-muted">Flat ₹25 off on all online payments</small>
+                        </div>
+                        <span class="ms-auto badge bg-success-subtle text-success small">AUTO</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Coupon Offers Section --}}
+            <div>
+                <h6 class="fw-bold small text-uppercase text-muted mb-3">Checkout Coupons</h6>
+                @foreach ($allCoupons as $coupon)
+                    <div class="card border-0 shadow-sm mb-3 position-relative overflow-hidden"
+                        style="border-left: 4px solid var(--primary-orange) !important;">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="bg-warning-subtle p-2 rounded-circle text-warning">
+                                    <i class="las la-tag fs-4"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-0 fw-bold small">{{ $coupon->code }}</p>
+                                    <p class="mb-2 text-muted" style="font-size: 11px;">
+                                        Save {{ $coupon->type == 'fixed' ? '₹' . $coupon->value : $coupon->value . '%' }}
+                                        extra
+                                        on this product.
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold text-success" style="font-size: 12px;">
+                                            Effective Price:
+                                            ₹{{ number_format($product->price - ($coupon->type == 'fixed' ? $coupon->value : ($product->price * $coupon->value) / 100), 0) }}
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-primary py-0 px-2 fw-bold"
+                                            style="font-size: 10px;"
+                                            onclick="copyCoupon('{{ $coupon->code }}')">COPY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Bottom Footer of Side Panel --}}
+            <div class="mt-4 p-3 bg-primary text-white rounded text-center shadow-lg">
+                <p class="mb-0 fw-bold">Save up to ₹{{ number_format($product->price - $lowestPrice, 0) }} with this offer
+                </p>
             </div>
         </div>
     </div>
@@ -2357,6 +2659,18 @@
             row.id = 'row-' + size;
             row.innerHTML = `<td>${size}</td><td>${data.mm}</td><td>${data.circ}</td>`;
             tableBody.appendChild(row);
+        }
+
+        function copyCoupon(code) {
+            navigator.clipboard.writeText(code);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Coupon ' + code + ' Copied!',
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
     </script>
     <script>

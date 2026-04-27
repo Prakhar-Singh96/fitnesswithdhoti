@@ -366,6 +366,21 @@ class CheckoutController extends Controller
             $finalTotal -= $walletDeduction;
         }
         $finalTotal = max(0, round($finalTotal));
+        $originalTotal = $finalTotal; // असली टोटल को याद रखें
+
+        $payableNow = $originalTotal;
+        $balance = 0;
+        $isPartial = false;
+
+        // 🔥 PARTIAL PAYMENT LOGIC (एडजस्ट किया गया)
+        if ($request->payment_method == 'PARTIAL') {
+            $payableNow = 100; // या 100, जो भी आप एडवांस लेना चाहते हैं
+            $balance = $originalTotal - $payableNow;
+            $isPartial = true;
+
+            // Razorpay के लिए finalTotal को एडवांस अमाउंट पर सेट करें
+            $finalTotal = $payableNow;
+        }
 
         // 🛑 COD LIMIT CHECK (नया हिस्सा)
         if ($request->payment_method == 'COD' && $finalTotal > 3000) {
@@ -387,11 +402,13 @@ class CheckoutController extends Controller
             'wallet_amount'    => $walletDeduction, // Record wallet usage
             'coupon_code'      => $request->coupon_code,
             'refer_code_used'  => $request->referral_code, // 👈 यह नया कॉलम यहाँ आएगा
-            'total_amount'     => $finalTotal,      // 👈 शुद्ध पेयबल अमाउंट
+            'total_amount'     => $originalTotal, // डेटाबेस में पूरा पैसा दिखाएँ
             // 'payment_method'   => $request->payment_method,
             'payment_method' => ($finalTotal == 0) ? 'WALLET' : $request->payment_method,
             // 'status'           => 'pending',
             // 'payment_status'   => 'pending'
+            'balance_amount' => $balance,
+            'is_partial'     => $isPartial,
             'status' => ($finalTotal == 0) ? 'processing' : 'pending',
             'payment_status' => ($finalTotal == 0) ? 'paid' : 'pending'
         ]);
@@ -441,7 +458,7 @@ class CheckoutController extends Controller
             ]);
         }
 
-        if ($request->payment_method == 'RAZORPAY') {
+        if ($request->payment_method == 'RAZORPAY' || $request->payment_method == 'PARTIAL') {
             $paymentSetting = PaymentSetting::first();
             if (!$paymentSetting || !$paymentSetting->key_id) {
                 return response()->json(['status' => false, 'message' => 'Payment Gateway Not Configured']);
@@ -599,7 +616,7 @@ class CheckoutController extends Controller
 
             // 🚀 यहाँ सभी Razorpay IDs को सेव करें ताकि रिफंड किया जा सके
             $order->update([
-                'payment_status' => 'paid',
+                'payment_status' => ($order->is_partial) ? 'partial_paid' : 'paid',
                 'status'         => 'processing',
                 'rzp_payment_id' => $request->razorpay_payment_id, // 👈 रिफंड के लिए सबसे ज़रूरी
                 'rzp_order_id'   => $request->razorpay_order_id,

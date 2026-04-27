@@ -264,6 +264,37 @@ class ProductListingController extends Controller
             1 => $reviews->where('rating', 1)->count(),
         ];
 
+        // 🔥 1. LOWEST PRICE CALCULATION LOGIC START
+        // सभी एक्टिव कूपन्स उठाएं
+        $allCoupons = \App\Models\Coupon::where('status', 1)
+            ->where(function($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })->get();
+
+        $minPriceAfterCoupon = $product->price;
+
+        foreach ($allCoupons as $coupon) {
+            $tempDiscount = 0;
+            if ($coupon->type == 'fixed') {
+                $tempDiscount = $coupon->value;
+            } else {
+                // Percentage discount calculation (e.g., 10% of 355 = 35.5)
+                $tempDiscount = ($product->price * $coupon->value) / 100;
+            }
+
+            $currentTempPrice = $product->price - $tempDiscount;
+
+            // अगर यह प्राइस अब तक की सबसे कम प्राइस है तो इसे सेव करें
+            if ($currentTempPrice < $minPriceAfterCoupon) {
+                $minPriceAfterCoupon = $currentTempPrice;
+            }
+        }
+
+        // 🔥 2. ₹25 का एक्स्ट्रा प्रीपेड डिस्काउंट जोड़ें
+        // Get this as low as = (Price - Best Coupon) - 25
+        $lowestPrice = $minPriceAfterCoupon - 25;
+        // 🔥 LOWEST PRICE CALCULATION LOGIC END
+
         // Related Products Logic (Updated to check both categories)
         $relatedProducts = Product::withCount('reviews') // ✅ Total Reviews layega
             ->withAvg('reviews', 'rating') // ✅ Average Rating nikalega (reviews_avg_rating)
@@ -285,7 +316,7 @@ class ProductListingController extends Controller
                 ->get();
         }
 
-        return view('frontend.pages.product_detail', compact('product', 'relatedProducts', 'categories', 'reviews', 'totalReviews', 'averageRating', 'starCounts', 'rashiProducts'));
+        return view('frontend.pages.product_detail', compact('product', 'relatedProducts', 'categories', 'reviews', 'totalReviews', 'averageRating', 'starCounts', 'rashiProducts','lowestPrice','allCoupons'));
     }
 
     public function searchListing(Request $request)

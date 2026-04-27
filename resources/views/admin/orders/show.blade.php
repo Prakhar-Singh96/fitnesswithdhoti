@@ -53,35 +53,66 @@
                         </table>
                     </div>
                 </div>
-                {{-- 📊 ORDER SUMMARY & CALCULATIONS --}}
+                {{-- 📊 ORDER SUMMARY & CALCULATIONS (Updated for Partial Pay) --}}
                 <div class="card mb-4">
                     <h5 class="card-header border-bottom">Order Price Summary</h5>
                     <div class="card-body pt-3">
                         <div class="row">
+                            {{-- Left Side: Base Calculations --}}
                             <div class="col-md-6 border-end">
                                 <p class="d-flex justify-content-between"><span>Items Total (MRP):</span>
                                     <strong>₹{{ number_format($order->mrp_total) }}</strong>
                                 </p>
                                 <p class="d-flex justify-content-between text-success"><span>Coupon Discount
-                                        ({{ $order->coupon_code ?? 'None' }}):</span> <strong>-
-                                        ₹{{ number_format($order->coupon_discount) }}</strong></p>
+                                        ({{ $order->coupon_code ?? 'None' }}):</span>
+                                    <strong>- ₹{{ number_format($order->coupon_discount) }}</strong>
+                                </p>
                                 <p class="d-flex justify-content-between text-success"><span>Gaming/Lucky Draw:</span>
                                     <strong>- ₹{{ number_format($order->gaming_discount) }}</strong>
                                 </p>
                                 <p class="d-flex justify-content-between text-success"><span>Prepaid Discount:</span>
                                     <strong>- ₹{{ number_format($order->prepaid_discount) }}</strong>
                                 </p>
+                                @if ($order->wallet_amount > 0)
+                                    <p class="d-flex justify-content-between text-info"><span>Wallet Used:</span>
+                                        <strong>- ₹{{ number_format($order->wallet_amount) }}</strong>
+                                    </p>
+                                @endif
                             </div>
+
+                            {{-- Right Side: Final Totals & Partial Info --}}
                             <div class="col-md-6">
                                 <p class="d-flex justify-content-between fs-5 fw-bold text-primary">
-                                    <span>Final Amount:</span>
+                                    <span>Final Order Value:</span>
                                     <span>₹{{ number_format($order->total_amount) }}</span>
                                 </p>
-                                <p class="d-flex justify-content-between small"><span>Payment Method:</span> <span
-                                        class="badge bg-label-info">{{ strtoupper($order->payment_method) }}</span></p>
+
+                                {{-- 🔵 PARTIAL PAYMENT HIGHLIGHT --}}
+                                @if ($order->is_partial)
+                                    <div class="p-3 rounded bg-label-success mb-3 border border-dashed border-success">
+                                        <p class="d-flex justify-content-between mb-1 text-success">
+                                            <span><i class="las la-check-double"></i> Advanced Paid:</span>
+                                            <strong>-
+                                                ₹{{ number_format($order->total_amount - $order->balance_amount) }}</strong>
+                                        </p>
+                                        <p class="d-flex justify-content-between mb-0 fs-5 text-dark fw-bold">
+                                            <span><i class="las la-hand-holding-usd"></i> Collect at Delivery:</span>
+                                            <span class="text-danger">₹{{ number_format($order->balance_amount) }}</span>
+                                        </p>
+                                    </div>
+                                @else
+                                    <p class="d-flex justify-content-between small"><span>Net Payable:</span>
+                                        <span class="fw-bold">₹{{ number_format($order->total_amount) }}</span>
+                                    </p>
+                                @endif
+
+                                <p class="d-flex justify-content-between small"><span>Payment Method:</span>
+                                    <span class="badge bg-label-info">{{ strtoupper($order->payment_method) }}</span>
+                                </p>
                                 <p class="d-flex justify-content-between small"><span>Payment Status:</span>
-                                    <span class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : 'warning' }}">
-                                        {{ strtoupper($order->payment_status) }}
+                                    <span
+                                        class="badge bg-{{ $order->payment_status == 'paid' || $order->payment_status == 'partial_paid' ? 'success' : 'warning' }}">
+                                        {{ strtoupper(str_replace('_', ' ', $order->payment_status)) }}
                                     </span>
                                 </p>
                             </div>
@@ -185,29 +216,34 @@
                                 <div class="mb-2">
                                     <label class="small fw-bold">Tracking URL (Optional)</label>
                                     <input type="text" name="tracking_url" class="form-control form-control-sm"
-                                        value="{{ old('tracking_url', $order->tracking_url) }}" placeholder="https://...">
+                                        value="{{ old('tracking_url', $order->tracking_url) }}"
+                                        placeholder="https://...">
                                 </div>
 
                                 <div class="mb-2">
                                     <label class="small fw-bold">Expected Delivery</label>
-                                    <input type="date" name="expected_delivery_date" class="form-control form-control-sm"
+                                    <input type="date" name="expected_delivery_date"
+                                        class="form-control form-control-sm"
                                         value="{{ old('expected_delivery_date', $order->expected_delivery_date) }}">
                                 </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100">Update Order</button>
                             {{-- 🚀 WhatsApp Button: सिर्फ तभी दिखेगा जब ट्रैकिंग डेटा मौजूद हो --}}
-                            @if($order->status == 'shipped' && $order->awb_number && $order->courier_name)
+                            @if ($order->status == 'shipped' && $order->awb_number && $order->courier_name)
                                 @php
-                                    $addr = is_array($order->shipping_address) ? $order->shipping_address : json_decode($order->shipping_address, true);
+                                    $addr = is_array($order->shipping_address)
+                                        ? $order->shipping_address
+                                        : json_decode($order->shipping_address, true);
                                     $phone = $addr['phone'] ?? '';
-                                    $trackingUrl = $order->tracking_url ?? "https://www.indiapost.gov.in/";
+                                    $trackingUrl = $order->tracking_url ?? 'https://www.indiapost.gov.in/';
 
-                                    $msg = "Hello, Your order #{$order->order_number} from Suyagya has been shipped! \n\n" .
+                                    $msg =
+                                        "Hello, Your order #{$order->order_number} from Suyagya has been shipped! \n\n" .
                                         "Courier: {$order->courier_name} \n" .
                                         "Tracking ID: {$order->awb_number} \n" .
                                         "Track your package here: {$trackingUrl} \n\n" .
-                                        "Thank you for shopping with us!";
+                                        'Thank you for shopping with us!';
 
                                     $wa_link = "https://wa.me/91{$phone}?text=" . urlencode($msg);
                                 @endphp

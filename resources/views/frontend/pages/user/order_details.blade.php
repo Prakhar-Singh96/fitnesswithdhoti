@@ -135,12 +135,13 @@
 
             <div class="col-lg-4">
                 {{-- 💰 💳 BILLING SUMMARY (Updated with Siddh Row) --}}
-                <div class="card border-0 shadow-sm mb-4 bg-light">
+                <div class="card border-0 shadow-sm mb-4"
+                    style="background-color: #fdfaf4; border: 1px solid #f1e0c5 !important;">
                     <div class="card-header bg-white py-3 border-0">
-                        <h6 class="mb-0 fw-bold">Payment Details</h6>
+                        <h6 class="mb-0 fw-bold text-dark">Payment Breakdown</h6>
                     </div>
                     <div class="card-body pt-0">
-                        {{-- Total MRP (Pure MRP without Siddh) --}}
+                        {{-- Total MRP --}}
                         <div class="d-flex justify-content-between mb-2 small">
                             <span class="text-muted">Total MRP</span>
                             <span class="text-dark">₹{{ number_format($order->mrp_total, 2) }}</span>
@@ -158,38 +159,23 @@
                             </div>
                         @endif
 
-                        {{-- 🎁 Admin Coupon --}}
-                        @if ($order->coupon_discount > 0)
+                        {{-- 🎁 Coupons/Rewards (Admin + Game + Prepaid) --}}
+                        @php
+                            $totalCoupons =
+                                $order->coupon_discount +
+                                $order->gaming_discount +
+                                $order->prepaid_discount +
+                                ($order->wallet_amount ?? 0);
+                        @endphp
+
+                        @if ($totalCoupons > 0)
                             <div class="d-flex justify-content-between mb-2 small text-danger fw-bold">
-                                <span>Coupon ({{ $order->coupon_code }})</span>
-                                <span>- ₹{{ number_format($order->coupon_discount, 2) }}</span>
+                                <span>Total Offers Applied</span>
+                                <span>- ₹{{ number_format($totalCoupons, 2) }}</span>
                             </div>
                         @endif
 
-                        {{-- 🎮 Gaming Reward --}}
-                        @if ($order->gaming_discount > 0)
-                            <div class="d-flex justify-content-between mb-2 small text-danger fw-bold">
-                                <span>Game Reward</span>
-                                <span>- ₹{{ number_format($order->gaming_discount, 2) }}</span>
-                            </div>
-                        @endif
-
-                        {{-- 🚀 नया: प्रीपेड डिस्काउंट रो --}}
-                        @if (isset($order->prepaid_discount) && $order->prepaid_discount > 0)
-                            <div class="d-flex justify-content-between mb-2 small text-danger fw-bold">
-                                <span>Prepaid Order Discount</span>
-                                <span>- ₹{{ number_format($order->prepaid_discount, 2) }}</span>
-                            </div>
-                        @endif
-
-                        @if (isset($order->wallet_amount) && $order->wallet_amount > 0)
-                            <div class="d-flex justify-content-between mb-2 small text-success fw-bold">
-                                <span>Use Coin</span>
-                                <span>- {{ number_format($order->wallet_amount, 2) }}</span>
-                            </div>
-                        @endif
-
-                        {{-- 🚀 सुधार: सिद्धार्थ चार्ज को अलग से दिखाएं --}}
+                        {{-- Siddh Charge --}}
                         @php $totalSiddh = $order->items->sum(fn($i) => $i->siddh_amount * $i->quantity); @endphp
                         @if ($totalSiddh > 0)
                             <div class="d-flex justify-content-between mb-2 small text-dark fw-bold">
@@ -199,10 +185,41 @@
                         @endif
 
                         <hr class="my-3 border-dark opacity-10">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="fw-bold mb-0">Total Paid</h5>
-                            <h5 class="fw-bold text-primary mb-0">₹{{ number_format($order->total_amount, 2) }}</h5>
+
+                        {{-- 🔥 Order Grand Total --}}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Order Total</h6>
+                            <h6 class="fw-bold text-dark mb-0">₹{{ number_format($order->total_amount, 2) }}</h6>
                         </div>
+
+                        {{-- 🔵 PARTIAL PAYMENT DETAILS --}}
+                        @if ($order->is_partial)
+                            <div class="p-3 rounded-3 mb-2" style="background-color: #fff; border: 1px dashed #28a745;">
+                                <div class="d-flex justify-content-between mb-1 small text-success fw-bold">
+                                    <span><i class="las la-check-circle"></i> Paid Online (Advance)</span>
+                                    <span>- ₹{{ number_format($order->total_amount - $order->balance_amount, 2) }}</span>
+                                </div>
+                                <div
+                                    class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-light">
+                                    <span class="fw-bold text-dark" style="font-size: 14px;">Payable at Delivery
+                                        (COD)</span>
+                                    <span
+                                        class="badge bg-success fs-6">₹{{ number_format($order->balance_amount, 2) }}</span>
+                                </div>
+                            </div>
+                            <p class="x-small text-muted text-center mt-2 mb-0">
+                                <i class="las la-info-circle"></i> Please pay the balance amount to the delivery partner.
+                            </p>
+                        @else
+                            {{-- Non-Partial Orders --}}
+                            <div class="d-flex justify-content-between align-items-center p-3 rounded-3"
+                                style="background-color: #e8f5e9;">
+                                <span
+                                    class="fw-bold text-success">{{ $order->payment_status == 'paid' ? 'Total Paid' : 'To be Paid' }}</span>
+                                <span
+                                    class="fw-bold text-success fs-5">₹{{ number_format($order->total_amount, 2) }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 {{-- Order Summary Info --}}

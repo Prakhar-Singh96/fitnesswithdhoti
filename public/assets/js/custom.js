@@ -1334,6 +1334,7 @@ function processPayment() {
     var formData = {
         _token: $('meta[name="csrf-token"]').attr('content'),
         payment_method: finalPaymentMethod,
+        partial_amount: (currentMethod === 'PARTIAL') ? 100 : 0,
         buy_mode: $('#final_buy_mode').val(),
         product_id: $('#final_product_id').val(),
         quantity: $('#final_quantity').val(),
@@ -2255,6 +2256,7 @@ function handlePaymentMethodChange(method) {
     console.log("Payment Method Changed To:", method);
     $('.pay-radio').prop('checked', false);
     $('#row_prepaid_discount').remove();
+    $('#row_partial_info').remove();
 
     if (method === 'RAZORPAY') {
         $('#rzp').prop('checked', true);
@@ -2271,7 +2273,20 @@ function handlePaymentMethodChange(method) {
         } else {
             $(prepaidHtml).insertAfter('#bill_subtotal');
         }
-    } else {
+    }
+    else if (method === 'PARTIAL') {
+        $('#partial').prop('checked', true);
+        prepaidDiscount = 0;
+
+        // बिल में एक जानकारी वाली रो (Row) जोड़ें
+        let partialHtml = `
+            <div class="d-flex justify-content-between mb-1 small text-primary fw-bold" id="row_partial_info">
+                <span><i class="las la-info-circle"></i> Partial Pay (Advance)</span>
+                <span>₹100</span>
+            </div>`;
+        $(partialHtml).insertAfter('#bill_subtotal');
+    }
+    else {
         $('#cod').prop('checked', true);
         prepaidDiscount = 0;
     }
@@ -2290,17 +2305,14 @@ function calculateFinalTotal() {
     let gameDiscount = window.appliedGamingAmount || 0;
     let currentPrepaid = ($('#step_payment').is(':visible')) ? prepaidDiscount : 0;
 
-    // डिस्काउंट के बाद बचा हुआ अमाउंट
     let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid);
     amountBeforeWallet = Math.max(0, amountBeforeWallet);
 
-    // 💰 WALLET LOGIC
     let walletDeduction = 0;
     let userBalance = parseFloat($('meta[name="user-wallet"]').attr('content')) || 0;
 
     if ($('#use_coins_switch').is(':checked') && $('#wallet_selection_area').is(':visible')) {
         walletDeduction = Math.min(userBalance, amountBeforeWallet);
-
         $('#wallet_applied_details').attr('style', 'display: block !important');
         $('#bill_coin_discount').text('- ₹' + Math.round(walletDeduction));
         $('#final_use_coins').val('1');
@@ -2309,19 +2321,28 @@ function calculateFinalTotal() {
         $('#final_use_coins').val('0');
     }
 
-    // फाइनल पेयबल
     let finalPayable = Math.round(amountBeforeWallet - walletDeduction);
     if (finalPayable < 0) finalPayable = 0;
 
+    // 💰 DISPLAY LOGIC
     let fmtTotal = finalPayable.toLocaleString('en-IN');
-    $('#bill_final_total').text('₹' + fmtTotal);
-    $('#btn_pay_amount').text('₹' + fmtTotal);
+    $('#bill_final_total').text('₹' + fmtTotal); // "To Pay" में हमेशा पूरा बिल दिखेगा (जैसा Flipkart/Amazon में होता है)
 
-    // बटन अपडेट: अगर ₹0 हो गया तो
-    if(finalPayable === 0 && $('#use_coins_switch').is(':checked')) {
-        $('#btn_place_order').removeClass('btn-dark').addClass('btn-success').text('Confirm Order (Paid by Coins)');
-    } else {
-        $('#btn_place_order').removeClass('btn-success').addClass('btn-dark').html(`Pay <span id="btn_pay_amount">₹${fmtTotal}</span>`);
+    // 🔥 BUTTON LOGIC FIX: Check Payment Method
+    let currentMethod = $('input[name="payment_method"]:checked').val();
+    let btn = $('#btn_place_order');
+
+    if (finalPayable === 0 && $('#use_coins_switch').is(':checked')) {
+        btn.removeClass('btn-dark').addClass('btn-success').text('Confirm Order (Paid by Coins)');
+    }
+    else if (currentMethod === 'PARTIAL') {
+        // 🚀 अगर Partial Pay चुना है, तो बटन पर सिर्फ ₹100 दिखाओ
+        btn.removeClass('btn-success').addClass('btn-dark').html(`Pay ₹100 Now <span class="small" style="font-size: 10px;">(Balance as COD)</span>`);
+        $('#btn_pay_amount').text('₹100'); // ये अगर कहीं और इस्तेमाल हो रहा हो
+    }
+    else {
+        // बाकी सब के लिए (Razorpay/COD) पूरा अमाउंट दिखाओ
+        btn.removeClass('btn-success').addClass('btn-dark').html(`Pay <span id="btn_pay_amount">₹${fmtTotal}</span>`);
     }
 }
 

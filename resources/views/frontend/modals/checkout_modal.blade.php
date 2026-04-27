@@ -475,6 +475,17 @@
                             <img src="https://cdn.razorpay.com/static/assets/logo/payment.svg" height="16">
                         </label>
 
+                        {{-- 🔥 NEW: Partial COD Option --}}
+                        <label class="d-flex align-items-center p-3 mb-2 border rounded-3 cursor-pointer bg-white"
+                            onclick="handlePaymentMethodChange('PARTIAL')">
+                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method" id="partial" value="PARTIAL">
+                            <div class="flex-grow-1">
+                                <span class="fw-bold d-block small">Pay ₹100 Now + COD</span>
+                                <small class="text-muted x-small">Pay ₹100 security fee online, rest as COD</small>
+                            </div>
+                            <i class="las la-wallet text-primary fs-4"></i>
+                        </label>
+
                         {{-- COD Option --}}
                         <label class="d-flex align-items-center p-3 mb-4 border rounded-3 cursor-pointer bg-white"
                             onclick="handlePaymentMethodChange('COD')"> {{-- 👈 नया फंक्शन --}}
