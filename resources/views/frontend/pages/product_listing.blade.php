@@ -109,6 +109,7 @@
                                                 class="img-fluid w-100 object-fit-cover" style="aspect-ratio: 1/1;">
                                         </a>
 
+
                                         @if ($product->discount > 0)
                                             <span
                                                 class="badge bg-danger position-absolute top-0 start-0 m-2 rounded-0 fw-normal px-2">

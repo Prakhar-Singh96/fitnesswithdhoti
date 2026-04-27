@@ -13,12 +13,12 @@
 
         /* 💎 GEMSTONE CONFIGURATOR STYLES (AstroTalk Style) */
         /* .gem-config-container {
-                                                                                                                                            border: 1px solid #eee;
-                                                                                                                                            padding: 15px;
-                                                                                                                                            border-radius: 8px;
-                                                                                                                                            margin-bottom: 20px;
-                                                                                                                                            background-color: #f7f1de;
-                                                                                                                                        } */
+                                                                                                                                                                    border: 1px solid #eee;
+                                                                                                                                                                    padding: 15px;
+                                                                                                                                                                    border-radius: 8px;
+                                                                                                                                                                    margin-bottom: 20px;
+                                                                                                                                                                    background-color: #f7f1de;
+                                                                                                                                                                } */
 
         .gem-option-group {
             margin-bottom: 15px;
@@ -462,120 +462,149 @@
         }
     </style>
     <style>
-/* 💎 PREMIUM PRODUCT PAGE CSS */
-.product-title-premium {
-    font-family: 'Merriweather', serif;
-    font-weight: 800;
-    font-size: 2rem;
-    color: #2c3e50;
-    letter-spacing: -0.5px;
-}
+        /* 💎 PREMIUM PRODUCT PAGE CSS */
+        .product-title-premium {
+            font-family: 'Merriweather', serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: #2c3e50;
+            letter-spacing: -0.5px;
+        }
 
-.review-text-premium {
-    font-size: 13px;
-    font-weight: 600;
-    color: #888;
-}
+        .review-text-premium {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+        }
 
-.selling-price-premium {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #000;
-}
+        .selling-price-premium {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #000;
+        }
 
-.mrp-diagonal-cut-premium {
-    position: relative;
-    font-size: 1.2rem;
-    color: #999;
-}
-.mrp-diagonal-cut-premium::after {
-    content: "";
-    position: absolute;
-    left: -2px; top: 50%;
-    width: 105%; height: 1.5px;
-    background: #ff4d4d;
-    transform: rotate(-12deg);
-}
+        .mrp-diagonal-cut-premium {
+            position: relative;
+            font-size: 1.2rem;
+            color: #999;
+        }
 
-.discount-badge-premium {
-    background: #fff0f0;
-    color: #ff4d4d;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-}
+        .mrp-diagonal-cut-premium::after {
+            content: "";
+            position: absolute;
+            left: -2px;
+            top: 50%;
+            width: 105%;
+            height: 1.5px;
+            background: #ff4d4d;
+            transform: rotate(-12deg);
+        }
 
-.promo-container-premium {
-    background: #fdfaf4;
-    border: 1px solid #f1e0c5;
-    border-radius: 7px;
-    margin: -1px;
-}
+        .discount-badge-premium {
+            background: #fff0f0;
+            color: #ff4d4d;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
 
-.timer-dot {
-    width: 8px; height: 8px;
-    background: #ff4d4d;
-    border-radius: 50%;
-}
+        .promo-container-premium {
+            background: #fdfaf4;
+            border: 1px solid #f1e0c5;
+            border-radius: 7px;
+            margin: -1px;
+        }
 
-.animate-pulse {
-    animation: pulse 1.5s infinite;
-}
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .timer-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff4d4d;
+            border-radius: 50%;
+        }
 
-.lowest-price-strip-premium {
-    background: #eef6ff;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px dashed #1a73e8;
-}
+        .animate-pulse {
+            animation: pulse 1.5s infinite;
+        }
 
-.quantity-selector-premium {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    height: 50px;
-    overflow: hidden;
-}
-.quantity-selector-premium button {
-    background: none; border: none;
-    width: 40px; height: 100%;
-    font-size: 18px; color: #555;
-}
-.quantity-selector-premium input {
-    width: 100%; border: none; text-align: center;
-    font-weight: bold; font-size: 16px;
-}
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
 
-.btn-cart-premium {
-    height: 50px;
-    border: 2px solid #000;
-    background: #fff;
-    color: #000;
-    font-weight: 800;
-    border-radius: 8px;
-}
+            50% {
+                opacity: 0.3;
+            }
 
-.btn-buy-premium {
-    height: 55px;
-    background: #ff6f00; /* Suyagya Brand Color */
-    color: #fff;
-    font-weight: 800;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 15px rgba(255, 111, 0, 0.3);
-    margin-top: 10px;
-}
+            100% {
+                opacity: 1;
+            }
+        }
 
-div#razorpay-affordability-widget {
-    margin: -2px;
-}
+        .lowest-price-strip-premium {
+            background: #eef6ff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px dashed #1a73e8;
+        }
 
-.x-small { font-size: 10px; letter-spacing: 1px; }
-</style>
+        .quantity-selector-premium {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .quantity-selector-premium button {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 100%;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .quantity-selector-premium input {
+            width: 100%;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-cart-premium {
+            height: 50px;
+            border: 2px solid #000;
+            background: #fff;
+            color: #000;
+            font-weight: 800;
+            border-radius: 8px;
+        }
+
+        .btn-buy-premium {
+            height: 55px;
+            background: #ff6f00;
+            /* Suyagya Brand Color */
+            color: #fff;
+            font-weight: 800;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        div#razorpay-affordability-widget {
+            margin: -2px;
+        }
+
+        .x-small {
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
 @endsection
 
 
@@ -644,6 +673,17 @@ div#razorpay-affordability-widget {
                                 <img src="{{ asset($product->product_main_image) }}" class="img-fluid zoom-img"
                                     alt="{{ $product->product_main_image_alt ?? $product->name }}">
                             </a>
+                            {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+                            @if ($product->youtube_link)
+                                {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
+                                <div class="video-overlay-icon position-absolute bottom-0 end-0 m-3" style="z-index: 100;">
+                                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#videoModalDetail"
+                                        class="text-white shadow-lg d-flex align-items-center justify-content-center"
+                                        style="background: rgba(220, 53, 69, 0.9); width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; text-decoration: none;">
+                                        <i class="las la-play fs-4"></i>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
 
                         {{-- B. Gallery Loop --}}
@@ -656,14 +696,12 @@ div#razorpay-affordability-widget {
 
                                 <div class="product-slider-container {{ $isVideo ? '' : 'zoom-container' }}">
                                     @if ($isVideo)
-                                        {{-- Video (No Zoom, No Lightbox on click usually, or specific lightbox type) --}}
                                         <a href="{{ asset($img->image) }}" class="glightbox"
                                             data-gallery="product-gallery">
                                             <video width="100%" height="100%"
                                                 style="object-fit: contain; max-height: 100%;">
                                                 <source src="{{ asset($img->image) }}" type="video/{{ $extension }}">
                                             </video>
-                                            {{-- Fake overlay to catch click for lightbox --}}
                                             <div
                                                 class="position-absolute top-50 start-50 translate-middle pointer-events-none">
                                                 <i class="las la-play-circle text-white"
@@ -671,7 +709,6 @@ div#razorpay-affordability-widget {
                                             </div>
                                         </a>
                                     @else
-                                        {{-- Image (Zoom + Lightbox) --}}
                                         <a href="{{ asset($img->image) }}" class="glightbox"
                                             data-gallery="product-gallery">
                                             <img src="{{ asset($img->image) }}" class="img-fluid zoom-img"
@@ -1278,84 +1315,27 @@ div#razorpay-affordability-widget {
                 </div>
 
             </div>
-            <div class="col-lg-6 ps-lg-5">
-                {{-- 1. Category & Name --}}
-                <div class="mb-2">
-                    <span class="text-uppercase text-muted fw-bold tracking-wider"
-                        style="font-size: 11px; letter-spacing: 1.5px;">
-                        {{ $product->category->name ?? 'Collection' }}
-                    </span>
-                    <h1 class="product-title-premium mt-1 mb-2">{{ $product->name }}</h1>
-                </div>
-
-                {{-- 2. Rating & Reviews --}}
-                <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-light">
-                    <div class="text-warning small me-2">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <i class="{{ $i <= round($averageRating) ? 'las la-star' : 'lar la-star' }}"></i>
-                        @endfor
+        </div>
+    </div>
+    {{-- 🚀 समाधान: MODAL को यहाँ बाहर रखें, किसी भी DIV के अंदर नहीं --}}
+    @if ($product->youtube_link)
+        <div class="modal fade" id="videoModalDetail" tabindex="-1" aria-hidden="true" style="z-index: 9999;">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-header border-0 p-0 justify-content-end mb-2">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
-                    <span class="review-text-premium">{{ number_format($averageRating, 1) }} | {{ $totalReviews }}
-                        Reviews</span>
-                </div>
-
-                {{-- 3. Price Section --}}
-                <div class="mb-4">
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="selling-price-premium">₹{{ number_format($product->price) }}</span>
-
-                        @if ($product->mrp_price > $product->price)
-                            <span class="mrp-diagonal-cut-premium">₹{{ number_format($product->mrp_price) }}</span>
-                            <span class="discount-badge-premium">{{ round($product->discount) }}% OFF</span>
-                        @endif
-                    </div>
-                    <p class="text-muted small mt-1">Inclusive of all taxes</p>
-                </div>
-
-                {{-- 5. Siddh & Gemstone Logic (Keeping your logic same but CSS changed) --}}
-                {{-- ... (यहाँ आपका Gemstone/Variant Selector का पुराना Logic रहेगा, बस उसे CSS से क्लीन करना है) ... --}}
-
-                {{-- 6. Add to Cart & Buy Now (Japam Style) --}}
-                <div class="sticky-action-container mt-5">
-                    <div class="row g-3">
-                        <div class="col-12 col-md-5">
-                            <div class="quantity-selector-premium">
-                                <button type="button" onclick="updateQty('minus')"><i class="las la-minus"></i></button>
-                                <input type="text" id="qty_input" value="1" readonly>
-                                <button type="button" onclick="updateQty('plus')"><i class="las la-plus"></i></button>
-                            </div>
+                    <div class="modal-body p-0">
+                        <div class="ratio shadow-lg"
+                            style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
+                            <iframe src="{{ $product->youtube_link }}" title="Product Video" allowfullscreen></iframe>
                         </div>
-                        <div class="col-6 col-md-7">
-                            <button class="btn btn-cart-premium w-100" onclick="addToCartFromDetail(this)">
-                                <i class="las la-shopping-bag me-2"></i> ADD TO CART
-                            </button>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-buy-premium w-100" onclick="openDirectCheckout(this)">
-                                BUY IT NOW
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- 7. Trust Elements (Clean Icons) --}}
-                <div class="d-flex justify-content-around border-top border-bottom py-3 mt-5">
-                    <div class="text-center">
-                        <i class="las la-certificate fs-3 text-muted"></i>
-                        <p class="x-small fw-bold mt-1 mb-0">CERTIFIED</p>
-                    </div>
-                    <div class="text-center border-start border-end px-4">
-                        <i class="las la-truck fs-3 text-muted"></i>
-                        <p class="x-small fw-bold mt-1 mb-0">FREE SHIPPING</p>
-                    </div>
-                    <div class="text-center">
-                        <i class="las la-undo-alt fs-3 text-muted"></i>
-                        <p class="x-small fw-bold mt-1 mb-0">EASY RETURN</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <section class="py-5" style="background-color: #D32F2F; color: white;">
         <div class="container text-center">

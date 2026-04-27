@@ -277,6 +277,39 @@
                                         alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
                                         height="600" loading="lazy">
                                 </a>
+                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+                                @if ($product->youtube_link)
+                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
+                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
+                                        style="z-index: 3;">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#videoModal{{ $product->id }}"
+                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
+                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
+                                            <i class="las la-play fs-4"></i>
+                                        </a>
+                                    </div>
+
+                                    {{-- Modal for this specific product (Shorts Optimized) --}}
+                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+                                            <div class="modal-content bg-transparent border-0">
+                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="ratio"
+                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
+                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
+                                                            allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             {{-- Details Area --}}
@@ -397,6 +430,39 @@
                                         alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
                                         height="600" loading="lazy">
                                 </a>
+                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+                                @if ($product->youtube_link)
+                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
+                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
+                                        style="z-index: 3;">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#videoModal{{ $product->id }}"
+                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
+                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
+                                            <i class="las la-play fs-4"></i>
+                                        </a>
+                                    </div>
+
+                                    {{-- Modal for this specific product (Shorts Optimized) --}}
+                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+                                            <div class="modal-content bg-transparent border-0">
+                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="ratio"
+                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
+                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
+                                                            allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
 
                             {{-- Details Area --}}

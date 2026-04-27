@@ -56,9 +56,7 @@
         </div>
 
         {{-- Pagination Links --}}
-        <div class="d-flex justify-content-center mt-5">
-            {{ $blogs->links() }}
-        </div>
+        <div class="mt-5 d-flex justify-content-center">{{ $blogs->links('pagination::bootstrap-5') }}</div>
     </div>
 </section>
 
