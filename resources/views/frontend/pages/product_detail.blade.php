@@ -895,7 +895,7 @@
                         {{-- <div class="gem-option-group">
                             <span class="gem-option-title">Size (Ratti)</span>
                             <div class="gem-btn-wrapper" id="ratti_group">
-                                {{-- 🔥 FIX: Removed 'where type loose'. Now shows unique sizes from ALL variants
+                                {{-- FIX: Removed 'where type loose'. Now shows unique sizes from ALL variants
                                 @foreach ($gemVariants->unique('ratti_size')->sortBy('ratti_size') as $gv)
                                     <div class="gem-btn gem-ratti-btn {{ (string) $gv->ratti_size == (string) $defRatti ? 'active' : '' }}"
                                         onclick="updateGemState('ratti', '{{ $gv->ratti_size }}', this)">
@@ -911,10 +911,16 @@
                             style="display: {{ $defType == 'loose' ? 'none' : 'block' }};">
                             <span class="gem-option-title">Material</span>
                             <div class="gem-btn-wrapper">
-                                @if (in_array('silver', $availMats))
-                                    <div class="gem-btn {{ $defMat == 'silver' ? 'active' : '' }} gem-mat-btn"
-                                        onclick="updateGemState('material', 'silver', this)">
+                                @if (in_array('Silver', $availMats))
+                                    <div class="gem-btn {{ $defMat == 'Silver' ? 'active' : '' }} gem-mat-btn"
+                                        onclick="updateGemState('material', 'Silver', this)">
                                         <span class="mat-color bg-silver"></span> Silver
+                                    </div>
+                                @endif
+                                @if (in_array('Ashtdhatu', $availMats))
+                                    <div class="gem-btn {{ $defMat == 'Ashtdhatu' ? 'active' : '' }} gem-mat-btn"
+                                        onclick="updateGemState('material', 'Ashtdhatu', this)">
+                                        <span class="mat-color bg-silver"></span> Ashtdhatu
                                     </div>
                                 @endif
                                 @if (in_array('panchdhatu', $availMats))
@@ -924,8 +930,8 @@
                                     </div>
                                 @endif
                             </div>
-                        </div>
-                        <input type="hidden" id="sel_mat" value="{{ $defMat }}"> --}}
+                        </div> --}}
+                        {{-- <input type="hidden" id="sel_mat" value="{{ $defMat }}"> --}}
 
                         {{-- 4. RING SIZE (Only show if Type is Ring) --}}
                         <div class="gem-option-group" id="ring_size_section"

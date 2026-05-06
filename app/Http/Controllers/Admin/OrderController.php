@@ -119,7 +119,7 @@ class OrderController extends Controller
                         ]);
 
                         // दोबारा रिवॉर्ड न मिले इसलिए मार्क करें
-                        $order->cashback_status = 'referral_paid';
+                       $data['cashback_status'] = 'referral_paid';
                     });
                 }
             }

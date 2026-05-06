@@ -173,7 +173,7 @@ class ProductController extends Controller
                                 'type' => $gem['type'],
                                 'ratti_size' => $gem['ratti'] ?? null,
                                 'material' => $gem['material'] ?? null,
-                                'ring_size' => $gem['ring_size'] ?? null,
+                                //'ring_size' => $gem['ring_size'] ?? null,
                                 'price' => $gem['price'],
                                 'mrp' => $gem['mrp'] ?? $gem['price'],
                                 'quantity' => $gem['qty'] ?? 0
@@ -383,7 +383,7 @@ class ProductController extends Controller
                                 'type' => $gem['type'],
                                 'ratti_size' => $gem['ratti'] ?? null,
                                 'material' => $gem['material'] ?? null,
-                                'ring_size' => $gem['ring_size'] ?? null,
+                                //'ring_size' => $gem['ring_size'] ?? null,
                                 'price' => $gem['price'],
                                 'mrp' => $gem['mrp'] ?? $gem['price'],
                                 'quantity' => $gem['qty'] ?? 0

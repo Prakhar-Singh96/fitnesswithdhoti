@@ -196,7 +196,6 @@
                                                 <th style="min-width: 100px;">Price</th>
                                                 <th style="min-width: 70px;">Disc%</th> {{-- NEW --}}
                                                 <th style="min-width: 80px;">Qty</th>
-                                                <th style="width: 50px;"></th>
                                             </tr>
                                         </thead>
                                         <tbody id="gem_variants_body">
@@ -621,7 +620,8 @@
                 <td>
                     <select name="gem_variants[${gemIndex}][material]" class="form-select gem-mat" disabled>
                         <option value="">-</option>
-                        <option value="silver">Silver</option>
+                        <option value="">Silver</option>
+                        <option value="Ashtdhatu">Ashtdhatu</option>
                         <option value="panchdhatu">Panchdhatu</option>
                     </select>
                 </td>

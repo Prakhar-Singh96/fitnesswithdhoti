@@ -2,15 +2,90 @@
 
 @section('title', 'Our Latest Blogs & Insights | Suyagya')
 
+@section('styles')
+<style>
+    /* 🖼️ Main Banner Container */
+    .blog-banner-container {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #000; /* Loading के समय काला दिखेगा */
+    }
+
+    /* 📱 Picture Tag & Image Styling */
+    .blog-banner-picture {
+        display: block;
+        width: 100%;
+    }
+
+    .blog-banner-img {
+        width: 100%;
+        height: auto; /* Height auto रहेगी ताकि रेश्यो न बिगड़े */
+        display: block;
+        object-fit: cover; /* यह पक्का करेगा कि इमेज डब्बे में सही फिट हो */
+    }
+
+    /* 🖊️ Floating Text Overlay (If needed over image) */
+    .banner-text-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        color: white;
+        text-align: center;
+        width: 100%;
+        padding: 0 20px;
+        /* अगर आपकी इमेज में टेक्स्ट पहले से है, तो इसे 'display: none' कर दें */
+        display: block;
+    }
+
+    /* 💻 Responsive Adjustments */
+    @media (min-width: 768px) {
+        /* Desktop Ratio: 1920x400 */
+        .blog-banner-img {
+            max-height: 400px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        /* Mobile Ratio: 483x273 */
+        .blog-banner-img {
+            max-height: 273px;
+        }
+        .banner-text-overlay h1 {
+            font-size: 1.8rem !important;
+            margin-bottom: 5px;
+        }
+        .banner-text-overlay p {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Blog Grid hover effects */
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+</style>
+@endsection
+
 @section('content')
 
-{{-- 1. Banner Section --}}
-<div class="py-5 bg-dark text-white text-center" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{{ asset('assets/img/blog-banner.jpg') }}') center/cover;">
-    <div class="container py-4">
-        <h1 class="display-4 fw-bold font-heading">Spiritual Wisdom</h1>
-        <p class="lead text-light">Explore articles on Rudraksha, Gemstones, and Vedic Rituals.</p>
-    </div>
-</div>
+{{-- 🚀 1. Banner Section: Uses Picture tag for specific images --}}
+<section class="blog-banner-container">
+
+    <picture class="blog-banner-picture">
+        {{-- मोबाइल के लिए इमेज (483x273) - जब स्क्रीन 767px से छोटी हो --}}
+        <source media="(max-width: 767px)" srcset="{{ asset('assets/img/blog-banner-mobile.png') }}">
+
+        {{-- डेस्कटॉप के लिए इमेज (1920x400) - जब स्क्रीन बड़ी हो --}}
+        <source media="(min-width: 768px)" srcset="{{ asset('assets/img/blog-banner.png') }}">
+
+        {{-- Fallback image (Default): डेस्कटॉप वाली ही रखें --}}
+        <img src="{{ asset('assets/img/blog-banner.png') }}"
+             alt="Vedic Rituals, Gemstones & Rudraksha Wisdom"
+             class="blog-banner-img">
+    </picture>
+</section>
 
 {{-- 2. Blog Grid --}}
 <section class="py-5" style="background-color: #ffff;">
