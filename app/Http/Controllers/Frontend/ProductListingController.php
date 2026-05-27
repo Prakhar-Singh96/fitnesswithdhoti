@@ -96,6 +96,8 @@ class ProductListingController extends Controller
                 $query->where('is_featured', 1);
             } elseif ($type == 'best-selling') {
                 $query->where('is_best_seller', 1);
+            } elseif ($type == 'newArrival') {
+                $query->where('is_new_Arrival', 1);
             }
         }
 
@@ -224,6 +226,9 @@ class ProductListingController extends Controller
             } elseif ($request->type == 'best-selling') {
                 $pageTitle = "Best Selling Products";
                 $pageDesc = "Our most loved and purchased spiritual items.";
+            } elseif ($request->type == 'newArrival') {
+                $pageTitle = "New Arrival Product";
+                $pageDesc = "New Product Arrived In our website.";
             }
         }
 

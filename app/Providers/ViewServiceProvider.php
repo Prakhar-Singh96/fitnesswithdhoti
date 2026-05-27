@@ -21,19 +21,33 @@ class ViewServiceProvider extends ServiceProvider
 
             // 1. Pehle Categories aur SubCategories load karein
             $headerCategories = Category::where('status', 1)
-                ->with(['subCategories' => function($q) {
+                ->with(['subCategories' => function ($q) {
                     $q->where('status', 1);
                 }])
-                ->orderBy('id', 'asc') // Ya 'id' 'asc'
+                ->orderBy('id', 'asc')
                 ->get();
 
-            // 2. 🟢 FIX: Har Category ke liye manually 4 latest products load karein
+            // 2. Har Category ke liye manually 4 latest products load karein
             foreach ($headerCategories as $category) {
+
+                // 🚀 सटीक चेकिंग: अब सिर्फ वही सब-कैटेगरी कैलकुलेटर पर जाएगी जिसके स्लग में 'calculator' शब्द होगा
+                foreach ($category->subCategories as $sub) {
+                    if ($sub->slug == 'gemstones-calculator') {
+                        // सीधे जेमस्टोन के राउट का नाम
+                        $sub->custom_url = route('gemstone.calculator');
+                    } elseif ($sub->slug == 'rudraksha-calculator') {
+                        // सीधे रुद्राक्ष के राउट का नाम
+                        $sub->custom_url = route('calculator.rudraksha');
+                    } else {
+                        $sub->custom_url = route('products.subcategory', [$category->slug, $sub->slug]);
+                    }
+                }
+
                 $latestProducts = $category->products()
-                                           ->where('status', 1)
-                                           ->latest() // Newest first
-                                           ->take(4)  // Sirf 4 chahiye
-                                           ->get();
+                    ->where('status', 1)
+                    ->latest()
+                    ->take(4)
+                    ->get();
 
                 // Blade file ke liye relation set kar rahe hain
                 $category->setRelation('products', $latestProducts);
@@ -48,15 +62,14 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // 👇 CART COUNT GLOBAL LOGIC (Yahan Add Karein) 👇
+        // 👇 CART COUNT GLOBAL LOGIC 👇
         View::composer('*', function ($view) {
             $cartGlobalCount = 0;
             $sessionId = Session::getId();
             $userId = Auth::id();
 
-            // Sirf tab count karein agar session ho
             if ($sessionId) {
-                $cartGlobalCount = Cart::where(function($q) use ($sessionId, $userId) {
+                $cartGlobalCount = Cart::where(function ($q) use ($sessionId, $userId) {
                     if ($userId) {
                         $q->where('user_id', $userId);
                     } else {
@@ -65,7 +78,6 @@ class ViewServiceProvider extends ServiceProvider
                 })->count();
             }
 
-            // 'cartGlobalCount' variable ab har blade file me milega
             $view->with('cartGlobalCount', $cartGlobalCount);
         });
     }

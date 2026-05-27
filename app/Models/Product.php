@@ -60,12 +60,14 @@ class Product extends Model
         'status',
         'is_featured',    // ✅ New
         'is_best_seller', // ✅ New
+        'is_new_arrival',
 
         'delivery_days',
         'emi_available',
 
         'astro_planet',
         'astro_rashi',
+        'purpose',
         'astro_benefits'
 
     ];

@@ -459,6 +459,49 @@
                         </div>
                     </div>
 
+                    <div class="card mb-4 border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0 text-white">Rudraksha Purpose (For Calculator)</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="small text-muted mb-3">Select one or more purposes for this Rudraksha:</p>
+                            <div class="row">
+                                @php
+                                    $purposes = [
+                                        'Business',
+                                        'Wealth',
+                                        'Health',
+                                        'Education',
+                                        'Love',
+                                        'Legal',
+                                        'Concentration',
+                                        'Growth',
+                                        'Protection',
+                                        'Success',
+                                    ];
+                                    // Edit मोड के लिए मौजूदा पर्पस को एरे में बदलें
+                                    $selectedPurposes = isset($product->purpose) ? explode(',', $product->purpose) : [];
+                                @endphp
+
+                                @foreach ($purposes as $p)
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="form-check custom-option custom-option-basic">
+                                            <label class="form-check-label custom-option-content"
+                                                for="purpose_{{ $p }}">
+                                                <input class="form-check-input" type="checkbox" name="purpose_tags[]"
+                                                    value="{{ $p }}" id="purpose_{{ $p }}"
+                                                    {{ in_array($p, $selectedPurposes) ? 'checked' : '' }}>
+                                                <span class="custom-option-header">
+                                                    <span class="fw-semibold">{{ $p }}</span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- 6. Brand Story (Dynamic for this product) --}}
                     <div class="card mb-4">
                         <h5 class="card-header">Product Story / Q&A</h5>
@@ -594,6 +637,11 @@
                                 <input class="form-check-input" type="checkbox" id="is_best_seller"
                                     name="is_best_seller" value="1" {{ $product->is_best_seller ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_best_seller">Best Seller</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="is_new_arrival"
+                                    name="is_new_arrival" value="1" {{ $product->is_new_arrival ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_new_arrival">New Arrival</label>
                             </div>
                             <div class="form-check form-switch mb-2">
                                 <input class="form-check-input" type="checkbox" id="emi_available" name="emi_available"
@@ -1107,6 +1155,7 @@ $rowSubs = \App\Models\SubCategory::where(
         }
 
         let tabIndex = 2000;
+
         function addTabRow() {
             const container = document.getElementById('tab-repeater-container');
             const html = `

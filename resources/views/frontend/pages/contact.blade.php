@@ -1,75 +1,56 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-
-{{-- 1. HERO BANNER --}}
-<div class="position-relative w-100">
-    {{-- Replace with a Banner Image --}}
-    <img src="{{ asset('assets/img/contact.webp') }}" alt="Contact Banner" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
-    <div class="position-absolute bottom-0 end-0 p-5 mb-4 text-end">
-        {{-- <h1 class="display-2 fw-bold text-white" style="font-family: 'Merriweather', serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">CONTACT US</h1> --}}
-    </div>
-</div>
-
-<div class="container py-5">
-    <div class="row g-5">
-
-        {{-- 2. LEFT: ADDRESS INFO --}}
-        <div class="col-lg-6">
-            <h3 class="mb-4" style="font-family: 'Merriweather', serif;">Reach Us Directly</h3>
-
-            <div class="mb-4">
-                <h6 class="fw-bold text-uppercase small text-muted mb-1">Suyagya</h6>
-                <p class="text-muted mb-1">J-3/356, DDA,</p>
-                <p class="text-muted mb-1">Kalkaji, India</p>
-                <p class="text-muted mb-1">New Delhi - 110019.</p>
-            </div>
-
-            <div class="mb-4">
-                <p class="mb-1"><strong class="text-dark">Email Id:</strong> <a href="mailto:info@suyagya.com" class="text-decoration-none text-muted">info@suyagya.com</a></p>
-                <p class="mb-1"><strong class="text-dark">Phone no:</strong> <a href="tel:+917692005006" class="text-decoration-none text-muted">+91 7692 005 006</a></p>
-            </div>
+    {{-- 1. HERO BANNER --}}
+    <div class="position-relative w-100">
+        {{-- 🖥️ DESKTOP BANNER: बड़ी स्क्रीन पर दिखेगा, मोबाइल (md से छोटी स्क्रीन) पर छिप जाएगा --}}
+        <div class="d-none d-md-block">
+            <img src="{{ asset('assets/img/contact.webp') }}" alt="Contact Banner Desktop" class="w-100 object-fit-cover"
+                style="height: 600px; object-position: center top;">
         </div>
 
-        {{-- 3. RIGHT: IMAGE --}}
-        <div class="col-lg-6">
-            <div class="text-center">
-                {{-- Replace with a square product image --}}
-                <img src="{{ asset('assets/img/contact-us.webp') }}" alt="Contact Visual" class="img-fluid shadow-sm" style="max-height: 350px; border-radius: 4px;">
-            </div>
+        {{-- 📱 MOBILE BANNER: सिर्फ मोबाइल स्क्रीन पर दिखेगा, डेस्कटॉप पर छिप जाएगा ($600x600 के लिए बेस्ट फिट) --}}
+        <div class="d-block d-md-none">
+            <img src="{{ asset('assets/img/contact-mobile.webp') }}" alt="Contact Banner Mobile" class="w-100 object-fit-cover"
+                style="height: 400px; object-position: center;">
         </div>
     </div>
 
-    {{-- 4. CONTACT FORM --}}
-    <div class="row mt-5">
-        <div class="col-12 text-center mb-4">
-            <p class="text-muted small">For business related bulk orders or queries, please contact us here.</p>
-            <h4 style="font-family: 'Merriweather', serif;">Send a message</h4>
-        </div>
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
 
-        <div class="col-lg-8 mx-auto">
-            <form action="#" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control rounded-0 p-3" placeholder="Name" required>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="email" class="form-control rounded-0 p-3" placeholder="Email" required>
-                    </div>
-                    <div class="col-12">
-                        <input type="tel" class="form-control rounded-0 p-3" placeholder="Phone number">
-                    </div>
-                    <div class="col-12">
-                        <textarea class="form-control rounded-0 p-3" rows="5" placeholder="Message"></textarea>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-dark rounded-0 px-5 py-2 text-uppercase" style="letter-spacing: 1px;">Send</button>
-                    </div>
+            {{-- 2. LEFT: ADDRESS INFO --}}
+            <div class="col-lg-6">
+                <h3 class="mb-4" style="font-family: 'Merriweather', serif; color: #233446;">Reach Us Directly</h3>
+
+                <div class="mb-4">
+                    <h6 class="fw-bold text-uppercase small text-muted mb-2" style="letter-spacing: 1px;">Office Address
+                    </h6>
+                    <p class="text-dark fw-semibold mb-1" style="font-size: 1.1rem;">Suyagya</p>
+                    <p class="text-muted mb-1">J-3/356, DDA,</p>
+                    <p class="text-muted mb-1">Kalkaji, New Delhi</p>
+                    <p class="text-muted mb-1">Delhi, India - 110019.</p>
                 </div>
-            </form>
+
+                <div class="mb-4 border-top pt-3">
+                    <p class="mb-2"><strong class="text-dark">Email Id:</strong> <a href="mailto:info@suyagya.com"
+                            class="text-decoration-none text-muted">info@suyagya.com</a></p>
+                    <p class="mb-1"><strong class="text-dark">Phone no:</strong> <a href="tel:+917692005006"
+                            class="text-decoration-none text-muted">+91 7692 005 006</a></p>
+                </div>
+            </div>
+
+            {{-- 3. RIGHT: GOOGLE MAP LOCATION --}}
+            <div class="col-lg-6">
+                {{-- 🚀 FIX: लाइव गूगल मैप का ओरिजिनल वर्किंग एम्बेड कोड --}}
+                <div class="w-100 shadow-sm border rounded overflow-hidden" style="height: 350px;">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.4244239911363!2d77.25311737601358!3d28.526959988866068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce184fc25a21b%3A0xa207dfde6f7e6cf7!2sSuyagya!5e0!3m2!1sen!2sin!4v1779526789889!5m2!1sen!2sin"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
 @endsection

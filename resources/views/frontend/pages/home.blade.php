@@ -35,7 +35,7 @@
     </section>
 
 
-    {{-- 🖼️ 2. HERO SLIDER SECTION (DYNAMIC) --}}
+    {{-- 🖼️ 2. HERO SLIDER SECTION (OPTIMIZED FOR NO-LAYOUT-SHIFT & SPEED) --}}
     <section class="home-banner-area">
         <div class="container-fluid px-0">
             <div class="row g-0">
@@ -43,22 +43,26 @@
 
                     <div id="heroSlider">
                         @if (isset($banners) && count($banners) > 0)
-                            @foreach ($banners as $banner)
+                            @foreach ($banners as $index => $banner)
                                 <div>
-                                    <a href="{{ $banner->link ?? '#' }}" class="d-block">
+                                    <a href="{{ $banner->link ?? '#' }}" class="d-block w-100 position-relative"
+                                        style="background: #e0d4c3; min-height: 700px;">
                                         <picture>
-                                            {{-- 📱 MOBILE IMAGE (Max Width 767px) --}}
+                                            {{-- 📱 MOBILE IMAGE: 400x400 के हिसाब से width और height सेट कर दी --}}
                                             @if ($banner->mobile_image)
                                                 <source media="(max-width: 767px)"
-                                                    srcset="{{ asset($banner->mobile_image) }}">
+                                                    srcset="{{ asset($banner->mobile_image) }}" width="400"
+                                                    height="400">
                                             @endif
 
                                             {{-- 💻 DESKTOP IMAGE (Default) --}}
                                             @if ($banner->desktop_image)
-                                                <img class="bnanner-img w-100" src="{{ asset($banner->desktop_image) }}"
-                                                    srcset="{{ asset($banner->desktop_image) }} 1920w"
-                                                    sizes="(max-width: 768px) 100vw, 100vw" alt="Banner" width="1920"
-                                                    height="700" fetchpriority="high">
+                                                <img class="bnanner-img w-100 img-fluid"
+                                                    src="{{ asset($banner->desktop_image) }}"
+                                                    alt="Suyagya Premium Spiritual Banner" width="1920" height="700"
+                                                    fetchpriority="{{ $index == 0 ? 'high' : 'low' }}"
+                                                    loading="{{ $index == 0 ? 'eager' : 'lazy' }}"
+                                                    decoding="{{ $index == 0 ? 'sync' : 'async' }}">
                                             @endif
                                         </picture>
                                     </a>
@@ -67,7 +71,8 @@
                         @else
                             {{-- Fallback --}}
                             <div>
-                                <img src="https://placehold.co/1903x700?text=Welcome+to+Suyagya" class="w-100 bnanner-img">
+                                <img src="https://placehold.co/1920x700?text=Welcome+to+Suyagya" class="w-100 bnanner-img"
+                                    width="1920" height="700">
                             </div>
                         @endif
                     </div>
@@ -77,22 +82,21 @@
         </div>
     </section>
 
-    {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
+    {{-- 🛒 3. New Arrival PRODUCTS (DYNAMIC) --}}
     <section class="py-3 featured-products-section" style="background-color: var(--light)">
         <div class="container">
 
             {{-- Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
-                    <h2 class="m-0">Featured Products</h2>
+                    <h2 class="m-0">New ArrivalProducts</h2>
                 </div>
             </div>
 
             {{-- Product Grid --}}
             <div class="row g-4">
 
-                @foreach ($featuredProducts as $product)
-
+                @foreach ($newArrivalProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product-card-minimal">
 
@@ -208,7 +212,166 @@
                                         Add to Cart
                                     </button>
                                 @else
-                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
+                                    <button class="btn btn-secondary w-100 disabled"
+                                        style="cursor: not-allowed; background: #d60808; border: none;">
+                                        Out of Stock
+                                    </button>
+                                @endif
+                            </div>
+
+                        </div>
+                    </div>
+                @endforeach
+
+                @if ($newArrivalProducts->count() == 0)
+                    <div class="col-12 text-center text-muted">No featured products found.</div>
+                @endif
+
+            </div>
+
+            {{-- View All --}}
+            <div class="text-center mt-5">
+                <a href="{{ route('products.all_collection') }}?type=newArrival"
+                    class="btn btn-view-all rounded-pill px-4 py-2">
+                    View all New Arrival
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
+    <section class="py-3 featured-products-section" style="background-color: var(--light)">
+        <div class="container">
+
+            {{-- Heading --}}
+            <div class="d-flex justify-content-center mb-5">
+                <div class="fancy-heading-box">
+                    <h2 class="m-0">Featured Products</h2>
+                </div>
+            </div>
+
+            {{-- Product Grid --}}
+            <div class="row g-4">
+
+                @foreach ($featuredProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card-minimal">
+
+                            {{-- Image Area --}}
+                            <div class="img-box position-relative"> {{-- position-relative zaroori hai --}}
+                                @if ($product->discount > 0)
+                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
+                                        style="z-index: 2;">
+                                        {{ round($product->discount) }}% OFF
+                                    </span>
+                                @endif
+
+                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
+                                    @php
+                                        $isInWishlist =
+                                            Auth::check() &&
+                                            \App\Models\Wishlist::where('user_id', Auth::id())
+                                                ->where('product_id', $product->id)
+                                                ->exists();
+                                    @endphp
+                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
+                                </button>
+
+                                {{-- 🔗 Product Image --}}
+                                <a href="{{ route('product.detail', $product->slug) }}">
+                                    <img src="{{ asset($product->main_image) }}"
+                                        alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
+                                        height="600" loading="lazy">
+                                </a>
+
+                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+                                @if ($product->youtube_link)
+                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
+                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
+                                        style="z-index: 3;">
+                                        <a href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#videoModal{{ $product->id }}"
+                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
+                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
+                                            <i class="las la-play fs-4"></i>
+                                        </a>
+                                    </div>
+
+                                    {{-- Modal for this specific product (Shorts Optimized) --}}
+                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+                                            <div class="modal-content bg-transparent border-0">
+                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body p-0">
+                                                    <div class="ratio"
+                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
+                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
+                                                            allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- Details Area --}}
+                            <div class="product-details text-start">
+                                <a href="{{ route('product.detail', $product->slug) }}"
+                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
+                                    style="font-family: 'Merriweather', serif;">
+                                    {{ $product->name }}
+                                </a>
+
+                                {{-- ⭐ Rating and 🎥 Video in SAME LINE --}}
+                                <div class="d-flex align-items-center justify-content-start rating-row mb-1">
+
+                                    {{-- Left: Stars --}}
+                                    <div class="d-flex align-items-center">
+                                        @php
+                                            $avgRating = 0;
+                                            $reviewCount = 0;
+                                            if ($product->relationLoaded('reviews') && $product->reviews) {
+                                                $avgRating = $product->reviews->avg('rating');
+                                                $reviewCount = $product->reviews->count();
+                                            }
+                                            $fullStars = round($avgRating);
+                                        @endphp
+
+                                        <span class="stars text-warning" style="font-size: 13px;">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $fullStars)
+                                                    <i class="las la-star"></i>
+                                                @else
+                                                    <i class="lar la-star"></i>
+                                                @endif
+                                            @endfor
+                                        </span>
+                                        <span class="review-count text-muted ms-1"
+                                            style="font-size: 11px;">({{ $reviewCount }})</span>
+                                    </div>
+                                </div>
+
+                                <div class="price-row">
+                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
+                                    @if ($product->mrp_price > $product->price)
+                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
+                                    @endif
+                                </div>
+                                @if ($product->quantity > 0)
+                                    {{-- Add to Cart --}}
+                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                        data-id="{{ $product->id }}">
+                                        Add to Cart
+                                    </button>
+                                @else
+                                    <button class="btn btn-secondary w-100 disabled"
+                                        style="cursor: not-allowed; background: #d60808; border: none;">
                                         Out of Stock
                                     </button>
                                 @endif
@@ -361,7 +524,8 @@
                                         Add to Cart
                                     </button>
                                 @else
-                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
+                                    <button class="btn btn-secondary w-100 disabled"
+                                        style="cursor: not-allowed; background: #d60808; border: none;">
                                         Out of Stock
                                     </button>
                                 @endif
@@ -389,24 +553,21 @@
     </section>
 
     {{-- 🛒 3. OUR PRODUCTS (DYNAMIC) --}}
-    <section class="py-3 featured-products-section" style="background-color: var(--light)">
+    {{-- <section class="py-3 featured-products-section" style="background-color: var(--light)">
         <div class="container">
 
-            {{-- Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
                     <h2 class="m-0">Our Products</h2>
                 </div>
             </div>
 
-            {{-- Product Grid --}}
             <div class="row g-4">
 
                 @foreach ($products as $product)
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product-card-minimal">
 
-                            {{-- Image Area --}}
                             <div class="img-box">
                                 @if ($product->discount > 0)
                                     <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
@@ -416,7 +577,6 @@
                                 @endif
                                 <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
                                     @php
-                                        // Check if user has liked this product (Optimization Tip: Load this via logic later, abhi simple check)
                                         $isInWishlist =
                                             Auth::check() &&
                                             \App\Models\Wishlist::where('user_id', Auth::id())
@@ -430,9 +590,8 @@
                                         alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
                                         height="600" loading="lazy">
                                 </a>
-                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
+
                                 @if ($product->youtube_link)
-                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
                                     <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
                                         style="z-index: 3;">
                                         <a href="javascript:void(0);" data-bs-toggle="modal"
@@ -443,7 +602,7 @@
                                         </a>
                                     </div>
 
-                                    {{-- Modal for this specific product (Shorts Optimized) --}}
+
                                     <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
                                         aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
@@ -465,7 +624,7 @@
                                 @endif
                             </div>
 
-                            {{-- Details Area --}}
+
                             <div class="product-details text-start">
                                 <a href="{{ route('product.detail', $product->slug) }}"
                                     class="text-decoration-none text-dark fw-bold text-truncate d-block"
@@ -475,7 +634,7 @@
 
                                 <div class="d-flex align-items-center rating-row">
                                     @php
-                                        // ✅ Safe Logic: Check karein ki reviews exist karte hain ya nahi
+
                                         $avgRating = 0;
                                         $reviewCount = 0;
 
@@ -507,7 +666,6 @@
                                     @endif
                                 </div>
                                 @if ($product->quantity > 0)
-                                    {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
                                         data-id="{{ $product->id }}">
                                         Add to Cart
@@ -529,7 +687,6 @@
 
             </div>
 
-            {{-- View All --}}
             <div class="text-center mt-5">
                 <a href="{{ route('products.all_collection') }}" class="btn btn-view-all rounded-pill px-4 py-2">
                     View all Products
@@ -537,7 +694,7 @@
             </div>
 
         </div>
-    </section>
+    </section> --}}
 
     {{-- 🛒 4. video-feed-section (Placeholder for next section) --}}
     <section class="py-3 video-feed-section" style="background-color: #f7f1de;">

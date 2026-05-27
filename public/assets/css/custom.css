@@ -3793,3 +3793,63 @@ html {
 .d-flex.align-items-center.justify-content-start.rating-row.mb-1 {
     gap: 10.5rem;
 }
+/* 🔮 फिक्स्ड सिंपल ड्रॉपडाउन मेनू स्टाइल (गैप फिक्स के साथ) */
+.nav-item.dropdown.hover-dropdown.position-relative {
+    position: relative !important;
+    padding-bottom: 12px !important; /* 🚀 MAGIC: मेनू के नीचे पैडिंग बढ़ा दी ताकि अदृश्य गैप खत्म हो जाए */
+    margin-bottom: -12px !important; /* मार्जिन को एडजस्ट किया ताकि लेआउट न बिगड़े */
+}
+
+.custom-simple-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    right: 0 !important;
+    min-width: 220px !important;
+    border-radius: 8px !important;
+    margin-top: 0px !important; /* 🚀 गैप को 0 कर दिया ताकि माउस का कनेक्शन न टूटे */
+    background-color: #fff !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1100 !important;
+    display: none;
+    border: 1px solid #f1f1f1 !important;
+}
+
+/* होवर करने पर ड्रॉपडाउन ओपन ही रहेगा */
+.nav-item.dropdown.hover-dropdown:hover .custom-simple-dropdown {
+    display: block !important;
+}
+
+.custom-simple-dropdown .dropdown-item {
+    transition: all 0.2s ease-in-out;
+    color: #233446 !important;
+}
+
+.custom-simple-dropdown .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #7b3f27 !important; /* ब्रांड का थीम कलर */
+    padding-left: 1.25rem !important;
+}
+
+/* 🖥️ डेस्कटॉप पर बैनर का आस्पेक्ट रेशियो लॉक करें */
+.home-banner-area .bnanner-img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1920 / 700 !important;
+    object-fit: cover !important;
+}
+
+/* 📱 मोबाइल स्क्रीन के लिए रिस्पॉन्सिव हाइट और 1:1 स्क्वायर रेशियो फिक्स */
+@media (max-width: 767px) {
+    .home-banner-area a.d-block {
+        /* मोबाइल पर चौड़ाई के बराबर हाइट रखने के लिए min-height को हटाकर aspect-ratio लॉक किया */
+        min-height: auto !important;
+    }
+
+    .home-banner-area .bnanner-img {
+        /* 🚀 MAGIC: 400x400 का मतलब है 1:1 का परफेक्ट स्क्वायर रेशियो */
+        aspect-ratio: 1 / 1 !important;
+        object-fit: cover !important;
+        height: auto !important;
+    }
+}

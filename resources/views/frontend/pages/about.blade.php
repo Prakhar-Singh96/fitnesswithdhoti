@@ -10,10 +10,19 @@
          style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); z-index: 1;"></div>
 
     {{-- Banner Image --}}
-    <img src="{{ asset('assets/img/about.webp') }}" alt="About Banner"
+    {{-- <img src="{{ asset('assets/img/about.webp') }}" alt="About Banner"
          class="w-100 object-fit-cover"
-         style="height: 600px; object-position: center top;">
+         style="height: 600px; object-position: center top;"> --}}
          {{-- Height 600px mobile/desktop dono ke liye balanced hai --}}
+
+    <div class="d-none d-md-block">
+        <img src="{{ asset('assets/img/about.webp') }}" alt="About Banner Desktop" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
+    </div>
+
+    {{-- 📱 MOBILE BANNER: सिर्फ मोबाइल स्क्रीन पर दिखेगा, डेस्कटॉप पर छिप जाएगा ($600x600 के लिए बेस्ट फिट) --}}
+    <div class="d-block d-md-none">
+        <img src="{{ asset('assets/img/about-mobile.webp') }}" alt="About Banner Mobile" class="w-100 object-fit-cover" style="height: 400px; object-position: center;">
+    </div>
 
     {{-- Text Content --}}
     <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3" style="z-index: 2;">
@@ -67,7 +76,7 @@
         </div>
         <div class="col-lg-6">
             {{-- Replace with your Shop/Office Image --}}
-            <img src="{{ asset('assets/img/shop-image.webp') }}" alt="Our Shop" class="img-fluid rounded shadow-sm w-100 grayscale-img">
+            <img src="{{ asset('assets/img/shopImage.jpg') }}" alt="Our Shop" class="img-fluid rounded shadow-sm w-100 grayscale-img">
         </div>
     </div>
 </div>
@@ -77,7 +86,7 @@
     <div class="row">
         <div class="col-12">
             {{-- Replace with Team Image --}}
-            <img src="{{ asset('assets/img/team-image.png') }}" alt="Our Team" class="img-fluid rounded w-100">
+            <img src="{{ asset('assets/img/teamImage.webp') }}" alt="Our Team" class="img-fluid rounded w-100">
         </div>
     </div>
 </div>

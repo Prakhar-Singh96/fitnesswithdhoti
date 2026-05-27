@@ -33,8 +33,18 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
+        // 2. Best Selling Products
+        $newArrivalProducts = Product::where('status', 1)
+            ->where('is_new_arrival', 1)
+            ->with('reviews')
+            ->latest()
+            ->take(8)
+            ->get();
+
         // 3. Categories
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)
+            ->where('slug', 'NOT LIKE', '%calculator%')
+            ->get();
 
         // 4. Products (General)
         $products = Product::where('status', 1)
@@ -106,6 +116,7 @@ class HomeController extends Controller
             'banners',
             'featuredProducts',
             'bestSellingProducts',
+            'newArrivalProducts',
             'categories',
             'purposes',
             'products',

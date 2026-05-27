@@ -144,9 +144,7 @@
             {{-- 1. LOGO --}}
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}"
-                        alt="Suyagya"
-                        class="logo-img">
+                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" class="logo-img">
                 </div>
                 {{-- <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya"
                     style="height: 50px; width: auto; object-fit: contain;"> --}}
@@ -161,67 +159,97 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 align-items-center gap-3 gap-xl-4">
 
                     @foreach ($headerCategories as $category)
-                        <li class="nav-item dropdown hover-dropdown">
-                            @if ($category->subCategories->count() > 0)
+                        {{-- 🚀 चेक करो: क्या यह कैलकुलेटर कैटेगरी है? --}}
+                        @if ($category->slug == 'calculator' || str_contains(strtolower($category->slug), 'calculator'))
+
+                            {{-- 🔮 CALCULATOR: साधारण ड्रॉपडाउन लेआउट --}}
+                            <li class="nav-item dropdown hover-dropdown position-relative">
                                 <a class="nav-link text-dark fw-bold text-uppercase d-flex align-items-center"
-                                    style="font-size: 13px; letter-spacing: 0.5px;"
-                                    href="{{ route('products.category', $category->slug) }}"
+                                    style="font-size: 13px; letter-spacing: 0.5px;" href="javascript:void(0);"
                                     id="catDrop{{ $category->id }}" role="button" aria-expanded="false">
                                     {{ $category->name }} <i class="las la-angle-down small ms-1"
                                         style="font-size: 10px;"></i>
                                 </a>
-                                {{-- Mega Menu --}}
-                                <div class="dropdown-menu japam-mega-menu shadow-lg border-0"
+
+                                {{-- एकदम सिंपल वर्टिकल ड्रॉपडाउन लिस्ट --}}
+                                <ul class="dropdown-menu custom-simple-dropdown shadow border-0 py-2"
                                     aria-labelledby="catDrop{{ $category->id }}">
-                                    <div class="row g-0">
-                                        <div class="col-4 col-lg-3">
-                                            <div class="japam-sc-list">
-                                                @foreach ($category->subCategories as $sub)
-                                                    <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
-                                                        class="japam-sc-item">
-                                                        {{ $sub->name }} <i class="las la-angle-right"></i>
+                                    @foreach ($category->subCategories as $sub)
+                                        <li>
+                                            <a href="{{ $sub->custom_url }}"
+                                                class="dropdown-item py-2 px-3 fw-semibold text-dark small">
+                                                {{ $sub->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            {{-- 🛒 SHOP CATEGORIES: आपका पुराना ओरिजिनल मेगा मेनू कोड (बिना किसी बदलाव के) --}}
+                            <li class="nav-item dropdown hover-dropdown">
+                                @if ($category->subCategories->count() > 0)
+                                    <a class="nav-link text-dark fw-bold text-uppercase d-flex align-items-center"
+                                        style="font-size: 13px; letter-spacing: 0.5px;"
+                                        href="{{ route('products.category', $category->slug) }}"
+                                        id="catDrop{{ $category->id }}" role="button" aria-expanded="false">
+                                        {{ $category->name }} <i class="las la-angle-down small ms-1"
+                                            style="font-size: 10px;"></i>
+                                    </a>
+
+                                    {{-- Mega Menu --}}
+                                    <div class="dropdown-menu japam-mega-menu shadow-lg border-0"
+                                        aria-labelledby="catDrop{{ $category->id }}">
+                                        <div class="row g-0">
+                                            <div class="col-4 col-lg-3">
+                                                <div class="japam-sc-list">
+                                                    @foreach ($category->subCategories as $sub)
+                                                        <a href="{{ $sub->custom_url }}" class="japam-sc-item">
+                                                            {{ $sub->name }} <i class="las la-angle-right"></i>
+                                                        </a>
+                                                    @endforeach
+
+                                                    <a href="{{ route('products.category', $category->slug) }}"
+                                                        class="japam-sc-item text-primary fw-bold">
+                                                        View All {{ $category->name }} <i
+                                                            class="las la-arrow-right"></i>
                                                     </a>
-                                                @endforeach
-                                                <a href="{{ route('products.category', $category->slug) }}"
-                                                    class="japam-sc-item text-primary fw-bold">
-                                                    View All {{ $category->name }} <i class="las la-arrow-right"></i>
-                                                </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-8 col-lg-9">
-                                            <div class="japam-prod-grid h-100">
-                                                <div class="row g-3">
-                                                    @if ($category->products->count() > 0)
-                                                        @foreach ($category->products->take(4) as $product)
-                                                            <div class="col-3">
-                                                                <a href="{{ route('product.detail', $product->slug) }}"
-                                                                    class="japam-prod-card">
-                                                                    <img src="{{ asset($product->main_image) }}"
-                                                                        class="japam-prod-img"
-                                                                        alt="{{ $product->name }}">
-                                                                    <span
-                                                                        class="japam-prod-title">{{ $product->name }}</span>
-                                                                </a>
+                                            <div class="col-8 col-lg-9">
+                                                <div class="japam-prod-grid h-100">
+                                                    <div class="row g-3">
+                                                        @if ($category->products->count() > 0)
+                                                            @foreach ($category->products->take(4) as $product)
+                                                                <div class="col-3">
+                                                                    <a href="{{ route('product.detail', $product->slug) }}"
+                                                                        class="japam-prod-card">
+                                                                        <img src="{{ asset($product->main_image) }}"
+                                                                            class="japam-prod-img"
+                                                                            alt="{{ $product->name }}">
+                                                                        <span
+                                                                            class="japam-prod-title">{{ $product->name }}</span>
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+                                                        @else
+                                                            <div class="col-12 text-center py-5 text-muted">
+                                                                <p>Explore our {{ $category->name }} collection</p>
                                                             </div>
-                                                        @endforeach
-                                                    @else
-                                                        <div class="col-12 text-center py-5 text-muted">
-                                                            <p>Explore our {{ $category->name }} collection</p>
-                                                        </div>
-                                                    @endif
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @else
-                                <a href="{{ route('products.category', $category->slug) }}"
-                                    class="nav-link text-dark fw-bold text-uppercase"
-                                    style="font-size: 13px; letter-spacing: 0.5px;">
-                                    {{ $category->name }}
-                                </a>
-                            @endif
-                        </li>
+                                @else
+                                    <a href="{{ route('products.category', $category->slug) }}"
+                                        class="nav-link text-dark fw-bold text-uppercase"
+                                        style="font-size: 13px; letter-spacing: 0.5px;">
+                                        {{ $category->name }}
+                                    </a>
+                                @endif
+                            </li>
+                        @endif
                     @endforeach
 
                 </ul>
@@ -406,9 +434,7 @@
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
                 {{-- <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" height="50"> --}}
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}"
-                        alt="Suyagya"
-                        class="logo-img">
+                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" class="logo-img">
                 </div>
             </a>
         </div>

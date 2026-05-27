@@ -76,6 +76,13 @@ class ProductController extends Controller
                 $discount = 0;
             }
 
+            // Purpose Array को Comma Separated String में बदलें
+            if ($request->has('purpose_tags')) {
+                $data['purpose'] = implode(',', $request->purpose_tags);
+            } else {
+                $data['purpose'] = null;
+            }
+
             if ($request->has('product_tabs')) {
                 // एरे को क्लीन करके इंडेक्स सही करें
                 $data['product_tabs'] = array_values($request->product_tabs);
@@ -124,6 +131,7 @@ class ProductController extends Controller
             $data['siddh_price'] = $request->siddh_price ?? 0;
             $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
+            $data['is_new_arrival'] = $request->has('is_new_arrival') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
             $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
 
@@ -276,6 +284,13 @@ class ProductController extends Controller
                 $discount = 0;
             }
 
+            // Purpose Array को Comma Separated String में बदलें
+            if ($request->has('purpose_tags')) {
+                $data['purpose'] = implode(',', $request->purpose_tags);
+            } else {
+                $data['purpose'] = null;
+            }
+
             if ($request->has('product_tabs')) {
                 // एरे को क्लीन करके इंडेक्स सही करें
                 $data['product_tabs'] = array_values($request->product_tabs);
@@ -295,6 +310,7 @@ class ProductController extends Controller
             $data['is_siddh_enabled'] = $request->has('is_siddh_enabled') ? 1 : 0;
             $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
             $data['is_best_seller'] = $request->has('is_best_seller') ? 1 : 0;
+            $data['is_new_arrival'] = $request->has('is_new_arrival') ? 1 : 0;
             $data['emi_available'] = $request->has('emi_available') ? 1 : 0;
             $data['is_gemstone'] = $request->has('is_gemstone') ? 1 : 0;
 

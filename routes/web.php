@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AffiliateRewardController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\CalculatorPageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -29,16 +30,17 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\FaqController;
 use App\Http\Controllers\Frontend\GameController;
+use App\Http\Controllers\Frontend\GemstoneCalculatorController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\ProductListingController;
 use App\Http\Controllers\Frontend\ReviewController;
 use App\Http\Controllers\Frontend\RssController;
+use App\Http\Controllers\Frontend\RudrakshaCalculatorController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Frontend\WishlistController;
-use App\Http\Controllers\Seller\Auth\LoginController as SellerLoginController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -150,6 +152,16 @@ Route::get('/blog/{slug}', [BlogPageController::class, 'show'])->name('blogs.sho
 
 Route::get('/blogs/feed', [RssController::class, 'blogs']);
 
+
+// Rudraksha Calculator Routes
+// 🔮 1. Rudraksha Calculator Routes (इसके यूआरएल में rudraksha फिक्स कर दिया)
+Route::get('/calculator/rudraksha-calculator', [App\Http\Controllers\Frontend\RudrakshaCalculatorController::class, 'index'])->name('calculator.rudraksha');
+Route::post('/rudraksha-recommendation', [App\Http\Controllers\Frontend\RudrakshaCalculatorController::class, 'getRecommendation'])->name('rudraksha.recommendation');
+
+// 💎 2. Gemstone Calculator Routes (इसके यूआरएल में gemstones फिक्स कर दिया)
+Route::get('/calculator/gemstones-calculator', [App\Http\Controllers\Frontend\GemstoneCalculatorController::class, 'index'])->name('gemstone.calculator');
+Route::post('/gemstone-recommendation', [App\Http\Controllers\Frontend\GemstoneCalculatorController::class, 'getRecommendation'])->name('gemstone.recommendation');
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
@@ -238,6 +250,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Referral Logs Route
         Route::get('referral-logs', [AffiliateRewardController::class, 'referralLogs'])->name('referrals.logs');
 
+        Route::get('/calculator-manager', [CalculatorPageController::class, 'index'])->name('calculator.index');
+        Route::get('/calculator-manager/load/{sub_category_id}', [CalculatorPageController::class, 'loadData']);
+        Route::post('/calculator-manager/save', [CalculatorPageController::class, 'saveData'])->name('calculator.save');
+
         // Admin Middleware Group ke andar
         Route::group(['prefix' => 'logistic', 'as' => 'logistic.'], function () {
 
@@ -283,25 +299,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // --- SELLER ROUTES ---
-Route::prefix('seller')->name('seller.')->group(function () {
+// Route::prefix('seller')->name('seller.')->group(function () {
 
-    // Login Page
-    Route::get('/login', [SellerLoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login-submit', [SellerLoginController::class, 'login'])->name('login.submit');
+//     // Login Page
+//     Route::get('/login', [SellerLoginController::class, 'showLoginForm'])->name('login');
+//     Route::post('/login-submit', [SellerLoginController::class, 'login'])->name('login.submit');
 
-    // Protected Routes (केवल Sellers के लिए)
-    Route::middleware(['auth'])->group(function () {
-        // यहाँ हम Controller के अंदर ही चेक कर रहे हैं, लेकिन Middleware भी लगा सकते हैं
-        Route::get('/dashboard', function () {
-            if (auth()->user()->user_type !== 'seller') {
-                abort(403);
-            }
-            return view('seller.dashboard');
-        })->name('dashboard');
+//     // Protected Routes (केवल Sellers के लिए)
+//     Route::middleware(['auth'])->group(function () {
+//         // यहाँ हम Controller के अंदर ही चेक कर रहे हैं, लेकिन Middleware भी लगा सकते हैं
+//         Route::get('/dashboard', function () {
+//             if (auth()->user()->user_type !== 'seller') {
+//                 abort(403);
+//             }
+//             return view('seller.dashboard');
+//         })->name('dashboard');
 
-        Route::post('/logout', [SellerLoginController::class, 'logout'])->name('logout');
-    });
-});
+//         Route::post('/logout', [SellerLoginController::class, 'logout'])->name('logout');
+//     });
+// });
 
 Route::get('/run-migration', function () {
     // Check karein ki URL mein secret password hai ya nahi
