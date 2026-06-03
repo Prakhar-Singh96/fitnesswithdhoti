@@ -1202,7 +1202,7 @@ function useSavedAddress() {
     showStep('payment');
 }
 
-// ⚡ SMART ADDRESS LOGIC (Auto-Fill if Exists)
+// ⚡ SMART ADDRESS LOGIC (Auto-Fill if Exists in DB, Else hit APIs)
 function fetchCheckoutCityState() {
     let pincode = $('#chk_pincode').val();
 
@@ -1211,12 +1211,11 @@ function fetchCheckoutCityState() {
 
         $('#chk_pincode_msg').text('Checking records...').removeClass('text-danger text-success').addClass('text-muted');
 
-        // 1. Apne Database me Check karo
+        // 1. Apne Local Database me Check karo
         $.ajax({
             url: "/checkout/check-address/" + pincode,
             type: "GET",
             success: function (response) {
-
                 if (response.found) {
                     // ✅ ADDRESS MIL GAYA -> Auto Fill Karo
                     let addr = response.data;
@@ -1225,55 +1224,100 @@ function fetchCheckoutCityState() {
                     $('#chk_state').val(addr.state);
                     $('#chk_name').val(addr.name);
 
-                    // Address Split (Agar comma se separate kiya tha)
-                    // Ya seedha fill karein agar logic complex nahi hai
                     $('#chk_house').val(getHousePart(addr.address_line1));
                     $('#chk_area').val(getAreaPart(addr.address_line1));
 
-                    // Type Select Karo
                     $(`input[name="addr_type"][value="${addr.type}"]`).prop('checked', true);
 
                     // Success Message
                     $('#chk_pincode_msg').text('✅ Saved Address Found!').removeClass('text-muted').addClass('text-success');
-
-                    // Form Open Karo
                     $('#address_expanded').slideDown();
 
                 } else {
-                    // ❌ ADDRESS NAHI MILA -> External API Call Karo (New Address Logic)
+                    // ❌ ADDRESS NAHI MILA -> External API Layer पर जाओ
                     fetchFromPostalApi(pincode);
                 }
             },
             error: function () {
-                // Agar error aaye to bhi External API try karo fallback ke liye
+                // DB एरर आने पर भी बैकअप के लिए आगे बढ़ो
                 fetchFromPostalApi(pincode);
             }
         });
     }
 }
 
-// 🌍 Helper: External API Call
+// 🌍 Helper: Dual External API Failover Call (जब पहली ठप होगी, दूसरी खुद संभालेगी)
 function fetchFromPostalApi(pincode) {
-    $('#chk_pincode_msg').text('Fetching City/State...');
+    $('#chk_pincode_msg').text('Fetching City/State...').removeClass('text-success text-danger');
 
-    $.get("https://api.postalpincode.in/pincode/" + pincode, function (data) {
-        if (data[0].Status === 'Success') {
-            let details = data[0].PostOffice[0];
+    // 🚀 PLAN A: पहली सरकारी API को ट्राई करो
+    $.ajax({
+        url: "https://api.postalpincode.in/pincode/" + pincode,
+        type: "GET",
+        dataType: "json",
+        timeout: 2000, // ⏳ अगर 2 सेकंड में इसका एक्सपायर्ड SSL जवाब नहीं देता, तो तुरंत प्लान B पर जाओ
+        success: function(data) {
+            if (data && data[0] && data[0].Status === 'Success') {
+                let details = data[0].PostOffice[0];
 
-            // Fill City State
-            $('#chk_city').val(details.District);
-            $('#chk_state').val(details.State);
+                $('#chk_city').val(details.District);
+                $('#chk_state').val(details.State);
 
-            // Clear other fields (Kyuki ye naya address hai)
-            $('#chk_house').val('');
-            $('#chk_area').val('');
-            // Name wahi rehne do jo Auth user ka hai
+                // नया पिनकोड है इसलिए फ़ील्ड्स क्लियर करो
+                $('#chk_house').val('');
+                $('#chk_area').val('');
 
-            $('#chk_pincode_msg').text('✅ New Location Detected').addClass('text-success');
+                $('#chk_pincode_msg').text('✅ Location Detected').removeClass('text-danger').addClass('text-success');
+                $('#address_expanded').slideDown();
+            } else {
+                // अगर वाकई पिनकोड ही गलत है, तो प्लान B (Zippopotam) से भी एक बार डबल-वेरिफाई कर लो
+                fetchFromZippopotamApi(pincode);
+            }
+        },
+        error: function() {
+            // 🔄 PLAN B: अगर सरकारी API का SSL एरर आया, तो तुरंत इस बैकअप को हिट करो
+            console.log("Primary API failed (SSL Expired). Switching to Zippopotam API...");
+            fetchFromZippopotamApi(pincode);
+        }
+    });
+}
+
+// 🌍 PLAN B: Zippopotam Global API (फिक्स किया हुआ सही यूआरएल और रिस्पॉन्स फॉर्मेट)
+function fetchFromZippopotamApi(pincode) {
+    $.ajax({
+        url: "https://api.zippopotam.is/in/" + pincode, // 🚀 CORRECTED URL: 'api.' भी ठीक किया और 'in/' इंडिया के लिए लॉक किया
+        type: "GET",
+        dataType: "json",
+        timeout: 3000,
+        success: function(data) {
+            if (data && data.places && data.places[0]) {
+                let details = data.places[0];
+
+                // Zippopotam का असली डेटा फॉर्मेट ऐसे रीड होता है भाई:
+                let district = details['place name'];
+                let state = details['state'];
+
+                $('#chk_city').val(district);
+                $('#chk_state').val(state);
+
+                $('#chk_house').val('');
+                $('#chk_area').val('');
+
+                $('#chk_pincode_msg').text('✅ Location Verified (Backup)').removeClass('text-danger').addClass('text-success');
+                $('#address_expanded').slideDown();
+            } else {
+                $('#chk_pincode_msg').text('❌ Invalid Pincode').removeClass('text-success').addClass('text-danger');
+                $('#address_expanded').slideUp();
+            }
+        },
+        error: function() {
+            // 🚨 आपातकालीन सुरक्षा कवच: अगर दोनों APIs ब्लॉक हो जाएं, तब कस्टमर खुद लिख सके ताकि बिज़नेस न रुके
+            console.log("Both APIs failed. Turning on manual fallback style.");
+            $('#chk_pincode_msg').text('⚠️ Enter City/State manually').removeClass('text-success').addClass('text-danger');
+
+            $('#chk_city').removeAttr('readonly').val('').attr('placeholder', 'Enter City Manually');
+            $('#chk_state').removeAttr('readonly').val('').attr('placeholder', 'Enter State Manually');
             $('#address_expanded').slideDown();
-        } else {
-            $('#chk_pincode_msg').text('❌ Invalid Pincode').addClass('text-danger');
-            $('#address_expanded').slideUp();
         }
     });
 }

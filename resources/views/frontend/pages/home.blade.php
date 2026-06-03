@@ -33,6 +33,7 @@
 
         </div>
     </section>
+    <h1 class="seo-h1">Buy Original Rudraksha, Karungali & Gemstone Bracelets Online</h1>
 
 
     {{-- 🖼️ 2. HERO SLIDER SECTION (OPTIMIZED FOR NO-LAYOUT-SHIFT & SPEED) --}}
