@@ -3743,41 +3743,39 @@ html {
 }
 
 /* 1. स्लाइडर का मुख्य कंटेनर */
-.home-banner-area {
+/* .home-banner-area {
     width: 100%;
     overflow: hidden !important;
     position: relative;
-}
+} */
 
 /* 🚀 स्लाइडर कंटेनर को लॉक करें */
-#heroSlider .slick-list {
+/* #heroSlider .slick-list {
     overflow: hidden !important;
     clip-path: inset(0 0 0 0);
-}
+} */
 
-#heroSlider .slick-slide {
+/* #heroSlider .slick-slide {
     overflow: hidden !important;
-}
+} */
 
 /* 🚀 डिफ़ॉल्ट स्टेट: इमेज को पहले से ज़ूम (बड़ा) रखें */
-#heroSlider .slick-slide img {
+/* #heroSlider .slick-slide img {
     width: 100%;
     height: auto;
     object-fit: cover;
     display: block;
     transform-origin: center center;
 
-    /* शुरुआत में इमेज 1.2 (20% बड़ी) रहेगी */
     transform: scale(1.2);
-    /* ट्रांज़िशन को थोड़ा धीमा (8s) रखें ताकि स्मूथ लगे */
     transition: transform 2s ease-in-out !important;
-}
+} */
 
 /* 🚀 एक्टिव स्टेट: जब स्लाइड सामने आए, तब उसे वापस 1 (नॉर्मल) पर लाएं */
 /* इससे "बाहर से अंदर" (Zoom In to Center) जाने वाला अहसास होगा */
-#heroSlider .slick-current img {
+/* #heroSlider .slick-current img {
     transform: scale(1) !important;
-}
+} */
 
 .align-items-center.d-flex.gap-2.justify-content-start.mb-1 {
     gap: 7.8rem !important;

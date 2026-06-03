@@ -86,6 +86,139 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
+        /* 🎨 PREMIUM MINI CALCULATOR SLIDER STYLING */
+        .calculator-product-slick-wrap {
+            margin: 0 -10px; /* साइड गैप बैलेंस करने के लिए */
+        }
+
+        /* स्लिक का सिंगल कार्ड रैपर */
+        .slider-card-slide {
+            padding: 10px;
+            height: auto;
+        }
+
+        /* 🎯 छोटा और फिक्स्ड साइज कार्ड (Small Size Layout) */
+        .calc-product-mini-card {
+            background: #ffffff;
+            border: 1px solid #f0e6d6;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            height: 380px; /* फिक्स्ड हाइट ताकि सारे कार्ड्स एक बराबर दिखें */
+            display: flex !important;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .calc-product-mini-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(123, 63, 39, 0.1) !important;
+            border-color: var(--calc-brown);
+        }
+
+        /* इमेज होल्डर */
+        .card-img-holder {
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .mini-prod-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            margin: 0 auto;
+        }
+
+        /* टाइटल छोटा किया */
+        .mini-prod-title {
+            font-size: 14px !important;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            height: 40px; /* 2 लाइनों के लिए स्पेस लॉक */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* एस्ट्रो बेनिफिट्स लिस्ट */
+        .mini-benefits-list {
+            text-align: left;
+            font-size: 11px;
+            color: #666;
+            padding-left: 15px;
+            margin-bottom: 15px;
+            height: 60px; /* साइज कंट्रोल */
+            overflow: hidden;
+        }
+
+        .mini-benefits-list li {
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* लंबी लाइन होने पर डॉट-डॉट आ जाएगा */
+        }
+
+        /* छोटा व्यू बटन */
+        .btn-mini-view {
+            background-color: var(--calc-brown);
+            color: white !important;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn-mini-view:hover {
+            background-color: #5d2f1c;
+        }
+
+        /* 🎮 कस्टमाइज्ड लेफ्ट-राइट एरो बटन्स स्टाइल */
+        .slider-nav-btn {
+            position: absolute;
+            top: 55%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 1px solid #7b3f27;
+            color: #7b3f27;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .slider-nav-btn:hover {
+            background-color: #7b3f27;
+            color: #fff;
+        }
+
+        .prev-btn { left: 0px; }
+        .next-btn { right: 0px; }
+
+        /* मोबाइल पर एरो बटन्स को हाइड करके डॉट्स को सेन्टर रखेंगे */
+        @media (max-width: 767px) {
+            .slider-nav-btn { display: none !important; }
+            .calc-product-mini-card { height: 360px; }
+        }
     </style>
 @endsection
 
@@ -192,33 +325,44 @@
         </div>
     </section>
 
-    {{-- 🎁 4. मुख्य कैटेगरी के सारे प्रोडक्ट्स (Type of Rudraksha / Gemstone Grid) --}}
+    {{-- 🎁 4. मुख्य कैटेगरी के सारे प्रोडक्ट्स (PREMIUM 4-COLUMN CAROUSEL SLIDER) --}}
     @if ($categoryProducts->count() > 0)
-        <section class="py-5 bg-white">
-            <div class="container text-center">
-                {{-- 📝 डेटाबेस से आया डायनामिक सेक्शन टाइटल --}}
-                <h2 class="fw-bold mb-4 font-heading">{{ $pageData->product_recommendation_title }}</h2>
-                <div class="row g-4 justify-content-center">
+        <section class="py-5 bg-white overflow-hidden">
+            <div class="container position-relative px-md-5"> {{-- साइड्स में स्पेस दिया ताकि बटन सुंदर दिखें --}}
+
+                {{-- 📝 डायनामिक सेक्शन टाइटल --}}
+                <h2 class="text-center fw-bold mb-5 font-heading text-dark">{{ $pageData->product_recommendation_title }}</h2>
+
+                {{-- 🚀 स्लिक कैरोसेल मुख्य कंटेनर (ग्रिड हटा दिया है ताकि JS परफेक्ट चले) --}}
+                <div id="calculatorProductsSlider" class="calculator-product-slick-wrap">
                     @foreach ($categoryProducts as $prod)
-                        <div class="col-md-4 col-sm-6">
-                            <div
-                                class="product-suggest-card p-4 shadow-sm text-center h-100 d-flex flex-column justify-content-between">
-                                <div>
-                                    <img src="{{ asset($prod->product_main_image) }}" alt="{{ $prod->name }}"
-                                        class="img-fluid rounded mb-3" style="max-height: 180px; object-fit: contain;">
-                                    <h4 class="fw-bold font-heading text-dark h5 mb-3">{{ $prod->name }}</h4>
-                                    <ul class="text-start small text-muted ps-3 mb-4">
-                                        @foreach (explode(',', $prod->astro_benefits) as $benefit)
-                                            <li class="mb-1">{{ trim($benefit) }}</li>
+                        <div class="slider-card-slide">
+                            <div class="calc-product-mini-card shadow-sm">
+                                <div class="card-img-holder">
+                                    <img src="{{ asset($prod->product_main_image) }}" alt="{{ $prod->name }}" class="mini-prod-img">
+                                </div>
+                                <div class="card-info-holder">
+                                    <h4 class="mini-prod-title">{{ $prod->name }}</h4>
+                                    <ul class="mini-benefits-list">
+                                        @foreach (array_slice(explode(',', $prod->astro_benefits), 0, 3) as $benefit) {{-- मैक्सिमम 3 मुख्य लाभ ही दिखाएंगे --}}
+                                            <li>{{ trim($benefit) }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
-                                <a href="{{ url('product/' . $prod->slug) }}"
-                                    class="btn btn-calculate py-2 btn-sm mt-auto">View Product</a>
+                                <a href="{{ url('product/' . $prod->slug) }}" class="btn-mini-view mt-auto">View Product</a>
                             </div>
                         </div>
                     @endforeach
                 </div>
+
+                {{-- 🎮 कस्टम लेफ्ट-राइट नेविगेशन बटन्स (मक्खन जैसी यूआई) --}}
+                <button class="slider-nav-btn prev-btn" id="calc-slider-prev" aria-label="Previous">
+                    <i class="las la-angle-left"></i>
+                </button>
+                <button class="slider-nav-btn next-btn" id="calc-slider-next" aria-label="Next">
+                    <i class="las la-angle-right"></i>
+                </button>
+
             </div>
         </section>
     @endif
@@ -398,6 +542,51 @@
                 }
             });
         });
+
+        // 🚀 MASTER SLIDER INITIALIZATION (PERFECT 4-COLUMN CAROUSEL WITH CUSTOM ARROWS)
+        if (typeof $ !== 'undefined' && $.fn.slick) {
+
+            // पहले अगर कोई पुराना इंस्टेंस फंसा हो तो उसे डिस्ट्रॉय कर दो सुरक्षा के लिए
+            if ($('#calculatorProductsSlider').hasClass('slick-initialized')) {
+                $('#calculatorProductsSlider').slick('unslick');
+            }
+
+            $('#calculatorProductsSlider').slick({
+                slidesToShow: 4,          // 💻 डेस्कटॉप/लैपटॉप पर एक बार में पूरे 4 प्रोडक्ट्स दिखेंगे!
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 3500,
+                infinite: true,
+                dots: false,               // नीचे नेविगेशन डॉट्स भी रहेंगे
+                arrows: true,             // एरो चालू करो
+                prevArrow: $('#calc-slider-prev'), // 👈 हमारे बनाए हुए कस्टम लेफ्ट बटन को यहाँ लिंक करो
+                nextArrow: $('#calc-slider-next'), // 👈 हमारे बनाए हुए कस्टम राइट बटन को यहाँ लिंक करो
+                responsive: [
+                    {
+                        breakpoint: 1200, // मीडियम स्क्रीन्स / टैबलेट्स के लिए 3 प्रोडक्ट्स
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 991,  // छोटे टैबलेट्स के लिए 2 प्रोडक्ट्स
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 575,  // 📱 प्योर मोबाइल पर एकदम सटीक 1 छोटा प्रोडक्ट दिखेगा
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            arrows: false // मोबाइल पर सिर्फ स्वाइप और डॉट्स चलेंगे
+                        }
+                    }
+                ]
+            });
+        }
 
         // Form Submission
         $('#rudrakshaForm').on('submit', async function(e) {
