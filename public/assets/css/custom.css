@@ -3908,3 +3908,137 @@ html {
         display: none !important;
     }
 }
+
+/* 🎨 PREMIUM TESTIMONIAL SLIDER CLEAN STYLING */
+.testimonial-slider {
+    margin: 0 -12px;
+}
+
+.testimonial-slide-item {
+    padding: 12px;
+    height: auto;
+}
+
+/* मास्टर रिव्यू कार्ड लेआउट */
+.premium-review-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 440px; /* फिक्स्ड हाइट सिमेट्री */
+    display: flex !important;
+    flex-direction: column;
+    border: 1px solid #eee8dc;
+    transition: all 0.3s ease;
+}
+
+.premium-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important;
+}
+
+/* इमेज होल्डर बॉक्स */
+.review-img-box {
+    height: 220px; /* आधी हाइट इमेज को दी */
+    width: 100%;
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+.review-attached-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+/* टेक्स्ट कंटेंट बॉक्स */
+.review-body-box {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.review-card-title {
+    font-size: 14px !important;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+.review-card-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* 4 लाइनों के बाद ऑटो-डॉट (...) */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.review-card-author {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7b3f27; /* सुयज्ञ थीम कलर */
+    text-transform: uppercase;
+    margin-top: auto;
+}
+
+/* 🎮 कस्टमाइज्ड नेविगेशन बटन्स स्टाइल */
+.review-slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #7b3f27;
+    color: #7b3f27;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 50;
+    transition: all 0.2s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.review-slider-btn:hover {
+    background-color: #7b3f27;
+    color: #fff;
+}
+
+.r-prev { left: -10px; }
+.r-next { right: -10px; }
+
+/* मोबाइल फ्रेंडली रिस्पांसिवनेस */
+@media (max-width: 767px) {
+    .review-slider-btn { display: none !important; }
+    .premium-review-card { height: 390px; }
+    .review-img-box { height: 180px; }
+}
+
+.btn-view-all-blogs {
+    background-color: transparent;
+    border: 2px solid #7b3f27; /* सुयज्ञ थीम का ओरिजिनल ब्राउन कलर */
+    color: #7b3f27 !important;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px; /* कैप्सूल शेप बटन */
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-view-all-blogs:hover {
+    background-color: #7b3f27;
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(123, 63, 39, 0.25) !important;
+}

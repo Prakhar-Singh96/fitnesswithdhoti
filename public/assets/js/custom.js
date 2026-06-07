@@ -2690,4 +2690,41 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     });
 }
 
+// 🚀 SUYAGYA CUSTOMER REVIEWS 3-COLUMN CAROUSEL INITIALIZATION
+if (typeof $ !== 'undefined' && $.fn.slick) {
+
+    if ($('#suyagyaCustomerReviewsSlider').hasClass('slick-initialized')) {
+        $('#suyagyaCustomerReviewsSlider').slick('unslick');
+    }
+
+    $('#suyagyaCustomerReviewsSlider').slick({
+        slidesToShow: 3,           // 💻 डेस्कटॉप/लैपटॉप पर एक बार में 3 रिव्यू कार्ड्स बराबर दिखेंगे
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 4000,
+        infinite: true,
+        dots: false,               // डॉट्स बंद रखे ताकि लेआउट साफ़ रहे भाई
+        arrows: true,
+        prevArrow: $('#review-slider-prev'), // हमारा नया लेफ्ट बटन
+        nextArrow: $('#review-slider-next'), // हमारा नया राइट बटन
+        responsive: [
+            {
+                breakpoint: 1024,  // टैबलेट्स के लिए 2 कार्ड्स
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 600,   // 📱 मोबाइल फोन पर एक बार में 1 ही रिव्यू दिखेगा नीट एंड क्लीन
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrows: false
+                }
+            }
+        ]
+    });
+}
+
 

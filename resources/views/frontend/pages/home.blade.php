@@ -1116,8 +1116,10 @@
         </div>
     </section> --}}
 
-    <section class="py-3 testimonial-section" style="background-color: #f7f1de;">
-        <div class="container">
+    {{-- 👥 CUSTOMER REVIEWS SECTION (PREMIUM SLIDER FORMAT) --}}
+    <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
+        <div class="container position-relative px-md-5">
+
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
                     <h2 class="m-0">Customer Love</h2>
@@ -1125,72 +1127,71 @@
             </div>
 
             <div class="testimonial-slider-container">
-                <div class="testimonial-slider">
+                <div class="testimonial-slider" id="suyagyaCustomerReviewsSlider">
                     @if (isset($reviews) && $reviews->count() > 0)
                         @foreach ($reviews as $review)
-                            {{-- 🔥 LOGIC CHANGE: Check if Image Exists --}}
                             @php
-                                // Check karein ki media array hai aur khali nahi hai
                                 $hasImage =
                                     !empty($review->media) && is_array($review->media) && count($review->media) > 0;
                             @endphp
 
-                            {{-- 🔥 CONDITION: Sirf tab dikhao jab Image ho --}}
                             @if ($hasImage)
-                                <div class="px-3">
-                                    <div class="testimonial-card shadow-sm border-0 overflow-hidden"
-                                        style="height: 280px; border-radius: 15px; background: #fff;">
-                                        <div class="row g-0 h-100">
+                                <div class="testimonial-slide-item">
+                                    <div class="premium-review-card shadow-sm">
 
-                                            {{-- Left: Text Content --}}
-                                            <div class="col-7 p-4 d-flex flex-column justify-content-center">
-                                                <div class="text-warning mb-2">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        <i class="las la-star"></i>
-                                                    @endfor
-                                                </div>
-
-                                                <p class="mb-2 small text-muted"
-                                                    style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;">
-                                                    "{{ $review->review }}"
-                                                </p>
-
-                                                @if ($review->title)
-                                                    <h6 class="fw-bold text-dark mb-0 text-truncate">{{ $review->title }}
-                                                    </h6>
-                                                @endif
-                                                <p class="text-muted x-small m-0 fw-bold mt-1">-
-                                                    {{ $review->display_name }}
-                                                </p>
-                                            </div>
-
-                                            {{-- Right: Image (Single) --}}
-                                            <div class="col-5 h-100">
-                                                @php
-                                                    // Yahan ab placeholder logic ki zarurat nahi hai
-                                                    // kyunki hum upar hi check kar chuke hain ki image hai.
-                                                    $reviewImage = asset($review->media[0]);
-                                                @endphp
-                                                <img src="{{ $reviewImage }}" alt="Review"
-                                                    class="w-100 h-100 object-fit-cover">
-                                            </div>
-
+                                        {{-- 🖼️ कार्ड का ऊपरी हिस्सा: रिव्यू इमेज --}}
+                                        <div class="review-img-box">
+                                            <img src="{{ asset($review->media[0]) }}" alt="Customer Review Product"
+                                                class="review-attached-img">
                                         </div>
+
+                                        {{-- 📝 कार्ड का निचला हिस्सा: टेक्स्ट कंटेंट --}}
+                                        <div class="review-body-box">
+                                            <div class="text-warning small mb-2">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <i class="las la-star"></i>
+                                                @endfor
+                                            </div>
+
+                                            @if ($review->title)
+                                                <h6 class="review-card-title text-truncate">{{ $review->title }}</h6>
+                                            @endif
+
+                                            <p class="review-card-text">
+                                                "{{ $review->review }}"
+                                            </p>
+
+                                            <div class="review-card-author">
+                                                - {{ $review->display_name }}
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             @endif
-                            {{-- End If Condition --}}
                         @endforeach
                     @else
-                        <div class="col-12 text-center text-muted">
-                            <p>No reviews yet.</p>
+                        <div class="text-center w-100 py-4">
+                            <p class="text-muted">No reviews yet.</p>
                         </div>
                     @endif
                 </div>
+
+                {{-- 🎮 कस्टमाइज्ड सुंदर लेफ्ट-राइट नेविगेशन बटन्स --}}
+                @if (isset($reviews) && $reviews->count() > 0)
+                    <button class="review-slider-btn r-prev" id="review-slider-prev" aria-label="Previous Reviews">
+                        <i class="las la-angle-left"></i>
+                    </button>
+                    <button class="review-slider-btn r-next" id="review-slider-next" aria-label="Next Reviews">
+                        <i class="las la-angle-right"></i>
+                    </button>
+                @endif
             </div>
+
         </div>
     </section>
 
+    {{-- ================= BLOG SECTION WITH VIEW ALL BUTTON ================= --}}
     <section class="py-5 blog-section" style="background-color: #f7f1de;">
         <div class="container">
 
@@ -1198,8 +1199,7 @@
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box text-center">
                     <h2 class="m-0 fw-bold" style="font-family: 'Merriweather', serif;">Blogs</h2>
-                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;">
-                    </div>
+                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;"></div>
                 </div>
             </div>
 
@@ -1212,11 +1212,9 @@
 
                                 {{-- Image Wrapper --}}
                                 <div class="blog-img-wrapper position-relative overflow-hidden" style="height: 220px;">
-                                    {{-- Optional Tag (Dynamic ya Static) --}}
-                                    <span
-                                        class="blog-tag position-absolute top-0 start-0 m-3 px-3 py-1 bg-white text-dark rounded-pill fw-bold small shadow-sm"
-                                        style="z-index: 10;">
-                                        Knowlege
+                                    {{-- 🚀 स्पेलिंग फिक्स: Knowlege को सुधारकर Knowledge कर दिया है --}}
+                                    <span class="blog-tag position-absolute top-0 start-0 m-3 px-3 py-1 bg-white text-dark rounded-pill fw-bold small shadow-sm" style="z-index: 10;">
+                                        Knowledge
                                     </span>
 
                                     <a href="{{ route('blogs.show', $blog->slug) }}" class="d-block h-100 w-100">
@@ -1233,8 +1231,7 @@
                                     </small>
 
                                     <h3 class="blog-title mb-3" style="font-size: 18px; line-height: 1.4;">
-                                        <a href="{{ route('blogs.show', $blog->slug) }}"
-                                            class="text-decoration-none text-dark fw-bold hover-primary">
+                                        <a href="{{ route('blogs.show', $blog->slug) }}" class="text-decoration-none text-dark fw-bold hover-primary">
                                             {{ Str::limit($blog->title, 55) }}
                                         </a>
                                     </h3>
@@ -1243,8 +1240,7 @@
                                         {{ Str::limit(strip_tags($blog->content), 100) }}
                                     </p>
 
-                                    <a href="{{ route('blogs.show', $blog->slug) }}"
-                                        class="read-more-btn text-uppercase fw-bold text-warning text-decoration-none small">
+                                    <a href="{{ route('blogs.show', $blog->slug) }}" class="read-more-btn text-uppercase fw-bold text-warning text-decoration-none small">
                                         Read more <i class="las la-arrow-right ms-1"></i>
                                     </a>
                                 </div>
@@ -1252,6 +1248,14 @@
                             </div>
                         </div>
                     @endforeach
+
+                    {{-- 🚀 बटन फिक्स: सारे ब्लॉग कार्ड्स खत्म होने के बाद नीचे सेंटर में View All बटन --}}
+                    <div class="col-12 text-center mt-5">
+                        <a href="{{ route('blogs.index') }}" class="btn btn-view-all-blogs px-5 py-3 shadow-sm">
+                            View All Blogs <i class="las la-arrow-right ms-2" style="font-size: 14px;"></i>
+                        </a>
+                    </div>
+
                 @else
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">No blogs found at the moment.</p>
