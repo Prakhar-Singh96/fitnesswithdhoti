@@ -454,6 +454,7 @@ class CheckoutController extends Controller
             // 5. फाइनल रिस्पॉन्स
             return response()->json([
                 'status'  => 'success',
+                'order_id' => $order->id,
                 'message' => 'Order Successful! Paid via Coins.'
             ]);
         }
@@ -515,7 +516,7 @@ class CheckoutController extends Controller
                 \App\Models\UserCoupon::where('id', $usedGameCouponId)->update(['is_used' => 1]);
             }
             $this->sendOrderEmail($order->id);
-            return response()->json(['status' => 'success', 'message' => 'Order Placed Successfully via COD!']);
+            return response()->json(['status' => 'success', 'order_id' => $order->id, 'message' => 'Order Placed Successfully via COD!']);
         }
     }
 
@@ -852,5 +853,14 @@ class CheckoutController extends Controller
                 'message' => 'Cancellation failed: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function orderSuccess(Order $order)
+    {
+        if ($order->user_id != Auth::id()) {
+            abort(403);
+        }
+
+        return view('frontend.pages.order_success', compact('order'));
     }
 }

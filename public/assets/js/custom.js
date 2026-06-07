@@ -480,6 +480,19 @@ function addToCart(productId, quantity, isSiddh, btnElement, variantId = null , 
         },
         success: function (res) {
             if (res.status) {
+
+                var productId = $(btn).data('id');
+                var productName = $(btn).data('name');
+                var productPrice = $(btn).data('price');
+
+                fbq('track', 'AddToCart', {
+                    content_ids: [String(productId)],
+                    content_name: productName,
+                    content_type: 'product',
+                    value: parseFloat(productPrice),
+                    currency: 'INR'
+                });
+
                 // ✅ Success
                 openSideCart();
                 btn.html('Added ✔').removeClass('btn-outline-dark').addClass('btn-success');
@@ -530,6 +543,8 @@ function removeFromSideCart(id) {
 
 // 🚀 5. CHECKOUT FROM SIDE CART
 function initiateCartCheckout() {
+
+    fbq('track', 'InitiateCheckout');
     // 1. Close Side Drawer
     var sideCartEl = document.getElementById('sideCart');
     var sideCart = bootstrap.Offcanvas.getInstance(sideCartEl);
@@ -672,6 +687,8 @@ function addToCartFromDetail(btn) {
 // 🛒 1. OPEN DIRECT CHECKOUT (Buy Now Button) - Fixed Calculation
 // 🛒 1. OPEN DIRECT CHECKOUT (Buy Now Button) - Fixed Calculation
 function openDirectCheckout(btn) {
+
+     fbq('track', 'InitiateCheckout');
     // 1. Data Collection
     var prodId = $(btn).data('id');
     var qty = $('#qty_input').val() || 1;
@@ -1429,7 +1446,7 @@ function processPayment() {
                                 order_id: res.order_id
                             },
                             success: function (response) {
-                                window.location.href = "/orders";
+                                window.location.href = "/order-success/" + res.order_id;
                             },
                             error: function (xhr, status, error) {
                                 window.location.href = "/orders";
@@ -1489,7 +1506,7 @@ function verifyServerPayment(paymentData, localOrderId) {
         if (res.status) {
             // ✅ Success - Redirect Logic
             setTimeout(function () {
-                window.location.replace("/orders");
+                window.location.replace("/order-success/" + localOrderId);
             }, 1000); // 1 sec dikha kar redirect kar do
         } else {
             // Error handling

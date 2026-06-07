@@ -180,6 +180,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/profile', [App\Http\Controllers\Frontend\UserController::class, 'profile'])->name('user.profile');
 
     Route::post('/checkout/cancel-order', [CheckoutController::class, 'cancelOrder'])->name('checkout.cancel');
+    Route::get('/order-success/{order}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
 
     // 3. Checkout Actions
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

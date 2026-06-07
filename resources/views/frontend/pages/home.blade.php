@@ -209,7 +209,7 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -367,7 +367,7 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -521,7 +521,7 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -1071,7 +1071,8 @@
                                                         </div>
 
                                                         <button class="btn btn-earthy w-100 btn-sm"
-                                                            onclick="addToCart({{ $product->id }}, 1, 0, this)">
+                                                            onclick="addToCart({{ $product->id }}, 1, 0, this)"
+                                                            data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
                                                             Add to cart
                                                         </button>
                                                     </div>

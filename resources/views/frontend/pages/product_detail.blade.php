@@ -13,12 +13,12 @@
 
         /* 💎 GEMSTONE CONFIGURATOR STYLES (AstroTalk Style) */
         /* .gem-config-container {
-                                                                                                                                                                    border: 1px solid #eee;
-                                                                                                                                                                    padding: 15px;
-                                                                                                                                                                    border-radius: 8px;
-                                                                                                                                                                    margin-bottom: 20px;
-                                                                                                                                                                    background-color: #f7f1de;
-                                                                                                                                                                } */
+                                                                                                                                                                        border: 1px solid #eee;
+                                                                                                                                                                        padding: 15px;
+                                                                                                                                                                        border-radius: 8px;
+                                                                                                                                                                        margin-bottom: 20px;
+                                                                                                                                                                        background-color: #f7f1de;
+                                                                                                                                                                    } */
 
         .gem-option-group {
             margin-bottom: 15px;
@@ -1063,7 +1063,10 @@
                     <div class="d-flex gap-3 mb-4">
                         <button class="btn btn-warning w-50 py-3 fw-bold text-dark text-uppercase shadow-sm fs-6"
                             style="border: 2px solid #ffc107;" data-id="{{ $product->id }}"
-                            onclick="addToCartFromDetail(this)">Add to Cart</button>
+                            data-name="{{ $product->name }}" data-price="{{ $product->price }}"
+                            onclick="addToCartFromDetail(this)">
+                            Add to Cart
+                        </button>
                         <button class="btn btn-dark w-50 py-3 fw-bold text-uppercase shadow-sm fs-6"
                             data-id="{{ $product->id }}" onclick="openDirectCheckout(this)">Buy Now</button>
                     </div>
@@ -2675,6 +2678,15 @@
                     }
                 });
             }
+        });
+    </script>
+    <script>
+        fbq('track', 'ViewContent', {
+            content_ids: ['{{ $product->id }}'],
+            content_name: '{{ addslashes($product->name) }}',
+            content_type: 'product',
+            value: {{ $product->price }},
+            currency: 'INR'
         });
     </script>
 @endsection
