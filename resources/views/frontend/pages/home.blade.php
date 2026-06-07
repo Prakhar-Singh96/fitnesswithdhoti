@@ -698,8 +698,9 @@
     </section> --}}
 
     {{-- 🛒 4. video-feed-section (Placeholder for next section) --}}
-    <section class="py-3 video-feed-section" style="background-color: #f7f1de;">
-        <div class="container-fluid px-4">
+    {{-- 🎥 EXPLORE VIDEO FEED SECTION (WITH SLICK NAVIGATION ARROWS) --}}
+    <section class="py-4 video-feed-section" style="background-color: #f7f1de; position: relative;">
+        <div class="container-fluid px-4 position-relative">
 
             <div class="d-flex justify-content-center mb-4">
                 <div class="fancy-heading-box">
@@ -707,12 +708,11 @@
                 </div>
             </div>
 
-            <div class="video-slider-container">
-                <div class="video-carousel">
+            <div class="video-slider-container px-md-4"> {{-- साइड्स में स्पेस दिया ताकि बटन परफेक्ट अलाइन हों --}}
+                <div class="video-carousel" id="suyagyaVideoFeedCarousel">
 
                     {{-- 🟢 Check if videos exist --}}
                     @if (isset($videos) && $videos->count() > 0)
-
                         @foreach ($videos as $video)
                             <div class="px-2">
                                 <div class="video-card">
@@ -720,10 +720,8 @@
 
                                         {{-- ✅ VIDEO TAG --}}
                                         <video loop playsinline preload="none" muted class="the-video"
-                                            poster="{{ asset($video->image) }}"> {{-- 🟢 Dynamic Poster --}}
-
+                                            poster="{{ asset($video->image) }}">
                                             <source src="{{ asset($video->video) }}" type="video/mp4">
-                                            {{-- 🟢 Dynamic Video --}}
                                         </video>
 
                                         {{-- Sound Toggle --}}
@@ -736,20 +734,17 @@
                                             <div class="play-icon-circle">
                                                 <i class="las la-play"></i>
                                             </div>
-                                            <h5 class="video-title">{{ $video->title }}</h5> {{-- 🟢 Dynamic Title --}}
+                                            <h5 class="video-title">{{ $video->title }}</h5>
                                         </div>
 
                                         {{-- Buy Now Overlay --}}
                                         <div class="video-overlay-hover">
-                                            {{-- 🟢 Dynamic Link (Handling Relative vs Absolute) --}}
                                             @php
                                                 $link = $video->link;
-                                                // If link doesn't start with http, wrap in url()
-if (!Str::startsWith($link, ['http://', 'https://'])) {
+                                                if (!Str::startsWith($link, ['http://', 'https://'])) {
                                                     $link = url($link);
                                                 }
                                             @endphp
-
                                             <a href="{{ $link }}" class="btn btn-buy-now-video w-100">
                                                 Buy Now <i class="las la-arrow-right ms-1"></i>
                                             </a>
@@ -760,13 +755,23 @@ if (!Str::startsWith($link, ['http://', 'https://'])) {
                             </div>
                         @endforeach
                     @else
-                        {{-- Optional: Show nothing or a message if no videos --}}
-                        <div class="text-center w-100">
+                        <div class="text-center w-100 py-4">
                             <p class="text-muted">No videos available at the moment.</p>
                         </div>
                     @endif
 
                 </div>
+
+                {{-- 🎮 कस्टमाइज्ड लेफ्ट-राइट एरो नेविगेशन बटन्स --}}
+                @if (isset($videos) && $videos->count() > 0)
+                    <button class="video-feed-nav-btn video-prev" id="video-feed-prev" aria-label="Previous Slide">
+                        <i class="las la-angle-left"></i>
+                    </button>
+                    <button class="video-feed-nav-btn video-next" id="video-feed-next" aria-label="Next Slide">
+                        <i class="las la-angle-right"></i>
+                    </button>
+                @endif
+
             </div>
 
         </div>

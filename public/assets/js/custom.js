@@ -2638,4 +2638,56 @@ $('.modal').on('hidden.bs.modal', function () {
     $(this).find('iframe').attr('src', $(this).find('iframe').attr('src'));
 });
 
+// 🚀 SUYAGYA PREMIUM VIDEO FEED CAROUSEL INITIALIZATION
+if (typeof $ !== 'undefined' && $.fn.slick) {
+
+    // पुराना कोई इंस्टेंस फंसा हो तो रीसेट करो
+    if ($('#suyagyaVideoFeedCarousel').hasClass('slick-initialized')) {
+        $('#suyagyaVideoFeedCarousel').slick('unslick');
+    }
+
+    $('#suyagyaVideoFeedCarousel').slick({
+        slidesToShow: 6,           // 💻 बड़े मॉनिटर्स/डेस्कटॉप पर एक साथ 6 रील्स दिखेंगी
+        slidesToScroll: 1,
+        autoplay: false,           // वीडियो पैकेट्स हैं इसलिए ऑटोप्ले बंद रखना बेस्ट है भाई
+        infinite: false,           // एंड होने पर रुक जाएगा ताकि यूजर को पता चले फीड खत्म हो गई
+        dots: false,               // डॉट्स बंद रखे ताकि कचरा न दिखे
+        arrows: true,
+        prevArrow: $('#video-feed-prev'), // हमारा कस्टम लेफ्ट एरो
+        nextArrow: $('#video-feed-next'), // हमारा कस्टम राइट एरो
+        responsive: [
+            {
+                breakpoint: 1400,  // लैपटॉप स्क्रीन्स के लिए 5 रील्स
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 1100,  // छोटे लैपटॉप/टैबलेट्स के लिए 4 रील्स
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 768,   // टैबलेट्स के लिए 3 रील्स
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    arrows: false
+                }
+            },
+            {
+                breakpoint: 480,   // 📱 मोबाइल फोन पर एक साथ 2 रील्स दिखेंगी एकदम परफेक्ट
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                    arrows: false
+                }
+            }
+        ]
+    });
+}
+
 
