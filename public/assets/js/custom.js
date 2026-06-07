@@ -1446,7 +1446,7 @@ function processPayment() {
                                 order_id: res.order_id
                             },
                             success: function (response) {
-                                window.location.href = "/order-success/" + res.order_id;
+                                window.location.href = "/order";
                             },
                             error: function (xhr, status, error) {
                                 window.location.href = "/orders";
@@ -1459,7 +1459,7 @@ function processPayment() {
             rzp1.open();
 
         } else if (res.status === 'success') {
-            window.location.href = "/orders";
+            window.location.href = "/order-success/" + res.order_id;
         } else {
             alert(res.message);
             btn.prop('disabled', false).text('Place Order');
