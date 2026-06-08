@@ -2666,60 +2666,77 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     }
 
     $('#suyagyaVideoFeedCarousel').slick({
-        slidesToShow: 6,           // 💻 बड़े मॉनिटर्स/डेस्कटॉप पर एक साथ 6 रील्स दिखेंगी
+        slidesToShow: 6,
         slidesToScroll: 1,
-        autoplay: false,           // वीडियो पैकेट्स हैं इसलिए ऑटोप्ले बंद रखना बेस्ट है भाई
-        infinite: false,           // एंड होने पर रुक जाएगा ताकि यूजर को पता चले फीड खत्म हो गई
-        dots: false,               // डॉट्स बंद रखे ताकि कचरा न दिखे
+        autoplay: false,
+        infinite: false,
+        dots: false,
         arrows: true,
-        prevArrow: $('#video-feed-prev'), // हमारा कस्टम लेफ्ट एरो
-        nextArrow: $('#video-feed-next'), // हमारा कस्टम राइट एरो
+        prevArrow: $('#video-feed-prev'),
+        nextArrow: $('#video-feed-next'),
         responsive: [
-            {
-                breakpoint: 1400,  // लैपटॉप स्क्रीन्स के लिए 5 रील्स
-                settings: { slidesToShow: 5, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 1100,  // छोटे लैपटॉप/टैबलेट्स के लिए 4 रील्स
-                settings: { slidesToShow: 4, slidesToScroll: 1 }
-            },
-            {
-                breakpoint: 768,   // टैबलेट्स के लिए 3 रील्स
-                settings: { slidesToShow: 3, slidesToScroll: 1, arrows: false }
-            },
-            {
-                breakpoint: 480,   // 📱 मोबाइल फोन पर एक साथ 2 रील्स दिखेंगी एकदम परफेक्ट
-                settings: { slidesToShow: 2, slidesToScroll: 1, arrows: false }
-            }
+            { breakpoint: 1400, settings: { slidesToShow: 5, slidesToScroll: 1 } },
+            { breakpoint: 1100, settings: { slidesToShow: 4, slidesToScroll: 1 } },
+            { breakpoint: 768, settings: { slidesToShow: 3, arrows: false } },
+            { breakpoint: 480, settings: { slidesToShow: 2, arrows: false } }
         ]
     });
 
-    // 🚀 ब्रह्मास्त्र फिक्स: ऑन-होवर वीडियो प्ले और पॉज़ का लॉजिक (Desktop Hover Effect)
+    // 🚀 ब्रह्मास्त्र फिक्स 1: ऑन-होवर वीडियो प्ले और पॉज़ (Desktop Hover Effect)
     $(document).on('mouseenter', '.video-wrapper', function() {
         const video = $(this).find('.the-video')[0];
         if (video) {
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
-                    // वीडियो चलना शुरू होने पर प्ले आइकॉन को छुपाओ
                     $(this).find('.play-icon-circle').fadeOut(200);
                 }).catch(error => {
-                    console.log("Autoplay blocked or interrupted:", error);
+                    console.log("Autoplay blocked:", error);
                 });
             }
         }
     }).on('mouseleave', '.video-wrapper', function() {
         const video = $(this).find('.the-video')[0];
         if (video) {
-            video.pause(); // माउस हटते ही वीडियो पॉज़
-            video.currentTime = 0; // वीडियो शुरू से रीसेट करो
-            $(this).find('.play-icon-circle').fadeIn(200); // प्ले आइकॉन वापस दिखाओ
+            video.pause();
+            video.currentTime = 0;
+            $(this).find('.play-icon-circle').fadeIn(200);
+
+            // 🔊 सेफ़्टी फिक्स: माउस हटने पर वीडियो को वापस म्यूट कर दो ताकि यूज़र परेशान न हो
+            video.muted = true;
+            $(this).find('.btn-sound-toggle i').attr('class', 'las la-volume-mute');
         }
     });
 
-    // 📱 मोबाइल/टैबलेट के लिए वन-टैप प्ले-पॉज लॉजिक (Touch Support)
+    // 🚀 ब्रह्मास्त्र फिक्स 2: साउंड ऑन/ऑफ (Mute / Unmute Working Logic)
+    $(document).on('click', '.btn-sound-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // ताकि वीडियो प्ले/पॉज़ का इवेंट ट्रिगर न हो
+
+        // इस बटन के ठीक बगल वाले वीडियो को ढूंढो
+        const video = $(this).closest('.video-wrapper').find('.the-video')[0];
+        const icon = $(this).find('i');
+
+        if (video) {
+            if (video.muted) {
+                // 🔊 अनम्यूट करो (Turn ON Sound)
+                video.muted = false;
+                // ब्राउज़र की सेफ़्टी के लिए वॉल्यूम 100% सेट करो
+                video.volume = 1.0;
+                icon.attr('class', 'las la-volume-up'); // वॉल्यूम चालू का आइकॉन
+                $(this).attr('title', 'Mute');
+            } else {
+                // 🔇 म्यूट करो (Turn OFF Sound)
+                video.muted = true;
+                icon.attr('class', 'las la-volume-mute'); // म्यूट आइकॉन
+                $(this).attr('title', 'Unmute');
+            }
+        }
+    });
+
+    // 📱 3. मोबाइल/टैबलेट के लिए वन-टैप प्ले-पॉज लॉजिक (Touch Support)
     $(document).on('click', '.video-wrapper', function(e) {
-        // अगर यूजर 'Buy Now' या 'Sound' बटन दबा रहा है तो वीडियो प्ले-पॉज इवेंट को रोको
+        // अगर यूजर 'Buy Now' या 'Sound' बटन दबा रहा है तो इसे स्किप करो
         if ($(e.target).closest('.btn-buy-now-video').length || $(e.target).closest('.btn-sound-toggle').length) {
             return;
         }
@@ -2727,10 +2744,11 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
         const video = $(this).find('.the-video')[0];
         if (video) {
             if (video.paused) {
-                // बाकी चल रहे सभी वीडियो बंद करो ताकि एक बार में एक ही रील चले
                 $('.the-video').each(function() {
                     this.pause();
                     this.currentTime = 0;
+                    this.muted = true; // बाकी सबको म्यूट करो
+                    $(this).closest('.video-wrapper').find('.btn-sound-toggle i').attr('class', 'las la-volume-mute');
                     $(this).closest('.video-wrapper').find('.play-icon-circle').fadeIn(200);
                 });
 
