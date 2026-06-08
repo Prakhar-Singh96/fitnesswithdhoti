@@ -2655,7 +2655,9 @@ $('.modal').on('hidden.bs.modal', function () {
     $(this).find('iframe').attr('src', $(this).find('iframe').attr('src'));
 });
 
-// 🚀 SUYAGYA PREMIUM VIDEO FEED CAROUSEL INITIALIZATION
+// =================================================================
+// 🎥 1. SUYAGYA PREMIUM VIDEO FEED CAROUSEL INITIALIZATION
+// =================================================================
 if (typeof $ !== 'undefined' && $.fn.slick) {
 
     // पुराना कोई इंस्टेंस फंसा हो तो रीसेट करो
@@ -2675,39 +2677,76 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
         responsive: [
             {
                 breakpoint: 1400,  // लैपटॉप स्क्रीन्स के लिए 5 रील्स
-                settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 1
-                }
+                settings: { slidesToShow: 5, slidesToScroll: 1 }
             },
             {
                 breakpoint: 1100,  // छोटे लैपटॉप/टैबलेट्स के लिए 4 रील्स
-                settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 1
-                }
+                settings: { slidesToShow: 4, slidesToScroll: 1 }
             },
             {
                 breakpoint: 768,   // टैबलेट्स के लिए 3 रील्स
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    arrows: false
-                }
+                settings: { slidesToShow: 3, slidesToScroll: 1, arrows: false }
             },
             {
                 breakpoint: 480,   // 📱 मोबाइल फोन पर एक साथ 2 रील्स दिखेंगी एकदम परफेक्ट
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    arrows: false
-                }
+                settings: { slidesToShow: 2, slidesToScroll: 1, arrows: false }
             }
         ]
     });
+
+    // 🚀 ब्रह्मास्त्र फिक्स: ऑन-होवर वीडियो प्ले और पॉज़ का लॉजिक (Desktop Hover Effect)
+    $(document).on('mouseenter', '.video-wrapper', function() {
+        const video = $(this).find('.the-video')[0];
+        if (video) {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // वीडियो चलना शुरू होने पर प्ले आइकॉन को छुपाओ
+                    $(this).find('.play-icon-circle').fadeOut(200);
+                }).catch(error => {
+                    console.log("Autoplay blocked or interrupted:", error);
+                });
+            }
+        }
+    }).on('mouseleave', '.video-wrapper', function() {
+        const video = $(this).find('.the-video')[0];
+        if (video) {
+            video.pause(); // माउस हटते ही वीडियो पॉज़
+            video.currentTime = 0; // वीडियो शुरू से रीसेट करो
+            $(this).find('.play-icon-circle').fadeIn(200); // प्ले आइकॉन वापस दिखाओ
+        }
+    });
+
+    // 📱 मोबाइल/टैबलेट के लिए वन-टैप प्ले-पॉज लॉजिक (Touch Support)
+    $(document).on('click', '.video-wrapper', function(e) {
+        // अगर यूजर 'Buy Now' या 'Sound' बटन दबा रहा है तो वीडियो प्ले-पॉज इवेंट को रोको
+        if ($(e.target).closest('.btn-buy-now-video').length || $(e.target).closest('.btn-sound-toggle').length) {
+            return;
+        }
+
+        const video = $(this).find('.the-video')[0];
+        if (video) {
+            if (video.paused) {
+                // बाकी चल रहे सभी वीडियो बंद करो ताकि एक बार में एक ही रील चले
+                $('.the-video').each(function() {
+                    this.pause();
+                    this.currentTime = 0;
+                    $(this).closest('.video-wrapper').find('.play-icon-circle').fadeIn(200);
+                });
+
+                video.play();
+                $(this).find('.play-icon-circle').fadeOut(200);
+            } else {
+                video.pause();
+                $(this).find('.play-icon-circle').fadeIn(200);
+            }
+        }
+    });
 }
 
-// 🚀 SUYAGYA CUSTOMER REVIEWS 3-COLUMN CAROUSEL INITIALIZATION
+// =================================================================
+// 👥 2. SUYAGYA CUSTOMER REVIEWS 3-COLUMN CAROUSEL INITIALIZATION
+// =================================================================
 if (typeof $ !== 'undefined' && $.fn.slick) {
 
     if ($('#suyagyaCustomerReviewsSlider').hasClass('slick-initialized')) {
@@ -2727,18 +2766,11 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
         responsive: [
             {
                 breakpoint: 1024,  // टैबलेट्स के लिए 2 कार्ड्स
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1
-                }
+                settings: { slidesToShow: 2, slidesToScroll: 1 }
             },
             {
                 breakpoint: 600,   // 📱 मोबाइल फोन पर एक बार में 1 ही रिव्यू दिखेगा नीट एंड क्लीन
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    arrows: false
-                }
+                settings: { slidesToShow: 1, slidesToScroll: 1, arrows: false }
             }
         ]
     });
