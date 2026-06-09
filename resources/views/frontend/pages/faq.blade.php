@@ -3,8 +3,8 @@
 @section('content')
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="font-heading fw-bold">Help & FAQs</h1>
-        <p class="text-muted">Find answers to your questions related to products, shipping, and more.</p>
+        <h1 class="font-heading fw-bold">Aapke Sawaal, Hamare Jawab</h1>
+        <p class="text-muted">Rudraksha se rashi bracelet tak — jo bhi jaanna ho, seedha aur sach jawab yahan milega.</p>
     </div>
 
     <div class="row justify-content-center">

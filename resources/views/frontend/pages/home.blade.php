@@ -90,7 +90,7 @@
             {{-- Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box">
-                    <h2 class="m-0">New ArrivalProducts</h2>
+                    <h2 class="m-0">New Arrival Products</h2>
                 </div>
             </div>
 

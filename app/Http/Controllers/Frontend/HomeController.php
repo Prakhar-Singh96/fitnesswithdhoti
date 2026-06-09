@@ -17,11 +17,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // 1. Featured Products
         $featuredProducts = Product::where('status', 1)
             ->where('is_featured', 1)
             ->with('reviews')
-            ->latest()
+            ->orderBy('sort_order', 'asc') // 👈 अल्फाबेटिकल की जगह कस्टम सॉर्ट ऑर्डर लॉक किया
             ->take(8)
             ->get();
 
