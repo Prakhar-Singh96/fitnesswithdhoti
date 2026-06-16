@@ -185,76 +185,11 @@ class CheckoutController extends Controller
             }
         }
 
-        // -----------------------------
-        // 2. PREPARE ORDER ITEMS & CALCULATE TOTAL
-        // -----------------------------
-        // $orderItemsData = [];
-        // $totalAmount = 0;
-        // 2. PREPARE ITEMS & CALCULATE TOTALS
-        // 2. PREPARE ITEMS & CALCULATE TOTALS
         $orderItemsData = [];
         $subtotal = 0;   // कुल सेलिंग प्राइस (Price * Qty)
         $totalMrp = 0;   // कुल MRP (MRP * Qty) - बिना सिद्धार्थ के
         $totalSiddhCharge = 0; // कुल सिद्धार्थ चार्ज
 
-        // if ($request->buy_mode == 'direct') {
-        //     $product = Product::findOrFail($request->product_id);
-        //     // 🚀 वजन (Weight) निकालें अगर variant_id भेजा गया है
-        //     $weight = null;
-        //     if ($request->variant_id) {
-        //         $variant = \App\Models\ProductVariant::find($request->variant_id);
-        //         if ($variant) {
-        //             $weight = $variant->weight . 'g'; // वजन जैसे '50g'
-        //         }
-        //     }
-        //     $qty = $request->quantity;
-        //     // 🔥 सिद्धार्थ अमाउंट अलग से कैलकुलेट करें
-        //     $isSiddh = $request->is_siddh ?? 0;
-        //     $siddhAmountPerItem = ($isSiddh == 1) ? ($product->siddh_price ?? 0) : 0;
-
-        //     $subtotal = round($product->price) * $qty;
-        //     $totalMrp = round($product->mrp_price ?? $product->price) * $qty;
-        //     $totalSiddhCharge = $siddhAmountPerItem * $qty;
-        //     $itemTotalPrice = (round($product->price) + $siddhAmountPerItem) * $qty; // Price + Siddh मिलाकर Total
-
-        //     $orderItemsData[] = [
-        //         'product_id'   => $product->id,
-        //         'product_name' => $product->name,
-        //         'quantity'     => $qty,
-        //         'price'        => round($product->price), // 👈 सिर्फ असली सेलिंग प्राइस
-        //         'total_price'  => $itemTotalPrice, // 👈 नया कॉलम
-        //         'mrp_price'    => round($product->mrp_price ?? $product->price), // 👈 शुद्ध MRP
-        //         'is_siddh'     => $isSiddh,
-        //         'siddh_amount' => $siddhAmountPerItem, // 👈 अलग से सिद्धार्थ चार्ज
-        //         'ring_size'    => $request->ring_size,
-        //         'weight'       => $weight // 👈 यहाँ वजन सेव होगा
-        //     ];
-        // } else {
-        //     $cartItems = Cart::with('product', 'variant')->where('user_id', $user->id)->get();
-        //     foreach ($cartItems as $item) {
-        //         $qty = $item->quantity;
-        //         $isSiddh = $item->is_siddh ?? 0;
-        //         $siddhAmountPerItem = ($isSiddh == 1) ? ($item->product->siddh_price ?? 0) : 0;
-
-        //         $subtotal += round($item->product->price) * $qty;
-        //         $totalMrp += round($item->product->mrp_price ?? $item->product->price) * $qty;
-        //         $totalSiddhCharge += $siddhAmountPerItem * $qty;
-        //         $itemTotalPrice = (round($item->product->price) + $siddhAmountPerItem) * $qty;
-
-        //         $orderItemsData[] = [
-        //             'product_id'   => $item->product_id,
-        //             'product_name' => $item->product->name,
-        //             'quantity'     => $qty,
-        //             'price'        => round($item->product->price ?? $item->product->price),
-        //             'total_price'  => $itemTotalPrice, // 👈 नया कॉलम
-        //             'mrp_price'    => round($item->product->mrp_price ?? $item->product->price),
-        //             'is_siddh'     => $isSiddh,
-        //             'siddh_amount' => $siddhAmountPerItem,
-        //             'ring_size'    => $item->ring_size,
-        //             'weight'       => $item->variant ? $item->variant->weight . 'g' : null // 👈 कार्ट में सेव वजन
-        //         ];
-        //     }
-        // }
         if ($request->buy_mode == 'direct') {
             $product = Product::findOrFail($request->product_id);
             $qty = $request->quantity;
@@ -450,6 +385,7 @@ class CheckoutController extends Controller
 
             // 4. ईमेल भेजें
             $this->sendOrderEmail($order->id);
+            $this->sendOrderWhatsApp($order->id);
 
             // 5. फाइनल रिस्पॉन्स
             return response()->json([
@@ -516,6 +452,7 @@ class CheckoutController extends Controller
                 \App\Models\UserCoupon::where('id', $usedGameCouponId)->update(['is_used' => 1]);
             }
             $this->sendOrderEmail($order->id);
+            $this->sendOrderWhatsApp($order->id);
             return response()->json(['status' => 'success', 'order_id' => $order->id, 'message' => 'Order Placed Successfully via COD!']);
         }
     }
@@ -641,6 +578,7 @@ class CheckoutController extends Controller
 
             // 🔥 MAIL SEND KARO (Payment Success hone par)
             $this->sendOrderEmail($order->id);
+            $this->sendOrderWhatsApp($order->id);
 
             return response()->json(['status' => true, 'message' => 'Payment Verified']);
         } catch (\Exception $e) {
@@ -782,24 +720,98 @@ class CheckoutController extends Controller
         }
     }
 
-    // public function cancelOrder(Request $request)
-    // {
+    // 🚀 FIXED: WHATSAPP API WITH ALL 3 VARIABLES (NAME, PRODUCT, ORDER ID)
+    private function sendOrderWhatsApp($orderId)
+    {
+        try {
+            // ऑर्डर को उसके आइटम्स के साथ लोड करें
+            $order = Order::with('items')->find($orderId);
+            if (!$order || $order->items->isEmpty()) {
+                Log::warning("WhatsApp Notification Skipped: Order or items not found.");
+                return;
+            }
 
-    //     $order = Order::find($request->order_id);
+            // शिपिंग एड्रेस को एरे में कन्वर्ट करना
+            $shippingAddress = is_string($order->shipping_address)
+                ? json_decode($order->shipping_address, true)
+                : $order->shipping_address;
 
-    //     if ($order && $order->payment_status == 'pending') {
-    //         $order->status = 'cancelled';
-    //         $order->payment_status = 'failed';
-    //         $order->save();
+            if (empty($shippingAddress) || !isset($shippingAddress['phone'])) {
+                return;
+            }
 
-    //         \Log::info('Order Successfully Cancelled'); // Success Log
+            // फोन नंबर को क्लीन करें
+            $customerPhone = preg_replace('/[^0-9]/', '', $shippingAddress['phone']);
+            if (strlen($customerPhone) === 10) {
+                $customerPhone = '91' . $customerPhone;
+            }
 
-    //         return response()->json(['status' => true, 'message' => 'Order Cancelled']);
-    //     }
+            // API क्रेडेंशियल्स
+            $endpointUrl = "https://messaginghub.solutions/relaybridge/api/v1/meta/6a2cfb3f8c93be1e2a1edb90/messages";
+            $apiKey = "4388e9f3e6984c89af1aaa57e82b53a7";
 
-    //     \Log::warning('Order Cancel Condition Failed'); // Fail Log
-    //     return response()->json(['status' => false]);
-    // }
+            // 🎯 3 VARIABLES IMPLEMENTATION
+            $customerName = $shippingAddress['name'] ?? 'Customer'; // {{1}}
+            $orderNumber = $order->order_number; // {{3}}
+
+            // 📦 {{2}} के लिए प्रोडक्ट का नाम डायनामिक निकालो
+            $firstItem = $order->items->first();
+            $productName = $firstItem->product_name;
+
+            // अगर ऑर्डर में 1 से ज़्यादा आइटम्स हैं, तो "Product Name + 1 more" कर दो
+            if ($order->items->count() > 1) {
+                $productName .= ' + ' . ($order->items->count() - 1) . ' more';
+            }
+
+            // 🚀 फाइनल पेलोड - बिल्कुल स्क्रीनशॉट के 1, 2, 3 वेरिएबल के क्रम में
+            $payload = [
+                "messaging_product" => "whatsapp",
+                "recipient_type"    => "individual",
+                "to"                => $customerPhone,
+                "type"              => "template",
+                "template"          => [
+                    "name"     => "order_confirmation",
+                    "language" => [
+                        "code" => "en"
+                    ],
+                    "components" => [
+                        [
+                            "type" => "body",
+                            "parameters" => [
+                                [
+                                    "type" => "text",
+                                    "text" => $customerName // 👈 {{1}} - कस्टमर का नाम
+                                ],
+                                [
+                                    "type" => "text",
+                                    "text" => $productName // 👈 {{2}} - ऑर्डर किए गए प्रोडक्ट का नाम
+                                ],
+                                [
+                                    "type" => "text",
+                                    "text" => $orderNumber // 👈 {{3}} - सुयज्ञ ऑर्डर आईडी (Your order id is)
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+            // लारेवेल HTTP क्लाइंट से पोस्ट रिक्वेस्ट
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                "X-API-KEY"    => $apiKey,
+                "Content-Type" => "application/json"
+            ])->post($endpointUrl, $payload);
+
+            if ($response->successful()) {
+                Log::info("WhatsApp Order Confirmation Sent Successfully to: " . $customerPhone);
+            } else {
+                Log::error("WhatsApp API Error: " . $response->body());
+            }
+
+        } catch (\Exception $e) {
+            Log::error('WhatsApp Order Notification Exception: ' . $e->getMessage());
+        }
+    }
 
     public function cancelOrder(Request $request)
     {

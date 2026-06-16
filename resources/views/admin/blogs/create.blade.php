@@ -3,6 +3,17 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">Add New Blog</h4>
+        @if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; padding: 15px; border-radius: 8px;">
+        <h5 class="fw-bold mb-2"><i class="las la-exclamation-triangle"></i> Validation Failed! Please fix these errors:</h5>
+        <ul class="mb-0 ps-3">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
         <form action="{{ route('admin.blogs.store') }}" method="POST" enctype="multipart/form-data">
             @csrf

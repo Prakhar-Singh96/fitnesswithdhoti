@@ -209,7 +209,8 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                        data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -367,7 +368,8 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                        data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -521,7 +523,8 @@
                                 @if ($product->quantity > 0)
                                     {{-- Add to Cart --}}
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                        data-price="{{ $product->price }}">
                                         Add to Cart
                                     </button>
                                 @else
@@ -1072,7 +1075,9 @@
 
                                                         <button class="btn btn-earthy w-100 btn-sm"
                                                             onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                                            data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}">
+                                                            data-id="{{ $product->id }}"
+                                                            data-name="{{ $product->name }}"
+                                                            data-price="{{ $product->price }}">
                                                             Add to cart
                                                         </button>
                                                     </div>
@@ -1118,7 +1123,7 @@
     </section> --}}
 
     {{-- 👥 CUSTOMER REVIEWS SECTION (PREMIUM SLIDER FORMAT) --}}
-    <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
+    {{-- <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
         <div class="container position-relative px-md-5">
 
             <div class="d-flex justify-content-center mb-5">
@@ -1140,13 +1145,11 @@
                                 <div class="testimonial-slide-item">
                                     <div class="premium-review-card shadow-sm">
 
-                                        {{-- 🖼️ कार्ड का ऊपरी हिस्सा: रिव्यू इमेज --}}
                                         <div class="review-img-box">
                                             <img src="{{ asset($review->media[0]) }}" alt="Customer Review Product"
                                                 class="review-attached-img">
                                         </div>
 
-                                        {{-- 📝 कार्ड का निचला हिस्सा: टेक्स्ट कंटेंट --}}
                                         <div class="review-body-box">
                                             <div class="text-warning small mb-2">
                                                 @for ($i = 1; $i <= 5; $i++)
@@ -1178,6 +1181,68 @@
                     @endif
                 </div>
 
+                @if (isset($reviews) && $reviews->count() > 0)
+                    <button class="review-slider-btn r-prev" id="review-slider-prev" aria-label="Previous Reviews">
+                        <i class="las la-angle-left"></i>
+                    </button>
+                    <button class="review-slider-btn r-next" id="review-slider-next" aria-label="Next Reviews">
+                        <i class="las la-angle-right"></i>
+                    </button>
+                @endif
+            </div>
+
+        </div>
+    </section> --}}
+
+    {{-- 👥 CUSTOMER REVIEWS SECTION (TEXT-ONLY PREMIUM SLIDER FORMAT) --}}
+    <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
+        <div class="container position-relative px-md-5">
+
+            <div class="d-flex justify-content-center mb-5">
+                <div class="fancy-heading-box">
+                    <h2 class="m-0">Customer Love</h2>
+                </div>
+            </div>
+
+            <div class="testimonial-slider-container">
+                <div class="testimonial-slider" id="suyagyaCustomerReviewsSlider">
+                    @if (isset($reviews) && $reviews->count() > 0)
+                        @foreach ($reviews as $review)
+                            {{-- 🚀 फिक्स: अब इमेज की पाबंदी हटा दी है, सारे रिव्यूज नीट एंड क्लीन दिखेंगे --}}
+                            <div class="testimonial-slide-item">
+                                <div class="premium-review-card text-only-card shadow-sm">
+
+                                    {{-- 📝 कार्ड का हिस्सा: शुद्ध टेक्स्ट कंटेंट --}}
+                                    <div class="review-body-box">
+                                        <div class="text-warning small mb-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="las la-star"></i>
+                                            @endfor
+                                        </div>
+
+                                        @if ($review->title)
+                                            <h6 class="review-card-title text-truncate">{{ $review->title }}</h6>
+                                        @endif
+
+                                        <p class="review-card-text">
+                                            "{{ $review->review }}"
+                                        </p>
+
+                                        <div class="review-card-author">
+                                            - {{ $review->display_name }}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="text-center w-100 py-4">
+                            <p class="text-muted">No reviews yet.</p>
+                        </div>
+                    @endif
+                </div>
+
                 {{-- 🎮 कस्टमाइज्ड सुंदर लेफ्ट-राइट नेविगेशन बटन्स --}}
                 @if (isset($reviews) && $reviews->count() > 0)
                     <button class="review-slider-btn r-prev" id="review-slider-prev" aria-label="Previous Reviews">
@@ -1200,7 +1265,8 @@
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box text-center">
                     <h2 class="m-0 fw-bold" style="font-family: 'Merriweather', serif;">Blogs</h2>
-                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;"></div>
+                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;">
+                    </div>
                 </div>
             </div>
 
@@ -1214,7 +1280,9 @@
                                 {{-- Image Wrapper --}}
                                 <div class="blog-img-wrapper position-relative overflow-hidden" style="height: 220px;">
                                     {{-- 🚀 स्पेलिंग फिक्स: Knowlege को सुधारकर Knowledge कर दिया है --}}
-                                    <span class="blog-tag position-absolute top-0 start-0 m-3 px-3 py-1 bg-white text-dark rounded-pill fw-bold small shadow-sm" style="z-index: 10;">
+                                    <span
+                                        class="blog-tag position-absolute top-0 start-0 m-3 px-3 py-1 bg-white text-dark rounded-pill fw-bold small shadow-sm"
+                                        style="z-index: 10;">
                                         Knowledge
                                     </span>
 
@@ -1232,7 +1300,8 @@
                                     </small>
 
                                     <h3 class="blog-title mb-3" style="font-size: 18px; line-height: 1.4;">
-                                        <a href="{{ route('blogs.show', $blog->slug) }}" class="text-decoration-none text-dark fw-bold hover-primary">
+                                        <a href="{{ route('blogs.show', $blog->slug) }}"
+                                            class="text-decoration-none text-dark fw-bold hover-primary">
                                             {{ Str::limit($blog->title, 55) }}
                                         </a>
                                     </h3>
@@ -1241,7 +1310,8 @@
                                         {{ Str::limit(strip_tags($blog->content), 100) }}
                                     </p>
 
-                                    <a href="{{ route('blogs.show', $blog->slug) }}" class="read-more-btn text-uppercase fw-bold text-warning text-decoration-none small">
+                                    <a href="{{ route('blogs.show', $blog->slug) }}"
+                                        class="read-more-btn text-uppercase fw-bold text-warning text-decoration-none small">
                                         Read more <i class="las la-arrow-right ms-1"></i>
                                     </a>
                                 </div>
@@ -1256,7 +1326,6 @@
                             View All Blogs <i class="las la-arrow-right ms-2" style="font-size: 14px;"></i>
                         </a>
                     </div>
-
                 @else
                     <div class="col-12 text-center py-5">
                         <p class="text-muted">No blogs found at the moment.</p>

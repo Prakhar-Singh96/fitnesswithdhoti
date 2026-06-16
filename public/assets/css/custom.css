@@ -4042,3 +4042,47 @@ html {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(123, 63, 39, 0.25) !important;
 }
+
+
+    /* 🚀 टेक्स्ट-ओनली कार्ड का मास्टर स्टाइल */
+    .premium-review-card.text-only-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 240px !important; /* 👈 इमेज हटने के बाद हाइट को घटाकर एकदम परफेक्ट 240px लॉक कर दिया */
+        display: flex !important;
+        flex-direction: column;
+        border: 1px solid #eee8dc;
+        transition: all 0.3s ease;
+    }
+
+    .premium-review-card.text-only-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(123, 63, 39, 0.1) !important;
+    }
+
+    .text-only-card .review-body-box {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+    }
+
+    .text-only-card .review-card-text {
+        font-size: 13px;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4; /* 4 लाइनों के बाद ऑटो (...) आ जाएगा */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    @media (max-width: 767px) {
+        .premium-review-card.text-only-card {
+            height: 220px !important; /* मोबाइल पर थोड़ा और छोटा */
+        }
+    }
+
