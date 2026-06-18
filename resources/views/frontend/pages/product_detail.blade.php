@@ -1876,6 +1876,7 @@
 
 @section('scripts')
     <script src="https://cdn.razorpay.com/widgets/affordability/affordability.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
         // --- 🟢 RAZORPAY WIDGET CONFIGURATION ---
         const rzpKey = "rzp_live_S0zZ2YEhXKBKxb"; // Aapki Live Key
