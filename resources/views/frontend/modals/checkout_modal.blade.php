@@ -123,6 +123,13 @@
                             </div>
                         </div>
 
+                        {{-- 🔥 NEW ROW FOR COD SHIPPING CHARGE (सिर्फ COD सिलेक्ट होने पर दिखेगा) --}}
+                        <div class="d-flex justify-content-between mb-1 small text-danger fw-bold"
+                            id="row_shipping_charge" style="display:none !important;">
+                            <span><i class="las la-truck"></i> COD Shipping Charge</span>
+                            <span id="bill_shipping_charge">+ ₹49</span>
+                        </div>
+
 
                         {{-- Final Amount --}}
 
@@ -400,12 +407,15 @@
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div class="d-flex align-items-center">
                                                 <div class="coin-icon-wrapper me-3">
-                                                    <i class="las la-coins fs-2 text-warning animate__animated animate__infinite animate__pulse"></i>
+                                                    <i
+                                                        class="las la-coins fs-2 text-warning animate__animated animate__infinite animate__pulse"></i>
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0 fw-bold text-dark" style="font-size: 13px;">Use
                                                         Suyagya Coins</h6>
-                                                    <small class="text-muted" style="font-size: 11px;">You have <b>{{ number_format(Auth::user()->wallet_balance) }}</b> coins available</small>
+                                                    <small class="text-muted" style="font-size: 11px;">You have
+                                                        <b>{{ number_format(Auth::user()->wallet_balance) }}</b> coins
+                                                        available</small>
                                                 </div>
                                             </div>
                                             <div class="form-check form-switch m-0">
@@ -478,7 +488,8 @@
                         {{-- 🔥 NEW: Partial COD Option --}}
                         <label class="d-flex align-items-center p-3 mb-2 border rounded-3 cursor-pointer bg-white"
                             onclick="handlePaymentMethodChange('PARTIAL')">
-                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method" id="partial" value="PARTIAL">
+                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method"
+                                id="partial" value="PARTIAL">
                             <div class="flex-grow-1">
                                 <span class="fw-bold d-block small">Pay ₹100 Now + COD</span>
                                 <small class="text-muted x-small">Pay ₹100 security fee online, rest as COD</small>

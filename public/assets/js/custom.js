@@ -2287,18 +2287,17 @@ let prepaidDiscount = 0; // 🚀 सुधार: शुरू में 0 र�
 //     $('#btn_pay_amount').text('₹' + fmtTotal);
 // }
 
+let codShippingCharge = 0;
+
 function handlePaymentMethodChange(method) {
-    // 🚀 1. सुरक्षा चेक: अगर बिल पहले ही ₹0 है (वॉलेट से), तो मेथड न बदलें
     let totalToPayStr = $('#bill_final_total').text().replace(/[^\d.]/g, '');
     let totalToPay = parseFloat(totalToPayStr) || 0;
 
-    // अगर बिल 0 है और यूजर स्विच ऑन कर चुका है, तो क्लिक डिसेबल रखें
     if (totalToPay === 0 && $('#use_coins_switch').is(':checked')) {
         console.log("Total is 0, skipping method change logic.");
         return;
     }
 
-    // 🛑 COD LIMIT CHECK: अगर अमाउंट 3000 से ज्यादा है
     if (method === 'COD' && currentCartTotal > 3000) {
         Swal.fire({
             title: 'COD Not Available',
@@ -2307,8 +2306,6 @@ function handlePaymentMethodChange(method) {
             confirmButtonColor: '#ff6f00',
             confirmButtonText: 'Pay Online'
         });
-
-        // वापस Razorpay पर स्विच करें
         $('#rzp').prop('checked', true);
         handlePaymentMethodChange('RAZORPAY');
         return;
@@ -2318,10 +2315,12 @@ function handlePaymentMethodChange(method) {
     $('.pay-radio').prop('checked', false);
     $('#row_prepaid_discount').remove();
     $('#row_partial_info').remove();
+    $('#row_shipping_charge').hide(); // डिफ़ॉल्ट छुपाओ
 
     if (method === 'RAZORPAY') {
         $('#rzp').prop('checked', true);
         prepaidDiscount = 25;
+        codShippingCharge = 0; // ऑनलाइन पेमेंट पर कोई एक्स्ट्रा चार्ज नहीं
 
         let prepaidHtml = `
             <div class="d-flex justify-content-between mb-1 small text-success fw-bold" id="row_prepaid_discount">
@@ -2338,8 +2337,8 @@ function handlePaymentMethodChange(method) {
     else if (method === 'PARTIAL') {
         $('#partial').prop('checked', true);
         prepaidDiscount = 0;
+        codShippingCharge = 0; // पार्सल एडवांस पर भी फॉलबैक 0 (या आप चाहें तो यहाँ भी रख सकते हैं)
 
-        // बिल में एक जानकारी वाली रो (Row) जोड़ें
         let partialHtml = `
             <div class="d-flex justify-content-between mb-1 small text-primary fw-bold" id="row_partial_info">
                 <span><i class="las la-info-circle"></i> Partial Pay (Advance)</span>
@@ -2347,13 +2346,16 @@ function handlePaymentMethodChange(method) {
             </div>`;
         $(partialHtml).insertAfter('#bill_subtotal');
     }
-    else {
+    else if (method === 'COD') {
         $('#cod').prop('checked', true);
         prepaidDiscount = 0;
+        codShippingCharge = 49; // 🚀 फिक्स: COD सिलेक्ट होते ही ₹49 एक्टिवेट
+
+        // बिल समरी में रो दिखाओ
+        $('#row_shipping_charge').attr('style', 'display: flex !important');
     }
 
-    // 🚀 2. हिसाब अपडेट करें
-    calculateFinalTotal();
+    calculateFinalTotal(); // हिसाब अपडेट करें
 }
 
 function calculateFinalTotal() {
@@ -2365,8 +2367,10 @@ function calculateFinalTotal() {
 
     let gameDiscount = window.appliedGamingAmount || 0;
     let currentPrepaid = ($('#step_payment').is(':visible')) ? prepaidDiscount : 0;
+    let currentShipping = ($('#step_payment').is(':visible')) ? codShippingCharge : 0; // 🚀 शिपिंग चार्ज जोड़ें
 
-    let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid);
+    // 🚀 फिक्स: बेस अमाउंट में डिस्काउंट घटेगा और कूरियर चार्ज जुड़ेगा
+    let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid) + currentShipping;
     amountBeforeWallet = Math.max(0, amountBeforeWallet);
 
     let walletDeduction = 0;
@@ -2385,11 +2389,9 @@ function calculateFinalTotal() {
     let finalPayable = Math.round(amountBeforeWallet - walletDeduction);
     if (finalPayable < 0) finalPayable = 0;
 
-    // 💰 DISPLAY LOGIC
     let fmtTotal = finalPayable.toLocaleString('en-IN');
-    $('#bill_final_total').text('₹' + fmtTotal); // "To Pay" में हमेशा पूरा बिल दिखेगा (जैसा Flipkart/Amazon में होता है)
+    $('#bill_final_total').text('₹' + fmtTotal);
 
-    // 🔥 BUTTON LOGIC FIX: Check Payment Method
     let currentMethod = $('input[name="payment_method"]:checked').val();
     let btn = $('#btn_place_order');
 
@@ -2397,12 +2399,10 @@ function calculateFinalTotal() {
         btn.removeClass('btn-dark').addClass('btn-success').text('Confirm Order (Paid by Coins)');
     }
     else if (currentMethod === 'PARTIAL') {
-        // 🚀 अगर Partial Pay चुना है, तो बटन पर सिर्फ ₹100 दिखाओ
         btn.removeClass('btn-success').addClass('btn-dark').html(`Pay ₹100 Now <span class="small" style="font-size: 10px;">(Balance as COD)</span>`);
-        $('#btn_pay_amount').text('₹100'); // ये अगर कहीं और इस्तेमाल हो रहा हो
+        $('#btn_pay_amount').text('₹100');
     }
     else {
-        // बाकी सब के लिए (Razorpay/COD) पूरा अमाउंट दिखाओ
         btn.removeClass('btn-success').addClass('btn-dark').html(`Pay <span id="btn_pay_amount">₹${fmtTotal}</span>`);
     }
 }

@@ -290,9 +290,10 @@ class CheckoutController extends Controller
         }
 
         $prepaidDiscount = ($request->payment_method == 'RAZORPAY') ? 25 : 0;
+        $shippingCharge = ($request->payment_method == 'COD') ? 49 : 0;
 
         // 🚀 फाइनल टोटल में प्रीपेड डिस्काउंट भी घटाएं
-        $finalTotal = ($baseForDiscount - ($adminDiscount + $gameDiscount)) - $prepaidDiscount;
+        $finalTotal = ($baseForDiscount - ($adminDiscount + $gameDiscount)) - $prepaidDiscount + $shippingCharge;
 
         // 💰 WALLET DEDUCTION
         $walletDeduction = 0;
@@ -334,6 +335,7 @@ class CheckoutController extends Controller
             'coupon_discount'  => $adminDiscount,
             'gaming_discount'  => $gameDiscount,
             'prepaid_discount' => $prepaidDiscount, // ✅ नया कॉलम यहाँ सेव होगा
+            'shipping_charge'  => ($request->payment_method == 'COD') ? 49 : 0,
             'wallet_amount'    => $walletDeduction, // Record wallet usage
             'coupon_code'      => $request->coupon_code,
             'refer_code_used'  => $request->referral_code, // 👈 यह नया कॉलम यहाँ आएगा

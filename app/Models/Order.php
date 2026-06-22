@@ -26,6 +26,7 @@ class Order extends Model
         'refer_code_used',
         'gaming_discount',
         'prepaid_discount',
+        'shipping_charge', // 🚀 मास्टर फिक्स: मास-असाइनमेंट के लिए इसे यहाँ जोड़ना ज़रूरी है
         'wallet_amount',
         'coupon_code',
         'payment_method',
