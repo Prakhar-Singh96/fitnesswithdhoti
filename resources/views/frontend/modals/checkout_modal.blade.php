@@ -123,13 +123,6 @@
                             </div>
                         </div>
 
-                        {{-- 🔥 NEW ROW FOR COD SHIPPING CHARGE (सिर्फ COD सिलेक्ट होने पर दिखेगा) --}}
-                        <div class="d-flex justify-content-between mb-1 small text-danger fw-bold"
-                            id="row_shipping_charge" style="display:none !important;">
-                            <span><i class="las la-truck"></i> COD Shipping Charge</span>
-                            <span id="bill_shipping_charge">+ ₹49</span>
-                        </div>
-
 
                         {{-- Final Amount --}}
 
@@ -495,16 +488,6 @@
                                 <small class="text-muted x-small">Pay ₹100 security fee online, rest as COD</small>
                             </div>
                             <i class="las la-wallet text-primary fs-4"></i>
-                        </label>
-
-                        {{-- COD Option --}}
-                        <label class="d-flex align-items-center p-3 mb-4 border rounded-3 cursor-pointer bg-white"
-                            onclick="handlePaymentMethodChange('COD')"> {{-- 👈 नया फंक्शन --}}
-                            <input type="radio" class="form-check-input me-3 pay-radio" name="payment_method"
-                                id="cod" value="COD">
-                            <div class="flex-grow-1">
-                                <span class="fw-bold d-block small">Cash on Delivery</span>
-                            </div>
                         </label>
 
 

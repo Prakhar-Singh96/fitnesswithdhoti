@@ -187,7 +187,7 @@
                         {{-- 🚀 नया: अगर ऑर्डर में COD शिपिंग चार्ज सेव है, तो यूज़र को साफ़-साफ़ अलग रो में दिखेगा --}}
                         @if (isset($order->shipping_charge) && $order->shipping_charge > 0)
                             <div class="d-flex justify-content-between mb-2 small text-danger fw-bold">
-                                <span><i class="las la-truck"></i> COD Shipping Charge</span>
+                                <span><i class="las la-truck"></i> COD Charge</span>
                                 <span>+ ₹{{ number_format($order->shipping_charge, 2) }}</span>
                             </div>
                         @endif

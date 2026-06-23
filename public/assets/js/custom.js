@@ -2287,8 +2287,6 @@ let prepaidDiscount = 0; // 🚀 सुधार: शुरू में 0 र�
 //     $('#btn_pay_amount').text('₹' + fmtTotal);
 // }
 
-let codShippingCharge = 0;
-
 function handlePaymentMethodChange(method) {
     let totalToPayStr = $('#bill_final_total').text().replace(/[^\d.]/g, '');
     let totalToPay = parseFloat(totalToPayStr) || 0;
@@ -2298,29 +2296,14 @@ function handlePaymentMethodChange(method) {
         return;
     }
 
-    if (method === 'COD' && currentCartTotal > 3000) {
-        Swal.fire({
-            title: 'COD Not Available',
-            text: 'Cash on Delivery is only available for orders up to ₹3,000. For orders above this, please use Online Payment.',
-            icon: 'warning',
-            confirmButtonColor: '#ff6f00',
-            confirmButtonText: 'Pay Online'
-        });
-        $('#rzp').prop('checked', true);
-        handlePaymentMethodChange('RAZORPAY');
-        return;
-    }
-
     console.log("Payment Method Changed To:", method);
     $('.pay-radio').prop('checked', false);
     $('#row_prepaid_discount').remove();
     $('#row_partial_info').remove();
-    $('#row_shipping_charge').hide(); // डिफ़ॉल्ट छुपाओ
 
     if (method === 'RAZORPAY') {
         $('#rzp').prop('checked', true);
         prepaidDiscount = 25;
-        codShippingCharge = 0; // ऑनलाइन पेमेंट पर कोई एक्स्ट्रा चार्ज नहीं
 
         let prepaidHtml = `
             <div class="d-flex justify-content-between mb-1 small text-success fw-bold" id="row_prepaid_discount">
@@ -2337,22 +2320,14 @@ function handlePaymentMethodChange(method) {
     else if (method === 'PARTIAL') {
         $('#partial').prop('checked', true);
         prepaidDiscount = 0;
-        codShippingCharge = 0; // पार्सल एडवांस पर भी फॉलबैक 0 (या आप चाहें तो यहाँ भी रख सकते हैं)
 
+        // बिल में एडवांस पेमेंट की रो दिखाओ भाई
         let partialHtml = `
             <div class="d-flex justify-content-between mb-1 small text-primary fw-bold" id="row_partial_info">
                 <span><i class="las la-info-circle"></i> Partial Pay (Advance)</span>
                 <span>₹100</span>
             </div>`;
         $(partialHtml).insertAfter('#bill_subtotal');
-    }
-    else if (method === 'COD') {
-        $('#cod').prop('checked', true);
-        prepaidDiscount = 0;
-        codShippingCharge = 49; // 🚀 फिक्स: COD सिलेक्ट होते ही ₹49 एक्टिवेट
-
-        // बिल समरी में रो दिखाओ
-        $('#row_shipping_charge').attr('style', 'display: flex !important');
     }
 
     calculateFinalTotal(); // हिसाब अपडेट करें
@@ -2367,10 +2342,9 @@ function calculateFinalTotal() {
 
     let gameDiscount = window.appliedGamingAmount || 0;
     let currentPrepaid = ($('#step_payment').is(':visible')) ? prepaidDiscount : 0;
-    let currentShipping = ($('#step_payment').is(':visible')) ? codShippingCharge : 0; // 🚀 शिपिंग चार्ज जोड़ें
 
-    // 🚀 फिक्स: बेस अमाउंट में डिस्काउंट घटेगा और कूरियर चार्ज जुड़ेगा
-    let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid) + currentShipping;
+    // 🚀 फिक्स: अब कूरियर का कोई एक्स्ट्रा चार्ज नहीं जुड़ेगा
+    let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid);
     amountBeforeWallet = Math.max(0, amountBeforeWallet);
 
     let walletDeduction = 0;
@@ -2399,6 +2373,7 @@ function calculateFinalTotal() {
         btn.removeClass('btn-dark').addClass('btn-success').text('Confirm Order (Paid by Coins)');
     }
     else if (currentMethod === 'PARTIAL') {
+        // 🚀 अगर पार्शियल पे चुना है तो बटन पर साफ दिखाओ कि अभी सिर्फ ₹100 ही कटेंगे
         btn.removeClass('btn-success').addClass('btn-dark').html(`Pay ₹100 Now <span class="small" style="font-size: 10px;">(Balance as COD)</span>`);
         $('#btn_pay_amount').text('₹100');
     }

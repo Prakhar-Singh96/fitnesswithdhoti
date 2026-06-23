@@ -81,7 +81,7 @@
                                 {{-- 🚀 नया: एडमिन पैनल पर भी कूरियर/शिपिंग चार्ज अलग से साफ़-साफ़ दिखेगा --}}
                                 @if (isset($order->shipping_charge) && $order->shipping_charge > 0)
                                     <p class="d-flex justify-content-between text-danger">
-                                        <span><i class="las la-truck"></i> COD Shipping Charge:</span>
+                                        <span><i class="las la-truck"></i> COD Charge:</span>
                                         <strong>+ ₹{{ number_format($order->shipping_charge) }}</strong>
                                     </p>
                                 @endif
