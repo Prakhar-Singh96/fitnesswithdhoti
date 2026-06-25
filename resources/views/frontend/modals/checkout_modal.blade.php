@@ -126,14 +126,20 @@
 
                         {{-- Final Amount --}}
 
+                        {{-- 📊 FINAL Totals Area (Updated for Transparent Partial Pay) --}}
                         <div class="border-top my-2"></div>
 
+                        {{-- 🔵 Dynamic Row: जो सिर्फ पार्शियल पे सिलेक्ट होने पर कस्टमर को उसका बाकी का बिल बताएगी --}}
+                        <div class="d-flex justify-content-between mb-2 small fw-bold text-secondary"
+                            id="row_balance_cod_info" style="display: none !important;">
+                            <span><i class="las la-hand-holding-usd"></i> Pay at Delivery (COD Balance)</span>
+                            <span id="bill_balance_cod">₹0</span>
+                        </div>
+
                         <div class="d-flex justify-content-between fw-bold text-dark fs-6 align-items-center">
-
-                            <span>To Pay</span>
-
-                            <span id="bill_final_total" class="fs-5">₹0</span>
-
+                            {{-- 🚀 यहाँ टेक्स्ट डायनामिकली 'To Pay Now' या 'To Pay' में बदलेगा --}}
+                            <span id="text_final_pay_label">To Pay</span>
+                            <span id="bill_final_total" class="fs-5 text-primary">₹0</span>
                         </div>
 
                     </div>

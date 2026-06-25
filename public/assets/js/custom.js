@@ -2343,7 +2343,7 @@ function calculateFinalTotal() {
     let gameDiscount = window.appliedGamingAmount || 0;
     let currentPrepaid = ($('#step_payment').is(':visible')) ? prepaidDiscount : 0;
 
-    // 🚀 फिक्स: अब कूरियर का कोई एक्स्ट्रा चार्ज नहीं जुड़ेगा
+    // 1. ऑफर्स और डिस्काउंट घटाने के बाद जो नेट आर्डर वैल्यू बची:
     let amountBeforeWallet = currentCartTotal - (adminDiscount + gameDiscount + currentPrepaid);
     amountBeforeWallet = Math.max(0, amountBeforeWallet);
 
@@ -2360,25 +2360,47 @@ function calculateFinalTotal() {
         $('#final_use_coins').val('0');
     }
 
-    let finalPayable = Math.round(amountBeforeWallet - walletDeduction);
-    if (finalPayable < 0) finalPayable = 0;
-
-    let fmtTotal = finalPayable.toLocaleString('en-IN');
-    $('#bill_final_total').text('₹' + fmtTotal);
+    // 🎯 यह है आपके पूरे आर्डर का फाइनल नेट टोटल बिल
+    let finalOrderTotal = Math.round(amountBeforeWallet - walletDeduction);
+    if (finalOrderTotal < 0) finalOrderTotal = 0;
 
     let currentMethod = $('input[name="payment_method"]:checked').val();
     let btn = $('#btn_place_order');
 
-    if (finalPayable === 0 && $('#use_coins_switch').is(':checked')) {
+    // डिफ़ॉल्ट रूप से बैलेंस रो छुपा कर रखो
+    $('#row_balance_cod_info').attr('style', 'display: none !important');
+    $('#text_final_pay_label').text('To Pay');
+
+    let finalPayableNow = finalOrderTotal; // अभी देने वाला अमाउंट
+
+    // 🚀 मास्टर पार्शियल पे कैलकुलेशन फिक्स:
+    if (finalOrderTotal > 0 && currentMethod === 'PARTIAL') {
+        finalPayableNow = 100; // अभी सिर्फ ₹100 एडवांस लेगा
+        let balanceCodAmount = finalOrderTotal - 100; // बाकी का कूरियर अमाउंट (699 - 100 = 599)
+        if (balanceCodAmount < 0) balanceCodAmount = 0;
+
+        // यूआई पर बाकी का कूरियर बिल दिखाओ
+        $('#row_balance_cod_info').attr('style', 'display: flex !important');
+        $('#bill_balance_cod').text('₹' + balanceCodAmount.toLocaleString('en-IN'));
+
+        // लेबल को बदल कर 'To Pay Now' करो ताकि कस्टमर को भरोसा हो
+        $('#text_final_pay_label').text('To Pay Now (Advance Confirmation COD)');
+    }
+
+    // 💰 डिस्प्ले अपडेट (To Pay में अब एडवांस सिलेक्ट होने पर सिर्फ ₹100 ही दिखेगा!)
+    let fmtTotalNow = finalPayableNow.toLocaleString('en-IN');
+    $('#bill_final_total').text('₹' + fmtTotalNow);
+
+    // 🎮 बॉटम बटन यूआई फिक्स
+    if (finalOrderTotal === 0 && $('#use_coins_switch').is(':checked')) {
         btn.removeClass('btn-dark').addClass('btn-success').text('Confirm Order (Paid by Coins)');
     }
     else if (currentMethod === 'PARTIAL') {
-        // 🚀 अगर पार्शियल पे चुना है तो बटन पर साफ दिखाओ कि अभी सिर्फ ₹100 ही कटेंगे
         btn.removeClass('btn-success').addClass('btn-dark').html(`Pay ₹100 Now <span class="small" style="font-size: 10px;">(Balance as COD)</span>`);
         $('#btn_pay_amount').text('₹100');
     }
     else {
-        btn.removeClass('btn-success').addClass('btn-dark').html(`Pay <span id="btn_pay_amount">₹${fmtTotal}</span>`);
+        btn.removeClass('btn-success').addClass('btn-dark').html(`Pay <span id="btn_pay_amount">₹${fmtTotalNow}</span>`);
     }
 }
 
