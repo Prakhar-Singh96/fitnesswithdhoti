@@ -1360,11 +1360,11 @@ function processPayment() {
     let currentMethod = $('input[name="payment_method"]:checked').val();
 
     // 🛑 COD LIMIT CHECK: अगर 3000 से ऊपर है तो पेमेंट प्रोसेस ही न होने दें
-    if (currentMethod === 'COD' && totalToPay > 3000) {
+    if (currentMethod === 'PARTIAL' && totalToPay > 3000) {
         Swal.fire({
             icon: 'error',
             title: 'COD Not Allowed',
-            text: 'Cash on Delivery is only available for orders up to ₹3,000. Please pay online to place this order.',
+            text: 'COD Payment is only available for orders up to ₹3,000. Please select Full Prepaid to continue.',
             confirmButtonColor: '#ff6f00'
         });
         return false; // यहीं रुक जाएं
@@ -2296,15 +2296,43 @@ function handlePaymentMethodChange(method) {
         return;
     }
 
+    // 🚀 MASTER LIMIT FIX: 3000 से ऊपर पर 'PARTIAL' पेमेंट ब्लॉक करें
+    if (method === 'PARTIAL') {
+        let tempAdminDisc = 0;
+        if ($('#coupon_applied_box').is(':visible')) {
+            let text = $('#saved_amount_text').text().replace(/[^\d.]/g, '');
+            tempAdminDisc = parseFloat(text) || 0;
+        }
+
+        // 🚀 गेम कूपन बंद हो गया है, इसलिए सिर्फ एडमिन कूपन घटाएंगे
+        let rawPayable = currentCartTotal - tempAdminDisc;
+
+        // अगर कूपन लगने के बाद भी नेट आर्डर वैल्यू 3000 से ज़्यादा है
+        if (rawPayable > 3000) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Online Payment Required',
+                text: 'COD Payment is only available for orders up to ₹3,000. Please select Full Prepaid to place this order.',
+                confirmButtonColor: '#ff6f00'
+            });
+            // 🚫 वापस सुरक्षित प्रीपेड पर धकेल दो
+            $('#rzp').prop('checked', true);
+            method = 'RAZORPAY';
+        }
+    }
+
     console.log("Payment Method Changed To:", method);
     $('.pay-radio').prop('checked', false);
+
+    // विजुअली सही रेडियो बटन चेक करें
+    if (method === 'RAZORPAY') $('#rzp').prop('checked', true);
+    if (method === 'PARTIAL') $('#partial').prop('checked', true);
+
     $('#row_prepaid_discount').remove();
     $('#row_partial_info').remove();
 
     if (method === 'RAZORPAY') {
-        $('#rzp').prop('checked', true);
         prepaidDiscount = 25;
-
         let prepaidHtml = `
             <div class="d-flex justify-content-between mb-1 small text-success fw-bold" id="row_prepaid_discount">
                 <span><i class="las la-check-circle"></i> Prepaid Offer (Online Pay)</span>
@@ -2318,10 +2346,7 @@ function handlePaymentMethodChange(method) {
         }
     }
     else if (method === 'PARTIAL') {
-        $('#partial').prop('checked', true);
         prepaidDiscount = 0;
-
-        // बिल में एडवांस पेमेंट की रो दिखाओ भाई
         let partialHtml = `
             <div class="d-flex justify-content-between mb-1 small text-primary fw-bold" id="row_partial_info">
                 <span><i class="las la-info-circle"></i> Partial Pay (Advance)</span>

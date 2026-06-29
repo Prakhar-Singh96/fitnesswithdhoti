@@ -125,7 +125,7 @@
                             <strong style="color: #333333; font-size: 15px;">{{ $order->shipping_address['name'] ?? '' }}</strong><br>
                             {{ $order->shipping_address['address_line1'] ?? '' }}<br>
                             {{ $order->shipping_address['city'] ?? '' }}, {{ $order->shipping_address['state'] ?? '' }} - {{ $order->shipping_address['pincode'] ?? '' }}<br>
-                            <strong>Phone:</strong> +91 {{ $order->shipping_address['phone'] ?? '' }}<br>
+                            <strong>Phone:</strong> {{ $order->shipping_address['phone'] ?? '' }}<br>
                             <strong>Email:</strong> {{ $order->shipping_address['email'] ?? 'N/A' }}
                         </div>
 

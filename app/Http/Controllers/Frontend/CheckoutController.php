@@ -319,7 +319,7 @@ class CheckoutController extends Controller
         }
 
         // 🛑 COD LIMIT CHECK (नया हिस्सा)
-        if ($request->payment_method == 'COD' && $finalTotal > 3000) {
+        if ($request->payment_method == 'PARTIAL' && $finalTotal > 3000) {
             return response()->json([
                 'status' => false,
                 'message' => 'Cash on Delivery (COD) is only available for orders up to ₹3,000. Your current total is ₹' . number_format($finalTotal) . '. Please use Online Payment to proceed.'
