@@ -269,13 +269,23 @@ class CheckoutController extends Controller
 
         $baseForDiscount = $subtotal + $totalSiddhCharge;
 
-        // placeOrder(Request $request) के अंदर:
         if ($request->coupon_code) {
             $coupon = Coupon::where('code', $request->coupon_code)->where('status', 1)->first();
             if ($coupon && !($coupon->expires_at && Carbon::now()->gt($coupon->expires_at))) {
-                // 🚀 यहाँ बदलाव: डिस्काउंट को round() करें
-                $rawDiscount = ($coupon->type == 'fixed') ? $coupon->value : ($baseForDiscount * $coupon->value) / 100;
-                $adminDiscount = round($rawDiscount);
+
+                // 🚀 प्लेस आर्डर के वक्त भी लिंक्ड प्रोडक्ट्स का टोटल निकालें
+                $applicableTotal = 0;
+                foreach($orderItemsData as $dataItem) {
+                    if (empty($coupon->product_ids) || in_array($dataItem['product_id'], $coupon->product_ids)) {
+                         $applicableTotal += ($dataItem['price'] + $dataItem['siddh_amount']) * $dataItem['quantity'];
+                    }
+                }
+
+                if ($applicableTotal > 0) {
+                    $activeCouponValue = ($request->payment_method == 'RAZORPAY') ? $coupon->value : $coupon->cod_value;
+                    $rawDiscount = ($coupon->type == 'fixed') ? $activeCouponValue : ($applicableTotal * $activeCouponValue) / 100;
+                    $adminDiscount = round($rawDiscount);
+                }
             }
         }
 
@@ -612,74 +622,69 @@ class CheckoutController extends Controller
 
     public function applyCoupon(Request $request)
     {
-        $code = strtoupper($request->code); // कोड को हमेशा CAPS में रखें
-
-        // 🔥 FIX: Ensure cartTotal is treated as a float
+        $code = strtoupper($request->code);
         $cartTotal = (float) str_replace(',', '', $request->cart_total);
         $user = Auth::user();
 
-        // 1. Coupon Find karo
         $coupon = Coupon::where('code', $code)->where('status', 1)->first();
 
-        // 2. Validation
-        if (!$coupon) {
-            return response()->json(['status' => false, 'message' => 'Invalid Coupon Code']);
-        }
+        if (!$coupon) return response()->json(['status' => false, 'message' => 'Invalid Coupon Code']);
 
-        // 🎯 मुख्य लॉजिक: अगर कूपन WELCOME10 है, तो ऑर्डर चेक करें
         if ($code === 'WELCOME10') {
-            $orderCount = \App\Models\Order::where('user_id', $user->id)
-                ->where('status', '!=', 'cancelled')
-                ->count();
-
-            if ($orderCount > 0) {
-                return response()->json(['status' => false, 'message' => 'Ye coupon sirf aapke pehle order ke liye hai!']);
-            }
+            $orderCount = \App\Models\Order::where('user_id', $user->id)->where('status', '!=', 'cancelled')->count();
+            if ($orderCount > 0) return response()->json(['status' => false, 'message' => 'Ye coupon sirf aapke pehle order ke liye hai!']);
         }
 
-        // Expiry Check (Agar NULL nahi hai tabhi check karo)
         if ($coupon->expires_at && Carbon::now()->gt($coupon->expires_at)) {
             return response()->json(['status' => false, 'message' => 'Coupon Expired']);
         }
-
-        // Min Amount Check
         if ($coupon->min_cart_amount && $cartTotal < $coupon->min_cart_amount) {
             return response()->json(['status' => false, 'message' => 'Add more items worth ₹' . ($coupon->min_cart_amount - $cartTotal)]);
         }
 
-        // 3. Calculation Logic (Main Fix)
-        $discountAmount = 0;
-        $couponValue = (float) $coupon->value;
-
-        // 🔥 FIX: Check lowercase string matches
-        $type = strtolower($coupon->type);
-
-        if ($type == 'fixed' || $type == 'flat') {
-            $discountAmount = $couponValue;
+        // 🚀 SMART LOGIC: सिर्फ लिंक्ड प्रोडक्ट्स का टोटल निकालें
+        $applicableTotal = 0;
+        if ($request->buy_mode == 'direct') {
+            if (empty($coupon->product_ids) || in_array($request->product_id, $coupon->product_ids)) {
+                $applicableTotal = $cartTotal;
+            }
         } else {
-            // Percent Case (10% of 500 = 50)
-            $discountAmount = round(($cartTotal * $couponValue) / 100);
+            $cartItems = Cart::with('product', 'variant')->where('user_id', $user->id)->get();
+            foreach ($cartItems as $item) {
+                if (empty($coupon->product_ids) || in_array($item->product_id, $coupon->product_ids)) {
+                    $itemPrice = $item->variant ? round($item->variant->selling_price) : round($item->product->price);
+                    $siddhAmt = ($item->is_siddh == 1) ? round($item->product->siddh_price ?? 0) : 0;
+                    $applicableTotal += (($itemPrice + $siddhAmt) * $item->quantity);
+                }
+            }
         }
 
-        // Discount Total se zyada nahi ho sakta
-        if ($discountAmount > $cartTotal) {
-            $discountAmount = $cartTotal;
+        if ($applicableTotal <= 0) {
+            return response()->json(['status' => false, 'message' => 'This coupon is not valid for the items in your cart.']);
         }
 
-        $newTotal = $cartTotal - $discountAmount;
+        // 🚀 दोनों डिस्काउंट कैलकुलेट करें
+        $prepaidDiscount = 0;
+        $codDiscount = 0;
+        if (strtolower($coupon->type) == 'fixed' || strtolower($coupon->type) == 'flat') {
+            $prepaidDiscount = $coupon->value;
+            $codDiscount = $coupon->cod_value;
+        } else {
+            $prepaidDiscount = round(($applicableTotal * $coupon->value) / 100);
+            $codDiscount = round(($applicableTotal * $coupon->cod_value) / 100);
+        }
 
         return response()->json([
             'status' => true,
-            'message' => 'Coupon Applied Successfully!',
-            'discount' => number_format($discountAmount, 0), // Format for display
-            'new_total' => number_format($newTotal, 0)
+            'message' => 'Coupon Applied! Discount adapts to Payment Method.',
+            'discount' => min($prepaidDiscount, $cartTotal), // JS फॉलबैक
+            'prepaid_discount' => min($prepaidDiscount, $cartTotal),
+            'cod_discount' => min($codDiscount, $cartTotal),
         ]);
     }
 
     public function getCoupons()
     {
-        // 1. सिर्फ वो कूपन लाओ जो Active हैं (Status=1)
-        // AUR (Expiry future me ho YA Expiry Null ho)
         $coupons = \App\Models\Coupon::where('status', 1)
             ->where(function ($query) {
                 $query->whereDate('expires_at', '>', Carbon::now())
@@ -688,12 +693,7 @@ class CheckoutController extends Controller
             ->latest()
             ->get();
 
-        // 2. Value ko Number banao taaki JS me dikkat na aaye
-        $coupons->transform(function ($coupon) {
-            $coupon->value = (float) $coupon->value;
-            return $coupon;
-        });
-
+        // 🚀 यहाँ सुनिश्चित करें कि cod_value भी JSON में जा रहा है
         return response()->json($coupons);
     }
 

@@ -1577,6 +1577,8 @@ function filterReviews(productId) {
 let currentCartTotal = 0;
 let currentProductId = 0;
 let appliedCouponCode = null;
+let appliedPrepaidDisc = 0; // 👈 नया
+let appliedCodDisc = 0;     // 👈 नया
 
 // 🔥 NEW VARIABLES FOR GAMING COUPON
 let appliedGamingCode = null;
@@ -1585,46 +1587,38 @@ let appliedGamingAmount = 0;
 // 1. Fetch Coupons (View All Click)
 function fetchCoupons() {
     $('#coupon_list_box').slideToggle();
-
-    // 🚀 सुधार: मेटा टैग से ताज़ा लॉगिन स्टेटस लें
     const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
 
-    $.ajax({
-        url: "/checkout/get-coupons", // अपनी रूट URL पक्का करें
-        type: "GET",
-        success: function (response) {
-            let html = '';
+    $.get("/checkout/get-coupons", function (data) {
+        let html = '';
+        if (data.length > 0) {
+            data.forEach(c => {
+                let pVal = parseFloat(c.value);
+                let cVal = parseFloat(c.cod_value);
+                let type = c.type === 'percent' ? '%' : '₹';
 
-            // फ़िल्टर करें: अगर लॉगिन नहीं है, तो 'WELCOME10' हटा दें
-            const filteredCoupons = response.filter(c => {
-                if (c.code === 'WELCOME10' && !isLoggedIn) {
-                    return false;
-                }
-                return true;
-            });
-
-            if (filteredCoupons.length > 0) {
-                filteredCoupons.forEach(c => {
-                    html += `
-                        <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2">
-                            <div>
-                                <strong class="text-uppercase text-primary border border-primary px-2 rounded small me-2">${c.code}</strong>
-                                <small class="text-muted d-block mt-1" style="font-size:10px;">
-                                    ${c.type === 'fixed' || c.type === 'flat' ? 'Flat ₹' + c.value + ' OFF' : c.value + '% OFF'}
-                                </small>
+                // 🚀 यहाँ क्लियर दिखाया है कि Prepaid पर कितना और COD पर कितना है
+                html += `
+                    <div class="d-flex justify-content-between align-items-center bg-white border rounded p-3 mb-2 shadow-sm">
+                        <div style="width: 70%;">
+                            <span class="badge bg-dark text-white mb-2 text-uppercase" style="font-size: 11px;">${c.code}</span>
+                            <div class="small fw-bold" style="color: #2e7d32; font-size: 12px;">
+                                <i class="las la-check-circle"></i> Prepaid: ${pVal}${type} OFF
                             </div>
-                            <button class="btn btn-sm btn-outline-dark py-1 px-3 fw-bold"
-                                    onclick="$('#coupon_code').val('${c.code}'); applyCouponManual();">
-                                APPLY
-                            </button>
+                            <div class="small fw-bold" style="color: #d32f2f; font-size: 12px;">
+                                <i class="las la-truck"></i> COD/Partial: ${cVal}${type} OFF
+                            </div>
                         </div>
-                    `;
-                });
-            } else {
-                html = '<p class="text-center small text-muted py-3">No coupons available at this moment.</p>';
-            }
-            $('#coupon_list_box').html(html);
+                        <button class="btn btn-sm btn-outline-dark fw-bold px-3"
+                                style="border-radius: 6px;"
+                                onclick="applyCouponDirect('${c.code}')">APPLY</button>
+                    </div>
+                `;
+            });
+        } else {
+            html = '<p class="text-center small text-muted py-3">No coupons available.</p>';
         }
+        $('#coupon_list_box').html(html);
     });
 }
 
@@ -1997,24 +1991,34 @@ function toggleCouponList() {
     } else {
         box.slideDown();
 
-        // 🔥 FIX: Use window.appRoutes instead of {{ route }}
+        // 🔥 FIX: Fetch updated coupons with cod_value
         $.get(window.appRoutes.getCoupons, function (data) {
             let html = '';
             if (data.length > 0) {
                 data.forEach(c => {
-                    let val = parseFloat(c.value);
+                    let pVal = parseFloat(c.value);
+                    let cVal = parseFloat(c.cod_value);
+                    let type = (c.type === 'percent') ? '%' : '₹';
 
-                    // Logic to show text properly
-                    let isPercent = c.type.toLowerCase().includes('percent') || c.type.includes('%');
-                    let desc = isPercent ? val + '% OFF' : 'Flat ₹' + val + ' OFF';
+                    // 🚀 प्रोफेशनल डिस्काउंट टेक्स्ट
+                    let prepaidText = (c.type === 'percent') ? `${pVal}% OFF` : `₹${pVal} OFF`;
+                    let codText = (c.type === 'percent') ? `${cVal}% OFF` : `₹${cVal} OFF`;
 
                     html += `
-                        <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2">
-                            <div>
-                                <span class="badge bg-light text-dark border border-secondary mb-1 text-uppercase">${c.code}</span>
-                                <div class="small text-muted" style="font-size: 11px;">${desc}</div>
+                        <div class="d-flex justify-content-between align-items-center bg-white border rounded p-2 mb-2 shadow-sm">
+                            <div style="width: 70%;">
+                                <span class="badge bg-dark text-white mb-1 text-uppercase" style="font-size: 10px;">${c.code}</span>
+
+                                <div class="small fw-bold" style="font-size: 11px; color: #2e7d32; margin-bottom: 2px;">
+                                    <i class="las la-check-circle"></i> Prepaid: ${prepaidText}
+                                </div>
+                                <div class="small fw-bold" style="font-size: 11px; color: #d32f2f;">
+                                    <i class="las la-truck"></i> COD/Partial: ${codText}
+                                </div>
                             </div>
-                            <button class="btn btn-sm btn-outline-dark fw-bold py-1 px-3" style="font-size: 11px;" onclick="applyCouponDirect('${c.code}')">APPLY</button>
+                            <button class="btn btn-sm btn-outline-dark fw-bold py-1 px-3"
+                                    style="font-size: 11px; border-radius: 6px;"
+                                    onclick="applyCouponDirect('${c.code}')">APPLY</button>
                         </div>
                     `;
                 });
@@ -2039,7 +2043,6 @@ function applyCouponDirect(code) {
     const msg = $('#coupon_msg');
     msg.hide().removeClass('text-success text-danger');
 
-    // 🚀 सुरक्षा चेक: बिना लॉगिन के WELCOME10 अप्लाई करने पर रोक
     const isLoggedIn = $('meta[name="is-logged-in"]').attr('content') === '1';
     if (code.toUpperCase() === 'WELCOME10' && !isLoggedIn) {
         msg.text('WELCOME10 coupon not applied. Please login first!').addClass('text-danger').show();
@@ -2047,35 +2050,35 @@ function applyCouponDirect(code) {
     }
     $('#coupon_code').val(code);
 
-    // Ensure route is correct
-    // If using Blade: let url = "{{ route('apply.coupon') }}";
-    // If external JS: let url = "/checkout/apply-coupon";
     let url = window.appRoutes ? window.appRoutes.applyCoupon : "/checkout/apply-coupon";
 
     $.post(url, {
         code: code,
         cart_total: currentCartTotal,
-        _token: $('meta[name="csrf-token"]').attr('content') // Ensure this selector is correct
+        buy_mode: $('#final_buy_mode').val(), // 👈 नया भेजा
+        product_id: $('#final_product_id').val(), // 👈 नया भेजा
+        _token: $('meta[name="csrf-token"]').attr('content')
     }, function (res) {
         if (res.status) {
-            // UI Show
             $('#coupon_input_group').hide();
             $('#coupon_list_box').slideUp();
             $('#coupon_applied_box').fadeIn();
             $('#row_coupon_discount').fadeIn();
 
-            // 1. Text Update (For calculator to read)
-            $('#saved_amount_text').text('₹' + res.discount);
-            $('#bill_coupon_discount').text('- ₹' + res.discount);
-
-            // 2. Set Variables
             appliedCouponCode = code;
             $('#final_coupon_code').val(code);
 
-            // 3. 🔥 RECALCULATE (Game + Admin)
-            calculateFinalTotal();
+            // 🚀 बैकएंड से आये दोनों डिस्काउंट सेव करें
+            appliedPrepaidDisc = parseFloat(res.prepaid_discount) || 0;
+            appliedCodDisc = parseFloat(res.cod_discount) || 0;
 
-            $('#coupon_msg').text(res.message).addClass('text-success').show();
+            calculateFinalTotal();
+            $('#coupon_msg').html(`
+                <div class="alert alert-success p-2 small">
+                    <b>${code} Applied!</b><br>
+                    Prepaid Disc: <b>${res.prepaid_discount}</b> | COD Disc: <b>${res.cod_discount}</b>
+                </div>
+            `).show();
         } else {
             $('#coupon_msg').text(res.message).addClass('text-danger').show();
         }
@@ -2086,21 +2089,18 @@ function applyCouponDirect(code) {
 
 // // 2. Remove Coupon Logic
 function removeCoupon() {
-    // 1. UI Reset
     $('#coupon_applied_box').hide();
     $('#coupon_input_group').fadeIn();
     $('#coupon_code').val('');
-    $('#coupon_msg').hide();
+    $('#coupon_msg').hide().html('');
     $('#row_coupon_discount').hide();
-
-    // 2. Text Reset (Crucial for calculator)
     $('#saved_amount_text').text('₹0');
 
-    // 3. Reset Variables
     appliedCouponCode = null;
     $('#final_coupon_code').val('');
+    appliedPrepaidDisc = 0; // 👈 नया
+    appliedCodDisc = 0;     // 👈 नया
 
-    // 4. 🔥 RECALCULATE (Only Game remains)
     calculateFinalTotal();
 }
 
@@ -2359,10 +2359,15 @@ function handlePaymentMethodChange(method) {
 }
 
 function calculateFinalTotal() {
+    let currentMethod = $('input[name="payment_method"]:checked').val();
     let adminDiscount = 0;
     if ($('#coupon_applied_box').is(':visible')) {
-        let text = $('#saved_amount_text').text().replace(/[^\d.]/g, '');
-        adminDiscount = parseFloat(text) || 0;
+       // 🚀 पेमेंट मेथड के अनुसार डिस्काउंट अमाउंट स्विच करें!
+        adminDiscount = (currentMethod === 'RAZORPAY') ? appliedPrepaidDisc : appliedCodDisc;
+
+        // यूआई पर टेक्स्ट को लाइव अपडेट करें
+        $('#saved_amount_text').text('₹' + adminDiscount);
+        $('#bill_coupon_discount').text('- ₹' + adminDiscount);
     }
 
     let gameDiscount = window.appliedGamingAmount || 0;
@@ -2389,7 +2394,6 @@ function calculateFinalTotal() {
     let finalOrderTotal = Math.round(amountBeforeWallet - walletDeduction);
     if (finalOrderTotal < 0) finalOrderTotal = 0;
 
-    let currentMethod = $('input[name="payment_method"]:checked').val();
     let btn = $('#btn_place_order');
 
     // डिफ़ॉल्ट रूप से बैलेंस रो छुपा कर रखो

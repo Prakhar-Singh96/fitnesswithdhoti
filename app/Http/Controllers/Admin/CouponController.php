@@ -18,7 +18,8 @@ class CouponController extends Controller
     // ✅ 2. Show Create Form (Ye Missing Tha)
     public function create()
     {
-        return view('admin.coupons.create');
+        $products = \App\Models\Product::where('status', 1)->get(); // सारे प्रोडक्ट्स लायें
+        return view('admin.coupons.create', compact('products'));
     }
 
     // 3. Store Logic
@@ -28,7 +29,9 @@ class CouponController extends Controller
             'code' => 'required|unique:coupons,code',
             'type' => 'required|in:fixed,percent',
             'value' => 'required|numeric',
+            'cod_value' => 'required|numeric', // 👈 नया
             'expires_at' => 'nullable|date',
+            'product_ids' => 'nullable|array', // 👈 नया
             'status' => 'nullable|boolean' // Optional: Status field agar ho
         ]);
 
@@ -45,7 +48,8 @@ class CouponController extends Controller
     public function edit($id)
     {
         $coupon = Coupon::findOrFail($id);
-        return view('admin.coupons.edit', compact('coupon'));
+        $products = \App\Models\Product::where('status', 1)->get();
+        return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
     // 5. Update Logic
@@ -57,11 +61,14 @@ class CouponController extends Controller
             'code' => 'required|unique:coupons,code,' . $id, // Ignore current ID
             'type' => 'required|in:fixed,percent',
             'value' => 'required|numeric',
+            'cod_value' => 'required|numeric', // 👈 नया
             'expires_at' => 'nullable|date',
+            'product_ids' => 'nullable|array', // 👈 नया
         ]);
 
         $data = $request->all();
         $data['status'] = $request->has('status') ? 1 : 0;
+        $data['product_ids'] = $request->product_ids ?? null;
 
         $coupon->update($data);
 
