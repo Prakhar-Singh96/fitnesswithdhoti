@@ -4,36 +4,8 @@
 
 @section('content')
 
-    {{-- 💎 1. CATEGORY SCROLL SECTION --}}
-    <section class="py-2 bg-white shadow-sm">
-        <div class="container">
 
-            {{-- Slider Container --}}
-            <div id="categoryScroll" class="category-slider" style="opacity: 0; transition: opacity 0.5s;">
-                @foreach ($categories as $category)
-                    <div class="px-2">
-                        <div class="text-center category-item">
-                            <a href="{{ url('category/' . $category['slug']) }}" class="text-decoration-none d-block">
-
-                                {{-- Image Circle (Updated Class) --}}
-                                <div class="category-circle-wrapper">
-                                    <img src="{{ asset($category->icon_image) }}"
-                                        alt="{{ $category['icon_alt'] ?? $category['name'] }}">
-                                </div>
-
-                                {{-- Name --}}
-                                <span class="small fw-bold text-dark d-block">
-                                    {{ $category['name'] }}
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-        </div>
-    </section>
-    <h1 class="seo-h1">Buy Original Rudraksha, Karungali & Gemstone Bracelets Online</h1>
+    <h1 class="seo-h1">Vardhiyas - Premium Mens Clothing | T-Shirts, Jeans & Shirts</h1>
 
 
     {{-- 🖼️ 2. HERO SLIDER SECTION (OPTIMIZED FOR NO-LAYOUT-SHIFT & SPEED) --}}
@@ -83,161 +55,123 @@
         </div>
     </section>
 
-    {{-- 🛒 3. New Arrival PRODUCTS (DYNAMIC) --}}
-    <section class="py-3 featured-products-section" style="background-color: var(--light)">
-        <div class="container">
+    {{-- 💎 1. MATCH THE MOOD SCROLL SECTION WITH BUTTONS --}}
+    <section class="py-4 bg-white position-relative overflow-hidden">
+        <div class="container-fluid px-3 px-md-4 position-relative">
 
-            {{-- Heading --}}
-            <div class="d-flex justify-content-center mb-5">
-                <div class="fancy-heading-box">
-                    <h2 class="m-0">New Arrival Products</h2>
-                </div>
+            {{-- Section Heading --}}
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1" style="color: #222f3e; font-size: 24px;">Match The Mood</h2>
+                <p class="text-muted small mb-0">Everyday Bestsellers</p>
             </div>
 
-            {{-- Product Grid --}}
-            <div class="row g-4">
+            {{-- Slider Wrapper for Buttons --}}
+            <div class="mood-slider-wrapper position-relative">
 
-                @foreach ($newArrivalProducts as $product)
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product-card-minimal">
+                {{-- Left Scroll Button --}}
+                <button class="mood-scroll-btn left-btn" id="moodScrollLeft" aria-label="Scroll Left">
+                    <i class="las la-angle-left"></i> {{-- LineAwesome icon --}}
+                </button>
 
-                            {{-- Image Area --}}
-                            <div class="img-box position-relative"> {{-- position-relative zaroori hai --}}
-                                @if ($product->discount > 0)
-                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
-                                        style="z-index: 2;">
-                                        {{ round($product->discount) }}% OFF
-                                    </span>
-                                @endif
+                {{-- Horizontal Scroll Container --}}
+                <div class="mood-scroll-container" id="moodScrollContainer">
+                    @foreach ($categories as $category)
+                        <div class="mood-scroll-item">
+                            <div class="mood-category-item">
+                                <a href="{{ url('category/' . $category['slug']) }}"
+                                    class="d-block position-relative overflow-hidden text-decoration-none">
 
-                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
-                                    @php
-                                        $isInWishlist =
-                                            Auth::check() &&
-                                            \App\Models\Wishlist::where('user_id', Auth::id())
-                                                ->where('product_id', $product->id)
-                                                ->exists();
-                                    @endphp
-                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
-                                </button>
+                                    {{-- Cover Image --}}
+                                    <img src="{{ asset($category->cover_image) }}" alt="{{ $category['name'] }}"
+                                        class="w-100 object-fit-cover mood-img">
 
-                                {{-- 🔗 Product Image --}}
-                                <a href="{{ route('product.detail', $product->slug) }}">
-                                    <img src="{{ asset($product->main_image) }}"
-                                        alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
-                                        height="600" loading="lazy">
-                                </a>
-
-                                {{-- 🎥 Video Play Button Overlay (Image ke upar) --}}
-                                @if ($product->youtube_link)
-                                    {{-- 👇 CLASSES CHANGED: bottom-0 end-0 m-2 --}}
-                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
-                                        style="z-index: 3;">
-                                        <a href="javascript:void(0);" data-bs-toggle="modal"
-                                            data-bs-target="#videoModal{{ $product->id }}"
-                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
-                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
-                                            <i class="las la-play fs-4"></i>
-                                        </a>
+                                    {{-- Dark Gradient Overlay & Text --}}
+                                    <div
+                                        class="mood-overlay position-absolute bottom-0 start-0 w-100 d-flex flex-column justify-content-end text-center pb-3">
+                                        <span class="text-white small text-uppercase fw-semibold mood-subtext">
+                                            Explore
+                                        </span>
+                                        <h3 class="text-white text-uppercase fw-bolder mb-0 mood-title">
+                                            {{ $category['name'] }}
+                                        </h3>
                                     </div>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
 
-                                    {{-- Modal for this specific product (Shorts Optimized) --}}
-                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
-                                            <div class="modal-content bg-transparent border-0">
-                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
-                                                    <button type="button" class="btn-close btn-close-white"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body p-0">
-                                                    <div class="ratio"
-                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
-                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
-                                                            allowfullscreen></iframe>
-                                                    </div>
-                                                </div>
-                                            </div>
+                {{-- Right Scroll Button --}}
+                <button class="mood-scroll-btn right-btn" id="moodScrollRight" aria-label="Scroll Right">
+                    <i class="las la-angle-right"></i>
+                </button>
+
+            </div>
+
+        </div>
+    </section>
+
+    {{-- 🛍️ NEW ARRIVALS (NOBERO SQUARE STYLE) --}}
+    <section class="py-5 bg-white">
+        <div class="container-fluid px-3 px-md-5">
+
+            {{-- Section Heading --}}
+            <div class="text-center mb-4 pb-2">
+                <h2 class="fw-bold m-0" style="color: #2c3e50; font-size: 22px;">New Arrivals</h2>
+            </div>
+
+            {{-- Grid Layout: Desktop pe 6, Tablet pe 4, Mobile pe 2 boxes ek line mein --}}
+            <div class="row g-3 g-md-4 justify-content-center">
+
+                {{-- Product Loop --}}
+                @foreach ($newArrivalProducts->take(12) as $product)
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <a href="{{ route('product.detail', $product->slug) }}" class="text-decoration-none collection-link">
+                            <div class="collection-item-wrapper text-center">
+
+                                {{-- Light Grey SQUARE Image Box (1:1 Ratio) --}}
+                                <div class="collection-img-box position-relative rounded-3 overflow-hidden mb-2" style="background-color: #f1f2f4; aspect-ratio: 1/1;">
+
+                                    {{-- Product Main Image --}}
+                                    <img src="{{ asset($product->main_image) }}"
+                                         alt="{{ $product->name }}"
+                                         class="w-100 h-100 object-fit-cover transition-transform"
+                                         loading="lazy"
+                                         style="mix-blend-mode: multiply; padding: 10px;"> {{-- Padding taki kapde edges se thoda andar rahein --}}
+
+                                    {{-- Top Right Plus Icon (White border, transparent inside) --}}
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <div class="plus-icon-circle rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="las la-plus"></i>
                                         </div>
                                     </div>
-                                @endif
-                            </div>
 
-                            {{-- Details Area --}}
-                            <div class="product-details text-start">
-                                <a href="{{ route('product.detail', $product->slug) }}"
-                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
-                                    style="font-family: 'Merriweather', serif;">
+                                </div>
+
+                                {{-- Product Name Only (No Price) --}}
+                                <h6 class="text-dark mb-0 fw-semibold collection-title text-truncate px-1" style="font-size: 13px;">
                                     {{ $product->name }}
-                                </a>
-
-                                {{-- ⭐ Rating and 🎥 Video in SAME LINE --}}
-                                <div class="d-flex align-items-center justify-content-start rating-row mb-1">
-
-                                    {{-- Left: Stars --}}
-                                    <div class="d-flex align-items-center">
-                                        @php
-                                            $avgRating = 0;
-                                            $reviewCount = 0;
-                                            if ($product->relationLoaded('reviews') && $product->reviews) {
-                                                $avgRating = $product->reviews->avg('rating');
-                                                $reviewCount = $product->reviews->count();
-                                            }
-                                            $fullStars = round($avgRating);
-                                        @endphp
-
-                                        <span class="stars text-warning" style="font-size: 13px;">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $fullStars)
-                                                    <i class="las la-star"></i>
-                                                @else
-                                                    <i class="lar la-star"></i>
-                                                @endif
-                                            @endfor
-                                        </span>
-                                        <span class="review-count text-muted ms-1"
-                                            style="font-size: 11px;">({{ $reviewCount }})</span>
-                                    </div>
-                                </div>
-
-                                <div class="price-row">
-                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
-                                    @if ($product->mrp_price > $product->price)
-                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
-                                    @endif
-                                </div>
-                                @if ($product->quantity > 0)
-                                    {{-- Add to Cart --}}
-                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                                        data-price="{{ $product->price }}">
-                                        Add to Cart
-                                    </button>
-                                @else
-                                    <button class="btn btn-secondary w-100 disabled"
-                                        style="cursor: not-allowed; background: #d60808; border: none;">
-                                        Out of Stock
-                                    </button>
-                                @endif
+                                </h6>
                             </div>
-
-                        </div>
+                        </a>
                     </div>
                 @endforeach
 
                 @if ($newArrivalProducts->count() == 0)
-                    <div class="col-12 text-center text-muted">No featured products found.</div>
+                    <div class="col-12 text-center text-muted">No new arrivals found.</div>
                 @endif
 
             </div>
 
-            {{-- View All --}}
-            <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}?type=newArrival"
-                    class="btn btn-view-all rounded-pill px-4 py-2">
-                    View all New Arrival
-                </a>
-            </div>
+            {{-- View All Button --}}
+            @if ($newArrivalProducts->count() > 0)
+                <div class="text-center mt-4">
+                    <a href="{{ route('products.all_collection') }}?type=newArrival"
+                       class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold" style="font-size: 13px;">
+                        View all New Arrivals
+                    </a>
+                </div>
+            @endif
 
         </div>
     </section>

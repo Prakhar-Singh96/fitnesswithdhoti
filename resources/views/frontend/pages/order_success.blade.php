@@ -38,23 +38,23 @@
 @section('scripts')
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('PURCHASE EVENT FIRED');
+//     console.log('PURCHASE EVENT FIRED');
 
-    fbq('track', 'Purchase', {
-        content_ids: [
-            @foreach($order->items as $item)
-                "{{ $item->product_id }}",
-            @endforeach
-        ],
-        content_type: 'product',
-        value: {{ $order->total_amount }},
-        currency: 'INR'
-    });
+//     fbq('track', 'Purchase', {
+//         content_ids: [
+//             @foreach($order->items as $item)
+//                 "{{ $item->product_id }}",
+//             @endforeach
+//         ],
+//         content_type: 'product',
+//         value: {{ $order->total_amount }},
+//         currency: 'INR'
+//     });
 
-});
-</script>
+// });
+// </script>
 
 @if(session('show_referral_popup'))
 

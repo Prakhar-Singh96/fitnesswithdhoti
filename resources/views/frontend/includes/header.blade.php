@@ -119,7 +119,7 @@
             {{-- 1. LOGO --}}
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" class="logo-img">
+                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Suyagya" class="logo-img">
                 </div>
             </a>
 

@@ -29,8 +29,8 @@
                                         <span>Qty: {{ $item->quantity }}</span>
                                         {{-- 🚀 नया: वजन (Weight) यहाँ दिखाएँ --}}
                                         @if ($item->weight)
-                                            <span class="ms-3 border-start ps-3 text-dark"><strong>Weight:</strong>
-                                                {{ $item->weight }}</span>
+                                            <span class="ms-3 border-start ps-3 text-dark"><strong>Size:</strong>
+                                                <span class="text-uppercase fw-bold">{{ $item->weight }}</span></span>
                                         @endif
 
                                         @if ($item->ring_size)

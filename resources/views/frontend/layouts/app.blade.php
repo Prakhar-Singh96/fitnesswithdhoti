@@ -3,11 +3,11 @@
 
 <head>
     {{-- ✅ 1. Google Tag Manager (Script) - <head> के सबसे ऊपर --}}
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    {{-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MLSST65C');</script>
+    })(window,document,'script','dataLayer','GTM-MLSST65C');</script> --}}
     {{-- End Google Tag Manager --}}
 
     <meta charset="utf-8">
@@ -25,46 +25,46 @@
 
     {{-- 🔥 DYNAMIC SEO LOGIC START 🔥 --}}
     @php
-        $metaTitle = 'Suyagya - Authentic Stone Jewelry & Rudraksha';
-        $metaDesc = 'Shop genuine Rudraksha, Gemstones, and spiritual jewelry at Suyagya. Certified products with lab reports.';
-        $metaKeys = 'rudraksha, gemstones, spiritual jewelry, mala, suyagya';
+        $metaTitle = 'Vardhiyas - Premium Mens Clothing | T-Shirts, Jeans & Shirts';
+        $metaDesc = 'Shop the latest collection of premium t-shirts, jeans, pants, shirts, and wallets at Vardhiyas. High-quality fashion delivered to your doorstep.';
+        $metaKeys = 'mens clothing, t-shirts, jeans, shirts, wallets, fashion brand, Vardhiyas';
         $ogImage = asset('img/default-og.jpg');
         $currentUrl = url()->current();
 
         if (Route::is('product.detail') && !empty($product)) {
-            $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Suyagya';
+            $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Vardhiyas';
             $metaDesc = !empty($product->meta_description) ? $product->meta_description : Str::limit(strip_tags($product->description), 160);
             $metaKeys = $product->meta_keywords ?? $metaKeys;
             $ogImage = !empty($product->og_image) ? asset($product->og_image) : (!empty($product->product_main_image) ? asset($product->product_main_image) : asset('og-images/default-og.jpg'));
         }
         elseif (Route::is('products.category') && !empty($category)) {
-            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Suyagya';
+            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Vardhiyas';
             $metaDesc = !empty($category->meta_description) ? $category->meta_description : 'Explore our exclusive collection of ' . $category->name;
             $metaKeys = $category->meta_keywords ?? $metaKeys;
             if ($category->og_image) { $ogImage = asset($category->og_image); }
         }
         elseif (Route::is('products.subcategory') && !empty($subCategory)) {
-            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Suyagya';
+            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Vardhiyas';
             $metaDesc = !empty($subCategory->meta_description) ? $subCategory->meta_description : 'Best quality ' . $subCategory->name . ' available online.';
             $metaKeys = $subCategory->meta_keywords ?? $metaKeys;
         }
         elseif (Route::is('blogs.index')) {
-            $metaTitle = 'Our Blogs - Spiritual Knowledge & Insights | Suyagya';
-            $metaDesc = 'Read latest articles on Rudraksha, Gemstones, and spirituality. Gain knowledge and insights from our experts.';
+            $metaTitle = 'Our Blogs - Fashion Trends & Style Guides | Vardhiyas';
+            $metaDesc = 'Read the latest fashion trends, styling tips, and clothing guides from Vardhiyas experts.';
         } elseif (Route::is('blogs.show') && !empty($blog)) {
-            $metaTitle = !empty($blog->meta_title) ? $blog->meta_title : $blog->title . ' | Suyagya';
+            $metaTitle = !empty($blog->meta_title) ? $blog->meta_title : $blog->title . ' | Vardhiyas';
             $metaDesc = !empty($blog->meta_description) ? $blog->meta_description : Str::limit(strip_tags($blog->content), 160);
             $metaKeys = !empty($blog->meta_keywords) ? $blog->meta_keywords : $metaKeys;
             if (!empty($blog->main_image)) { $ogImage = asset($blog->main_image); } elseif (!empty($blog->og_image)) { $ogImage = asset($blog->og_image); }
         }
-        elseif (Route::is('terms.conditions')) { $metaTitle = 'Terms & Conditions | Suyagya'; $metaDesc = 'Understand our policies regarding usage, orders, and services.'; }
-        elseif (Route::is('privacy.policy')) { $metaTitle = 'Privacy Policy | Suyagya'; $metaDesc = 'Learn how Suyagya collects, uses, and protects your personal data.'; }
-        elseif (Route::is('refund.policy')) { $metaTitle = 'Return & Refund Policy | Suyagya'; $metaDesc = 'Understand our return and refund process.'; }
-        elseif (Route::is('support.policy')) { $metaTitle = 'Support Policy | Suyagya'; $metaDesc = 'Contact Suyagya support team for assistance.'; }
-        elseif (Route::is('frontend.faq')) { $metaTitle = 'Rudraksha, Rashi Bracelet & Gemstone FAQs | Suyagya'; $metaDesc = 'Rudraksha pehenne ke niyam, rashi bracelet selection, gemstone care, shipping, authenticity check — Suyagya ke sabse common sawaalon ke seedhe jawab. Lab certified original products.'; $metaKeys = 'rudraksha FAQ, rashi bracelet sawaal, gemstone bracelet care, karungali bracelet FAQ, suyagya products original, rudraksha pehenne ke niyam, spiritual jewelry india'; }
-        elseif (Route::is('about')) { $metaTitle = 'About us | Suyagya'; $metaDesc = 'How Suyagya Was Born.'; }
-        elseif (Route::is('contact')) { $metaTitle = 'Contact us | Suyagya'; $metaDesc = 'For business related bulk orders or queries, please contact us here.'; }
-        elseif (Route::is('track.order')) { $metaTitle = 'Track Order | Suyagya'; $metaDesc = 'Track Your Order Here.'; }
+        elseif (Route::is('terms.conditions')) { $metaTitle = 'Terms & Conditions | Vardhiyas'; $metaDesc = 'Understand our policies regarding usage, orders, and services.'; }
+        elseif (Route::is('privacy.policy')) { $metaTitle = 'Privacy Policy | Vardhiyas'; $metaDesc = 'Learn how Vardhiyas collects, uses, and protects your personal data.'; }
+        elseif (Route::is('refund.policy')) { $metaTitle = 'Return & Refund Policy | Vardhiyas'; $metaDesc = 'Understand our return and refund process.'; }
+        elseif (Route::is('support.policy')) { $metaTitle = 'Support Policy | Vardhiyas'; $metaDesc = 'Contact Vardhiyas support team for assistance.'; }
+        elseif (Route::is('frontend.faq')) { $metaTitle = 'Size Guide, Shipping & Clothing FAQs | Vardhiyas'; $metaDesc = 'Find answers to all your questions regarding Vardhiyas clothing, fabric care, size guide, shipping, and return policies.'; $metaKeys = 'clothing FAQ, size guide, fabric care, Vardhiyas returns, fashion india'; }
+        elseif (Route::is('about')) { $metaTitle = 'About us | Vardhiyas'; $metaDesc = 'How Vardhiyas Was Born.'; }
+        elseif (Route::is('contact')) { $metaTitle = 'Contact us | Vardhiyas'; $metaDesc = 'For business related bulk orders or queries, please contact us here.'; }
+        elseif (Route::is('track.order')) { $metaTitle = 'Track Order | Vardhiyas'; $metaDesc = 'Track Your Order Here.'; }
         elseif (Request::path() == '/' || Route::is('home') || Route::is('frontend.home')) {
             if (isset($homeSettings) && !empty($homeSettings)) {
                 $metaTitle = $homeSettings->meta_title ?? $metaTitle;
@@ -76,24 +76,17 @@
     @endphp
     {{-- 🔥 DYNAMIC SEO LOGIC END 🔥 --}}
 
-    @pwaHead
-    <link rel="apple-touch-icon" href="https://suyagya.com/apple-touch-icon-only.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="https://suyagya.com/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://suyagya.com/icon-192x192.png">
-    <meta name="apple-mobile-web-app-title" content="Suyagya">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDesc }}">
     <meta name="keywords" content="{{ $metaKeys }}">
-    <meta name="author" content="Suyagya">
+    <meta name="author" content="Vardhiyas">
     <link rel="canonical" href="{{ $currentUrl }}{{ request()->has('page') ? '?page=' . request()->page : '' }}" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ $metaTitle }}" />
     <meta property="og:description" content="{{ $metaDesc }}" />
     <meta property="og:url" content="{{ $currentUrl }}" />
-    <meta property="og:site_name" content="Suyagya" />
+    <meta property="og:site_name" content="Vardhiyas" />
     <meta property="og:image" content="{{ $ogImage }}" />
     <meta property="og:image:secure_url" content="{{ $ogImage }}" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -105,18 +98,18 @@
     <meta name="twitter:description" content="{{ $metaDesc }}">
     <meta name="twitter:image" content="{{ $ogImage }}">
 
-    @include('frontend.includes.schema')
-    <meta name="p:domain_verify" content="da11f887c65754b1b5b976de4e3e4fbd" />
+    {{-- @include('frontend.includes.schema') --}}
+    {{-- <meta name="p:domain_verify" content="da11f887c65754b1b5b976de4e3e4fbd" /> --}}
 
     {{-- Meta Pixel Code --}}
-    <script>
+    {{-- <script>
         ! function(f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function() { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
         }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '799436573082052'); fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=799436573082052&ev=PageView&noscript=1" /></noscript>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=799436573082052&ev=PageView&noscript=1" /></noscript> --}}
 
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 
@@ -167,80 +160,12 @@
         {{-- ⬇️ Footer --}}
         @include('frontend.includes.footer')
 
-        {{-- PWA Popup --}}
-        <div class="pwa-popup-container" id="pwa-install-popup" style="display: none;">
-            <div class="pwa-popup-content">
-                <div class="d-flex align-items-center">
-                    <img src="{{ asset('icon-96x96.png') }}" alt="Suyagya Logo" class="pwa-app-icon" width="48" height="48" loading="lazy">
-                    <div class="ms-3 flex-grow-1">
-                        <h6 class="mb-0 fw-bold">Suyagya App</h6>
-                        <p class="mb-0 small text-muted">Install for better experience</p>
-                    </div>
-                    <div class="pwa-action-btns">
-                        <button onclick="hidePwaPopup()" class="btn btn-link text-muted text-decoration-none small">Later</button>
-                        <button onclick="triggerInstall()" class="btn btn-warning btn-sm fw-bold px-3 rounded-pill ms-2">Install</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         {{-- Toast Container --}}
         <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1060;">
             <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
                     <div class="toast-body" id="toast-message">Item added to wishlist!</div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Astro AI Launcher Widget --}}
-    <div id="chat-launcher" onclick="toggleChat()" class="astro-bounce" style="position:fixed; bottom:90px; right:20px; width:75px; height:75px; cursor:pointer; z-index:99;">
-        <div style="position: relative; width: 100%; height: 100%;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: radial-gradient(circle, #ff9800 0%, rgba(255,152,0,0) 70%); border-radius: 50%; z-index: -1; animation: pulse-glow 2s infinite;"></div>
-            <img src="{{ asset('assets/img/astropandit-icon.webp') }}" alt="Astro Pandit" width="75" height="75" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));" loading="lazy">
-            <span style="position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); background: #673ab7; color: white; font-size: 10px; padding: 2px 10px; border-radius: 10px; white-space: nowrap; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3);">Astro AI</span>
-        </div>
-    </div>
-
-    {{-- Astro Chat Window --}}
-    <div id="astro-chat-window" style="position:fixed; bottom:100px; right:25px; width:350px; max-height:550px; background:white; border-radius:15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display:none; flex-direction:column; z-index:10000; border: 1px solid #e0e0e0; overflow:hidden;">
-        <div style="background:#673ab7; color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-weight:bold;"><i class="las la-stars"></i> Suyagya Astro AI</span>
-            <span onclick="toggleChat()" style="cursor:pointer; font-size:20px;">&times;</span>
-        </div>
-        <div id="chat-content" style="padding:15px; overflow-y:auto; flex-grow:1; background:#f9f9f9; max-height:400px;">
-            <div id="chat-messages-container">
-                <div class="bot-msg" style="background:#eee; padding:10px; border-radius:10px; margin-bottom:15px; font-size:14px;">
-                    Namaste! 🙏 Main aapka digital jyotish hoon. Details bharein:
-                </div>
-                <div id="ai-response-text" style="white-space: pre-line; font-size: 14px; line-height: 1.6;"></div>
-            </div>
-            <div id="astro-form">
-                <div class="mb-2"><input type="text" id="user_name" class="form-control" placeholder="Aapka Naam"></div>
-                <div class="mb-2"><label class="astro-label">📅 Janam Tareekh</label><input type="date" id="dob" class="form-control"></div>
-                <div class="mb-2"><label class="astro-label">⏰ Janam Samay</label><input type="time" id="tob" class="form-control"></div>
-                <div class="mb-2 position-relative">
-                    <label class="astro-label">🏙️ Birth City & State</label>
-                    <input type="text" id="birth_city" class="form-control" placeholder="Type your city" oninput="searchCity(this.value)" autocomplete="off">
-                    <div id="city-suggestions" class="list-group position-absolute w-100" style="z-index: 1000; display: none; max-height: 200px; overflow-y: auto;"></div>
-                </div>
-                <input type="hidden" id="lat"><input type="hidden" id="lng">
-                <button onclick="processAstroRequest()" id="submit-btn" class="btn btn-primary w-100" style="background:#673ab7; border:none; height: 45px; font-weight: bold;">Kundali Analysis Karein ✨</button>
-            </div>
-            <div id="chat-loader" style="display:none; text-align:center; padding:20px;">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p style="font-size:12px; margin-top:10px;">Grahon ki ganana ho rahi hai...</p>
-            </div>
-            <div id="ai-result-area" style="display:none; margin-top:10px;">
-                <div class="input-group mb-2">
-                    <input type="text" id="user-followup-msg" class="form-control" placeholder="Kuch aur puchein...">
-                    <button onclick="sendFollowup()" class="btn btn-primary" style="background:#673ab7;"><i class="las la-paper-plane"></i></button>
-                </div>
-                <div class="d-flex gap-2">
-                    <button onclick="shareOnWhatsApp()" class="btn btn-success btn-sm flex-grow-1">WhatsApp Share</button>
-                    <button onclick="resetChat()" class="btn btn-outline-secondary btn-sm">Reset</button>
                 </div>
             </div>
         </div>
@@ -272,12 +197,12 @@
     </style>
 
     {{-- ✅ WHATSAPP FLOATING BUTTON --}}
-    <a href="https://wa.me/918920471151?text=Hi%20Suyagya%20Team,%20I%20need%20help%20with%20a%20product." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+    <a href="https://wa.me/919870271533?text=Hi%20Vardhiyas%20Team,%20I%20need%20help%20with%20a%20product." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
         <i class="lab la-whatsapp"></i>
     </a>
 
     {{-- Google Tag Manager (noscript) - <body> के तुरंत बाद --}}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLSST65C" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    {{-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLSST65C" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> --}}
 
     {{-- ⚙️ SCRIPTS CORE LOADER: DEFER ATTACHED FOR NON-BLOCKING INITIAL RENDER --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -296,15 +221,15 @@
                 document.body.appendChild(scriptRazor);
 
                 // 2. Load GTM / Analytics (Jo Head se hataya tha)
-                var scriptGTM = document.createElement('script');
-                scriptGTM.async = true;
-                scriptGTM.src = "https://www.googletagmanager.com/gtag/js?id=G-6ECDBEM0VJ";
-                document.head.appendChild(scriptGTM);
+                // var scriptGTM = document.createElement('script');
+                // scriptGTM.async = true;
+                // scriptGTM.src = "https://www.googletagmanager.com/gtag/js?id=G-6ECDBEM0VJ";
+                // document.head.appendChild(scriptGTM);
 
-                window.dataLayer = window.dataLayer || [];
-                function  gtag() { dataLayer.push(arguments); }
-                gtag('js', new Date());
-                gtag('config', 'G-6ECDBEM0VJ');
+                // window.dataLayer = window.dataLayer || [];
+                // function  gtag() { dataLayer.push(arguments); }
+                // gtag('js', new Date());
+                // gtag('config', 'G-6ECDBEM0VJ');
             }, 2500); // 🚀 2.5 Second Delay for Performance Boom!
         });
     </script>
@@ -425,7 +350,7 @@
     </script>
 
     {{-- LUCKY DRAW INITIALIZATION --}}
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             @auth
                 let dbHasActiveCoupon = {{ \App\Models\UserCoupon::where('user_id', Auth::id())->where('is_used', 0)->exists() ? 'true' : 'false' }};
@@ -485,7 +410,7 @@
                 }
             });
         }
-    </script>
+    </script> --}}
 
     {{-- URL parameter cleanup --}}
     <script>
@@ -497,43 +422,6 @@
                 window.history.replaceState({}, document.title, cleanUrl);
             }
         })();
-    </script>
-
-    {{-- PWA Service Worker Registration --}}
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                console.log('Suyagya PWA ServiceWorker registered!');
-            });
-        }
-    </script>
-
-    {{-- PWA Install Popup --}}
-    <script>
-        let deferredPrompt;
-        const pwaPopup = document.getElementById('pwa-install-popup');
-        function isMobileUser() { return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferredPrompt = e;
-            const dismissed = sessionStorage.getItem('pwa-popup-dismissed');
-            if (isMobileUser() && !window.matchMedia('(display-mode: standalone)').matches && dismissed !== 'true') {
-                setTimeout(() => { if(pwaPopup) pwaPopup.style.display = 'block'; }, 3000);
-            }
-        });
-
-        function triggerInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') { hidePwaPopup(); }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert("Suyagya ऐप इंस्टॉल करने के लिए ब्राउज़र के 'Share' बटन पर क्लिक करें और 'Add to Home Screen' चुनें।");
-            }
-        }
-        function hidePwaPopup() { if (pwaPopup) pwaPopup.style.display = 'none'; sessionStorage.setItem('pwa-popup-dismissed', 'true'); }
     </script>
 </body>
 

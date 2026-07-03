@@ -66,7 +66,7 @@
                         {{-- 🚀 वजन और रिंग साइज यहाँ दिखाएं --}}
                         @if($item->variant)
                             <small class="text-muted d-block" style="font-size: 11px;">
-                                <i class="las la-weight"></i> Weight: <b>{{ $item->variant->weight }}g</b>
+                                <i class="las la-weight"></i> Size: <b class="text-dark">{{ strtoupper($item->variant->weight) }}</b>
                             </small>
                         @endif
                         @if($item->ring_size)

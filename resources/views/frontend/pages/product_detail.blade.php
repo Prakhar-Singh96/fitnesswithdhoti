@@ -13,12 +13,12 @@
 
         /* 💎 GEMSTONE CONFIGURATOR STYLES (AstroTalk Style) */
         /* .gem-config-container {
-                                                                                                                                                                        border: 1px solid #eee;
-                                                                                                                                                                        padding: 15px;
-                                                                                                                                                                        border-radius: 8px;
-                                                                                                                                                                        margin-bottom: 20px;
-                                                                                                                                                                        background-color: #f7f1de;
-                                                                                                                                                                    } */
+                                                                                                                                                                                border: 1px solid #eee;
+                                                                                                                                                                                padding: 15px;
+                                                                                                                                                                                border-radius: 8px;
+                                                                                                                                                                                margin-bottom: 20px;
+                                                                                                                                                                                background-color: #f7f1de;
+                                                                                                                                                                            } */
 
         .gem-option-group {
             margin-bottom: 15px;
@@ -960,15 +960,38 @@
 
                     </div>
                 @elseif ($product->variants->count() > 0)
-                    {{-- STANDARD WEIGHT DROPDOWN (No Change) --}}
-                    <div class="mb-2 bg-light p-2 rounded border" style="max-width: 250px;">
-                        <label class="fw-bold small mb-1 d-block text-dark">Select Weight:</label>
-                        <select class="form-select form-select-sm border-secondary fw-bold text-dark" id="variant_select"
-                            name="variant_id">
+                    {{-- 👕 CLOTHING PREMIUM SIZE SELECTOR --}}
+                    <div class="mb-4 mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="fw-bold text-dark text-uppercase"
+                                style="letter-spacing: 1px; font-size: 13px;">Select Size</label>
+                            <a href="javascript:void(0)" class="text-primary small text-decoration-none fw-bold">Size
+                                Guide</a>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2" id="size-btn-container">
+                            @foreach ($product->variants as $index => $variant)
+                                <div class="size-box">
+                                    <input type="radio" class="btn-check size-selector-btn" name="custom_size_selector"
+                                        id="size_{{ $variant->id }}" value="{{ $variant->id }}"
+                                        {{ $index == 0 ? 'checked' : '' }} {{ $variant->quantity < 1 ? 'disabled' : '' }}>
+
+                                    <label
+                                        class="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
+                                        for="size_{{ $variant->id }}"
+                                        style="width: 45px; height: 45px; font-weight: 600; {{ $variant->quantity < 1 ? 'opacity: 0.4; text-decoration: line-through;' : '' }}">
+                                        {{ strtoupper($variant->weight) }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        {{-- 🛑 HIDDEN SELECT: Aapke purane JS ko bina tode chalane ke liye --}}
+                        <select class="d-none" id="variant_select" name="variant_id">
                             @foreach ($product->variants as $variant)
                                 <option value="{{ $variant->id }}" data-price="{{ $variant->selling_price }}"
                                     data-mrp="{{ $variant->mrp_price }}" data-stock="{{ $variant->quantity }}">
-                                    {{ $variant->weight }}g
+                                    {{ $variant->weight }}
                                 </option>
                             @endforeach
                         </select>
@@ -2681,13 +2704,36 @@
             }
         });
     </script>
-    <script>
+    {{-- <script>
         fbq('track', 'ViewContent', {
             content_ids: ['{{ $product->id }}'],
             content_name: '{{ addslashes($product->name) }}',
             content_type: 'product',
             value: {{ $product->price }},
             currency: 'INR'
+        });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Size button click hone par hidden dropdown ko update karna
+            const sizeButtons = document.querySelectorAll('.size-selector-btn');
+            const hiddenSelect = document.getElementById('variant_select');
+
+            sizeButtons.forEach(button => {
+                button.addEventListener('change', function() {
+                    if (this.checked) {
+                        hiddenSelect.value = this.value;
+                        // Trigger the existing change event so your price/stock updates!
+                        hiddenSelect.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+
+            // Page load hone par pehle available size ko select kar dena
+            if (hiddenSelect) {
+                hiddenSelect.dispatchEvent(new Event('change'));
+            }
         });
     </script>
 @endsection

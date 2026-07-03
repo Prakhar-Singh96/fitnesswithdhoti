@@ -506,11 +506,6 @@ main {
         padding: 6px 0 !important;
     }
 
-    /* Logo smaller */
-    .navbar-brand img {
-        height: 50px !important;
-    }
-
     /* Menu collapse full width */
     #mainMenu {
         background: var(--light) !important;
@@ -626,7 +621,7 @@ main {
 @media (min-width: 993px) and (max-width: 1200px) {
 
     .navbar-brand img {
-        height: 50px !important;
+        height: 60px !important;
     }
 
     .main-nav-list .nav-link {
@@ -3645,137 +3640,10 @@ html {
 }
 
 .logo-img {
-    height: 50px;
-    width: auto;
-    opacity: 1;
-    transform: scale(1);
-    animation: logoFadeIn 3.8s ease-in-out infinite;
+    width: 180px;
+    height: 66px;
 }
 
-/* Golden Aura */
-.spiritual-logo::before {
-    content: "";
-    position: absolute;
-    inset: -10px;
-    background: radial-gradient(
-        circle,
-        rgba(212,175,55,0.35) 0%,
-        rgba(212,175,55,0.15) 45%,
-        rgba(212,175,55,0) 70%
-    );
-    filter: blur(14px);
-    border-radius: 50%;
-    opacity: 0.3;
-    animation: auraPulse 3.8s ease-in-out infinite;
-    pointer-events: none;
-}
-
-/* 🌿 UPDATED KEYFRAMES (NO ZERO OPACITY) */
-@keyframes logoFadeIn {
-    0% {
-        opacity: 0.85;
-        transform: scale(0.97);
-    }
-    40% {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-    70% {
-        opacity: 0.95;
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0.9;
-        transform: scale(0.97);
-    }
-}
-
-@keyframes auraPulse {
-    0% {
-        opacity: 0.25;
-        transform: scale(0.9);
-    }
-    50% {
-        opacity: 0.55;
-        transform: scale(1.15);
-    }
-    100% {
-        opacity: 0.25;
-        transform: scale(0.9);
-    }
-}
-
-
-.pwa-popup-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 450px;
-    background: #fff;
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.1);
-    border-radius: 15px;
-    z-index: 99999;
-    padding: 15px;
-    border: 1px solid #f7f1de;
-    animation: slideUp 0.5s ease-out;
-}
-
-.pwa-app-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    object-fit: cover;
-}
-
-@keyframes slideUp {
-    from { bottom: -100px; opacity: 0; }
-    to { bottom: 20px; opacity: 1; }
-}
-
-/* मोबाइल के लिए स्पेसिफिक स्टाइल */
-@media (max-width: 768px) {
-    .pwa-popup-container {
-        bottom: 10px;
-        width: 95%;
-    }
-}
-
-/* 1. स्लाइडर का मुख्य कंटेनर */
-/* .home-banner-area {
-    width: 100%;
-    overflow: hidden !important;
-    position: relative;
-} */
-
-/* 🚀 स्लाइडर कंटेनर को लॉक करें */
-/* #heroSlider .slick-list {
-    overflow: hidden !important;
-    clip-path: inset(0 0 0 0);
-} */
-
-/* #heroSlider .slick-slide {
-    overflow: hidden !important;
-} */
-
-/* 🚀 डिफ़ॉल्ट स्टेट: इमेज को पहले से ज़ूम (बड़ा) रखें */
-/* #heroSlider .slick-slide img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: block;
-    transform-origin: center center;
-
-    transform: scale(1.2);
-    transition: transform 2s ease-in-out !important;
-} */
-
-/* 🚀 एक्टिव स्टेट: जब स्लाइड सामने आए, तब उसे वापस 1 (नॉर्मल) पर लाएं */
-/* इससे "बाहर से अंदर" (Zoom In to Center) जाने वाला अहसास होगा */
-/* #heroSlider .slick-current img {
-    transform: scale(1) !important;
-} */
 
 .align-items-center.d-flex.gap-2.justify-content-start.mb-1 {
     gap: 7.8rem !important;
@@ -4107,4 +3975,172 @@ html {
     border-radius: 12px !important;
     padding: 10px !important;
     background: #fcfcfc !important;
+}
+
+/* --- SLIDER WRAPPER & BUTTONS --- */
+.mood-slider-wrapper {
+    position: relative;
+}
+
+.mood-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.mood-scroll-btn:hover {
+    background: #222f3e;
+    color: #ffffff;
+    border-color: #222f3e;
+}
+
+.mood-scroll-btn.left-btn { left: -15px; }
+.mood-scroll-btn.right-btn { right: -15px; }
+
+/* Mobile par buttons chhupane ke liye taaki user swipe kare */
+@media (max-width: 768px) {
+    .mood-scroll-btn { display: none; }
+}
+
+/* --- HORIZONTAL SCROLL CONTAINER --- */
+.mood-scroll-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 15px;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth; /* Smooth scroll feature */
+
+    /* Scrollbar hide karne ke liye for clean look */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.mood-scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* --- CARDS SIZING (Aapki request ke hisaab se unchanged) --- */
+.mood-scroll-item {
+    flex: 0 0 auto;
+    width: 65%; /* Mobile width */
+}
+
+@media (min-width: 768px) {
+    .mood-scroll-item {
+        width: 23.5%; /* Desktop par 4 cards dikhenge */
+    }
+}
+
+/* --- IMAGE & OVERLAY STYLING --- */
+.mood-category-item {
+    border-radius: 6px;
+    overflow: hidden;
+    display: block;
+    height: 100%;
+}
+
+.mood-img {
+    width: 100%;
+    /* Fixed height hata kar aspect-ratio lagaya hai taaki photo tall (portrait) dikhe */
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.mood-overlay {
+    height: 60%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: padding-bottom 0.3s ease;
+}
+
+.mood-subtext {
+    letter-spacing: 1.5px;
+    font-size: 11px;
+    opacity: 0.9;
+    margin-bottom: 2px;
+}
+
+.mood-title {
+    letter-spacing: 2px;
+    font-size: 22px;
+}
+
+.mood-category-item:hover .mood-img { transform: scale(1.05); }
+.mood-category-item:hover .mood-overlay { padding-bottom: 20px; }
+
+/* Mobile Devices Font Adjustments (Height automatically adjust hogi ab) */
+@media (max-width: 768px) {
+    .mood-title { font-size: 18px; }
+    .mood-subtext { font-size: 10px; }
+}
+
+
+/* =========================================
+   🛍️ SQUARE COLLECTION / NEW ARRIVAL (NOBERO STYLE)
+   ========================================= */
+
+.collection-img-box {
+    transition: all 0.3s ease;
+}
+
+/* Hover par image thodi zoom hogi */
+.collection-img-box img {
+    transition: transform 0.5s ease;
+}
+.collection-link:hover .collection-img-box img {
+    transform: scale(1.08);
+}
+
+/* Nobero Style Plus Icon */
+.plus-icon-circle {
+    width: 22px;
+    height: 22px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.9); /* White border */
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.plus-icon-circle i {
+    font-size: 12px;
+}
+
+/* Hover karne par icon white background aur dark text le lega */
+.collection-link:hover .plus-icon-circle {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+.collection-title {
+    letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif; /* Ya jo aapka theme font ho */
+}
+
+/* Mobile Screens (Phones) */
+@media (max-width: 768px) {
+    .collection-title {
+        font-size: 11px !important;
+    }
+    .plus-icon-circle {
+        width: 18px;
+        height: 18px;
+    }
+    .plus-icon-circle i {
+        font-size: 10px !important;
+    }
 }

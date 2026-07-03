@@ -485,13 +485,13 @@ function addToCart(productId, quantity, isSiddh, btnElement, variantId = null , 
                 var productName = $(btn).data('name');
                 var productPrice = $(btn).data('price');
 
-                fbq('track', 'AddToCart', {
-                    content_ids: [String(productId)],
-                    content_name: productName,
-                    content_type: 'product',
-                    value: parseFloat(productPrice),
-                    currency: 'INR'
-                });
+                // fbq('track', 'AddToCart', {
+                //     content_ids: [String(productId)],
+                //     content_name: productName,
+                //     content_type: 'product',
+                //     value: parseFloat(productPrice),
+                //     currency: 'INR'
+                // });
 
                 // ✅ Success
                 openSideCart();
@@ -544,7 +544,7 @@ function removeFromSideCart(id) {
 // 🚀 5. CHECKOUT FROM SIDE CART
 function initiateCartCheckout() {
 
-    fbq('track', 'InitiateCheckout');
+    // fbq('track', 'InitiateCheckout');
     // 1. Close Side Drawer
     var sideCartEl = document.getElementById('sideCart');
     var sideCart = bootstrap.Offcanvas.getInstance(sideCartEl);
@@ -688,7 +688,7 @@ function addToCartFromDetail(btn) {
 // 🛒 1. OPEN DIRECT CHECKOUT (Buy Now Button) - Fixed Calculation
 function openDirectCheckout(btn) {
 
-     fbq('track', 'InitiateCheckout');
+    //  fbq('track', 'InitiateCheckout');
     // 1. Data Collection
     var prodId = $(btn).data('id');
     var qty = $('#qty_input').val() || 1;
@@ -754,6 +754,14 @@ function openDirectCheckout(btn) {
     $('#summ_img').attr('src', img);
     $('#summ_name').text(title);
     $('#summ_qty').text('Qty: ' + qty);
+
+    // 🔥 Size UI Update Logic
+    if (weightText && weightText !== "Gemstone Variant") {
+        $('#summ_size_val').text(weightText);
+        $('#summ_size').show();
+    } else {
+        $('#summ_size').hide();
+    }
 
     let fmtBase = currentCartTotal.toLocaleString('en-IN');
     let fmtMrp = totalMrp.toLocaleString('en-IN');
@@ -1899,6 +1907,7 @@ function openCheckoutModal(price, mrpTotal = 0, discountTotal = 0) {
     // 5. Header & Images
     $('#summ_name').text('Cart Checkout');
     $('#summ_qty').text($('#side_cart_count').text() + ' Items');
+    $('#summ_size').hide();
     $('#summ_img').attr('src', 'https://cdn-icons-png.flaticon.com/512/1170/1170678.png'); // Cart Icon
 
     // 6. Update Subtotal (Base Price)
@@ -2819,5 +2828,30 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
         ]
     });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+        const scrollContainer = document.getElementById('moodScrollContainer');
+        const leftBtn = document.getElementById('moodScrollLeft');
+        const rightBtn = document.getElementById('moodScrollRight');
+
+        if(scrollContainer && leftBtn && rightBtn) {
+            // Kitna scroll karna hai ek click par (desktop par approx 1 card width + gap)
+            const scrollAmount = 300;
+
+            leftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            rightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    });
 
 

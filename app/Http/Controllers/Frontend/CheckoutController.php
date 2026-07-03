@@ -204,7 +204,7 @@ class CheckoutController extends Controller
                 if ($variant) {
                     $baseSellingPrice = round($variant->selling_price); // वजन वाली असली कीमत
                     $baseMrpPrice = round($variant->mrp_price);
-                    $weight = $variant->weight . 'g';
+                    $weight = $variant->weight;
                 }
             }
 
@@ -258,7 +258,7 @@ class CheckoutController extends Controller
                     'is_siddh'     => $isSiddh,
                     'siddh_amount' => $siddhAmountPerItem,
                     'ring_size'    => $item->ring_size,
-                    'weight'       => $item->variant ? $item->variant->weight . 'g' : null
+                    'weight'       => $item->variant ? $item->variant->weight : null
                 ];
             }
         }
@@ -397,7 +397,7 @@ class CheckoutController extends Controller
 
             // 4. ईमेल भेजें
             $this->sendOrderEmail($order->id);
-            $this->sendOrderWhatsApp($order->id);
+            // $this->sendOrderWhatsApp($order->id);
 
             // 5. फाइनल रिस्पॉन्स
             return response()->json([
@@ -464,7 +464,7 @@ class CheckoutController extends Controller
                 \App\Models\UserCoupon::where('id', $usedGameCouponId)->update(['is_used' => 1]);
             }
             $this->sendOrderEmail($order->id);
-            $this->sendOrderWhatsApp($order->id);
+            // $this->sendOrderWhatsApp($order->id);
             return response()->json(['status' => 'success', 'order_id' => $order->id, 'message' => 'Order Placed Successfully via COD!']);
         }
     }
@@ -590,7 +590,7 @@ class CheckoutController extends Controller
 
             // 🔥 MAIL SEND KARO (Payment Success hone par)
             $this->sendOrderEmail($order->id);
-            $this->sendOrderWhatsApp($order->id);
+            // $this->sendOrderWhatsApp($order->id);
 
             return response()->json(['status' => true, 'message' => 'Payment Verified']);
         } catch (\Exception $e) {
@@ -708,7 +708,7 @@ class CheckoutController extends Controller
 
             // 2. Admin Email (Jaha aapko notification chahiye)
             // Aap chaho to apni personal gmail daal lo taaki turant pata chale
-            $adminEmail = 'ram@rammittal.com'; // 👈 Yahan apni personal ID dalein
+            $adminEmail = 'singh.prakhar1996@gmail.com'; // 👈 Yahan apni personal ID dalein
 
             // Send to User (From: support@suyagya.com)
             if ($userEmail) {
@@ -723,97 +723,97 @@ class CheckoutController extends Controller
     }
 
     // 🚀 FIXED: WHATSAPP API WITH ALL 3 VARIABLES (NAME, PRODUCT, ORDER ID)
-    private function sendOrderWhatsApp($orderId)
-    {
-        try {
-            // ऑर्डर को उसके आइटम्स के साथ लोड करें
-            $order = Order::with('items')->find($orderId);
-            if (!$order || $order->items->isEmpty()) {
-                Log::warning("WhatsApp Notification Skipped: Order or items not found.");
-                return;
-            }
+    // private function sendOrderWhatsApp($orderId)
+    // {
+    //     try {
+    //         // ऑर्डर को उसके आइटम्स के साथ लोड करें
+    //         $order = Order::with('items')->find($orderId);
+    //         if (!$order || $order->items->isEmpty()) {
+    //             Log::warning("WhatsApp Notification Skipped: Order or items not found.");
+    //             return;
+    //         }
 
-            // शिपिंग एड्रेस को एरे में कन्वर्ट करना
-            $shippingAddress = is_string($order->shipping_address)
-                ? json_decode($order->shipping_address, true)
-                : $order->shipping_address;
+    //         // शिपिंग एड्रेस को एरे में कन्वर्ट करना
+    //         $shippingAddress = is_string($order->shipping_address)
+    //             ? json_decode($order->shipping_address, true)
+    //             : $order->shipping_address;
 
-            if (empty($shippingAddress) || !isset($shippingAddress['phone'])) {
-                return;
-            }
+    //         if (empty($shippingAddress) || !isset($shippingAddress['phone'])) {
+    //             return;
+    //         }
 
-            // फोन नंबर को क्लीन करें
-            $customerPhone = preg_replace('/[^0-9]/', '', $shippingAddress['phone']);
-            if (strlen($customerPhone) === 10) {
-                $customerPhone = '91' . $customerPhone;
-            }
+    //         // फोन नंबर को क्लीन करें
+    //         $customerPhone = preg_replace('/[^0-9]/', '', $shippingAddress['phone']);
+    //         if (strlen($customerPhone) === 10) {
+    //             $customerPhone = '91' . $customerPhone;
+    //         }
 
-            // API क्रेडेंशियल्स
-            $endpointUrl = "https://messaginghub.solutions/relaybridge/api/v1/meta/6a2cfb3f8c93be1e2a1edb90/messages";
-            $apiKey = "4388e9f3e6984c89af1aaa57e82b53a7";
+    //         // API क्रेडेंशियल्स
+    //         $endpointUrl = "https://messaginghub.solutions/relaybridge/api/v1/meta/6a2cfb3f8c93be1e2a1edb90/messages";
+    //         $apiKey = "4388e9f3e6984c89af1aaa57e82b53a7";
 
-            // 🎯 3 VARIABLES IMPLEMENTATION
-            $customerName = $shippingAddress['name'] ?? 'Customer'; // {{1}}
-            $orderNumber = $order->order_number; // {{3}}
+    //         // 🎯 3 VARIABLES IMPLEMENTATION
+    //         $customerName = $shippingAddress['name'] ?? 'Customer'; // {{1}}
+    //         $orderNumber = $order->order_number; // {{3}}
 
-            // 📦 {{2}} के लिए प्रोडक्ट का नाम डायनामिक निकालो
-            $firstItem = $order->items->first();
-            $productName = $firstItem->product_name;
+    //         // 📦 {{2}} के लिए प्रोडक्ट का नाम डायनामिक निकालो
+    //         $firstItem = $order->items->first();
+    //         $productName = $firstItem->product_name;
 
-            // अगर ऑर्डर में 1 से ज़्यादा आइटम्स हैं, तो "Product Name + 1 more" कर दो
-            if ($order->items->count() > 1) {
-                $productName .= ' + ' . ($order->items->count() - 1) . ' more';
-            }
+    //         // अगर ऑर्डर में 1 से ज़्यादा आइटम्स हैं, तो "Product Name + 1 more" कर दो
+    //         if ($order->items->count() > 1) {
+    //             $productName .= ' + ' . ($order->items->count() - 1) . ' more';
+    //         }
 
-            // 🚀 फाइनल पेलोड - बिल्कुल स्क्रीनशॉट के 1, 2, 3 वेरिएबल के क्रम में
-            $payload = [
-                "messaging_product" => "whatsapp",
-                "recipient_type"    => "individual",
-                "to"                => $customerPhone,
-                "type"              => "template",
-                "template"          => [
-                    "name"     => "order_confirmation",
-                    "language" => [
-                        "code" => "en"
-                    ],
-                    "components" => [
-                        [
-                            "type" => "body",
-                            "parameters" => [
-                                [
-                                    "type" => "text",
-                                    "text" => $customerName // 👈 {{1}} - कस्टमर का नाम
-                                ],
-                                [
-                                    "type" => "text",
-                                    "text" => $productName // 👈 {{2}} - ऑर्डर किए गए प्रोडक्ट का नाम
-                                ],
-                                [
-                                    "type" => "text",
-                                    "text" => $orderNumber // 👈 {{3}} - सुयज्ञ ऑर्डर आईडी (Your order id is)
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ];
+    //         // 🚀 फाइनल पेलोड - बिल्कुल स्क्रीनशॉट के 1, 2, 3 वेरिएबल के क्रम में
+    //         $payload = [
+    //             "messaging_product" => "whatsapp",
+    //             "recipient_type"    => "individual",
+    //             "to"                => $customerPhone,
+    //             "type"              => "template",
+    //             "template"          => [
+    //                 "name"     => "order_confirmation",
+    //                 "language" => [
+    //                     "code" => "en"
+    //                 ],
+    //                 "components" => [
+    //                     [
+    //                         "type" => "body",
+    //                         "parameters" => [
+    //                             [
+    //                                 "type" => "text",
+    //                                 "text" => $customerName // 👈 {{1}} - कस्टमर का नाम
+    //                             ],
+    //                             [
+    //                                 "type" => "text",
+    //                                 "text" => $productName // 👈 {{2}} - ऑर्डर किए गए प्रोडक्ट का नाम
+    //                             ],
+    //                             [
+    //                                 "type" => "text",
+    //                                 "text" => $orderNumber // 👈 {{3}} - सुयज्ञ ऑर्डर आईडी (Your order id is)
+    //                             ]
+    //                         ]
+    //                     ]
+    //                 ]
+    //             ]
+    //         ];
 
-            // लारेवेल HTTP क्लाइंट से पोस्ट रिक्वेस्ट
-            $response = \Illuminate\Support\Facades\Http::withHeaders([
-                "X-API-KEY"    => $apiKey,
-                "Content-Type" => "application/json"
-            ])->post($endpointUrl, $payload);
+    //         // लारेवेल HTTP क्लाइंट से पोस्ट रिक्वेस्ट
+    //         $response = \Illuminate\Support\Facades\Http::withHeaders([
+    //             "X-API-KEY"    => $apiKey,
+    //             "Content-Type" => "application/json"
+    //         ])->post($endpointUrl, $payload);
 
-            if ($response->successful()) {
-                Log::info("WhatsApp Order Confirmation Sent Successfully to: " . $customerPhone);
-            } else {
-                Log::error("WhatsApp API Error: " . $response->body());
-            }
+    //         if ($response->successful()) {
+    //             Log::info("WhatsApp Order Confirmation Sent Successfully to: " . $customerPhone);
+    //         } else {
+    //             Log::error("WhatsApp API Error: " . $response->body());
+    //         }
 
-        } catch (\Exception $e) {
-            Log::error('WhatsApp Order Notification Exception: ' . $e->getMessage());
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         Log::error('WhatsApp Order Notification Exception: ' . $e->getMessage());
+    //     }
+    // }
 
     public function cancelOrder(Request $request)
     {

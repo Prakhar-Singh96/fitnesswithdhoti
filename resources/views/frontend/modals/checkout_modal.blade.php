@@ -43,6 +43,10 @@
                             <div class="d-flex justify-content-between align-items-center mt-1">
 
                                 <small class="text-muted fw-bold" id="summ_qty">Qty: 1</small>
+                                {{-- Naya Size dikhane ka element --}}
+                                <small class="text-muted fw-bold ms-2 ps-2 border-start border-secondary" id="summ_size"
+                                    style="display:none;">Size: <span id="summ_size_val"
+                                        class="text-uppercase text-dark"></span></small>
 
                                 <div class="text-end">
 
