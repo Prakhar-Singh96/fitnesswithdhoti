@@ -53,23 +53,23 @@ $(document).ready(function () {
     }
 
     if ($('#heroSlider').length) {
-    $('#heroSlider').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000, // 👈 6 second रुकने का समय (Astrotalk जैसा)
-        speed: 1000,         // 👈 1 second स्लाइड होने की रफ़्तार (Smooth Slide)
+        $('#heroSlider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 5000, // 👈 6 second रुकने का समय (Astrotalk जैसा)
+            speed: 1000,         // 👈 1 second स्लाइड होने की रफ़्तार (Smooth Slide)
 
-        fade: false,          // 👈 इसको FALSE करें ताकि 'खिसकने' वाला इफ़ेक्ट आए (Astrotalk में खिसकता है)
+            fade: false,          // 👈 इसको FALSE करें ताकि 'खिसकने' वाला इफ़ेक्ट आए (Astrotalk में खिसकता है)
 
-        infinite: true,
-        arrows: false,
-        dots: false,
-        cssEase: 'ease-in-out', // 👈 स्लाइड स्मूथली शुरू और ख़त्म होगी
-        pauseOnHover: false,
-        rtl: false            // 👈 पक्का करें कि ये FALSE हो (ताकि Right to Left जाए)
-    });
-}
+            infinite: true,
+            arrows: false,
+            dots: false,
+            cssEase: 'ease-in-out', // 👈 स्लाइड स्मूथली शुरू और ख़त्म होगी
+            pauseOnHover: false,
+            rtl: false            // 👈 पक्का करें कि ये FALSE हो (ताकि Right to Left जाए)
+        });
+    }
 });
 
 // Initialize intl-tel-input
@@ -212,7 +212,7 @@ function startTimer() {
     resendBox.style.display = 'none';
     timerElem.innerHTML = timeLeft;
 
-    timerInterval = setInterval(function() {
+    timerInterval = setInterval(function () {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerBox.style.display = 'none'; // टाइमर छुपाएं
@@ -455,7 +455,7 @@ function openSideCart() {
 // ---------------------------------------------------
 // 🛒 4. ADD TO CART (Open Drawer after adding)
 // ---------------------------------------------------
-function addToCart(productId, quantity, isSiddh, btnElement, variantId = null , ringSize = null) {
+function addToCart(productId, quantity, isSiddh, btnElement, variantId = null, ringSize = null) {
     var btn = $(btnElement);
     var originalText = btn.html();
 
@@ -1281,7 +1281,7 @@ function fetchFromPostalApi(pincode) {
         type: "GET",
         dataType: "json",
         timeout: 2000, // ⏳ अगर 2 सेकंड में इसका एक्सपायर्ड SSL जवाब नहीं देता, तो तुरंत प्लान B पर जाओ
-        success: function(data) {
+        success: function (data) {
             if (data && data[0] && data[0].Status === 'Success') {
                 let details = data[0].PostOffice[0];
 
@@ -1299,7 +1299,7 @@ function fetchFromPostalApi(pincode) {
                 fetchFromZippopotamApi(pincode);
             }
         },
-        error: function() {
+        error: function () {
             // 🔄 PLAN B: अगर सरकारी API का SSL एरर आया, तो तुरंत इस बैकअप को हिट करो
             console.log("Primary API failed (SSL Expired). Switching to Zippopotam API...");
             fetchFromZippopotamApi(pincode);
@@ -1314,7 +1314,7 @@ function fetchFromZippopotamApi(pincode) {
         type: "GET",
         dataType: "json",
         timeout: 3000,
-        success: function(data) {
+        success: function (data) {
             if (data && data.places && data.places[0]) {
                 let details = data.places[0];
 
@@ -1335,7 +1335,7 @@ function fetchFromZippopotamApi(pincode) {
                 $('#address_expanded').slideUp();
             }
         },
-        error: function() {
+        error: function () {
             // 🚨 आपातकालीन सुरक्षा कवच: अगर दोनों APIs ब्लॉक हो जाएं, तब कस्टमर खुद लिख सके ताकि बिज़नेस न रुके
             console.log("Both APIs failed. Turning on manual fallback style.");
             $('#chk_pincode_msg').text('⚠️ Enter City/State manually').removeClass('text-success').addClass('text-danger');
@@ -2348,7 +2348,7 @@ function handlePaymentMethodChange(method) {
                 <span id="bill_prepaid_discount">- ₹25</span>
             </div>`;
 
-        if($('#row_coupon_discount').length) {
+        if ($('#row_coupon_discount').length) {
             $(prepaidHtml).insertBefore('#row_coupon_discount');
         } else {
             $(prepaidHtml).insertAfter('#bill_subtotal');
@@ -2371,7 +2371,7 @@ function calculateFinalTotal() {
     let currentMethod = $('input[name="payment_method"]:checked').val();
     let adminDiscount = 0;
     if ($('#coupon_applied_box').is(':visible')) {
-       // 🚀 पेमेंट मेथड के अनुसार डिस्काउंट अमाउंट स्विच करें!
+        // 🚀 पेमेंट मेथड के अनुसार डिस्काउंट अमाउंट स्विच करें!
         adminDiscount = (currentMethod === 'RAZORPAY') ? appliedPrepaidDisc : appliedCodDisc;
 
         // यूआई पर टेक्स्ट को लाइव अपडेट करें
@@ -2671,12 +2671,12 @@ function toggleFilterItems(btn) {
     }
 }
 
-$('#referral_code_input').on('change', function() {
+$('#referral_code_input').on('change', function () {
     let code = $(this).val();
-    if(code == '') return;
+    if (code == '') return;
 
-    $.get("/check-referral/" + code, function(data) {
-        if(data.status == false) {
+    $.get("/check-referral/" + code, function (data) {
+        if (data.status == false) {
             $('#referral_msg').text(data.message).addClass('text-danger').removeClass('text-success');
             $('#referral_code_input').addClass('is-invalid');
         } else {
@@ -2718,7 +2718,7 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     });
 
     // 🚀 ब्रह्मास्त्र फिक्स 1: ऑन-होवर वीडियो प्ले और पॉज़ (Desktop Hover Effect)
-    $(document).on('mouseenter', '.video-wrapper', function() {
+    $(document).on('mouseenter', '.video-wrapper', function () {
         const video = $(this).find('.the-video')[0];
         if (video) {
             const playPromise = video.play();
@@ -2730,7 +2730,7 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
                 });
             }
         }
-    }).on('mouseleave', '.video-wrapper', function() {
+    }).on('mouseleave', '.video-wrapper', function () {
         const video = $(this).find('.the-video')[0];
         if (video) {
             video.pause();
@@ -2744,7 +2744,7 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     });
 
     // 🚀 ब्रह्मास्त्र फिक्स 2: साउंड ऑन/ऑफ (Mute / Unmute Working Logic)
-    $(document).on('click', '.btn-sound-toggle', function(e) {
+    $(document).on('click', '.btn-sound-toggle', function (e) {
         e.preventDefault();
         e.stopPropagation(); // ताकि वीडियो प्ले/पॉज़ का इवेंट ट्रिगर न हो
 
@@ -2770,7 +2770,7 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     });
 
     // 📱 3. मोबाइल/टैबलेट के लिए वन-टैप प्ले-पॉज लॉजिक (Touch Support)
-    $(document).on('click', '.video-wrapper', function(e) {
+    $(document).on('click', '.video-wrapper', function (e) {
         // अगर यूजर 'Buy Now' या 'Sound' बटन दबा रहा है तो इसे स्किप करो
         if ($(e.target).closest('.btn-buy-now-video').length || $(e.target).closest('.btn-sound-toggle').length) {
             return;
@@ -2779,7 +2779,7 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
         const video = $(this).find('.the-video')[0];
         if (video) {
             if (video.paused) {
-                $('.the-video').each(function() {
+                $('.the-video').each(function () {
                     this.pause();
                     this.currentTime = 0;
                     this.muted = true; // बाकी सबको म्यूट करो
@@ -2829,29 +2829,55 @@ if (typeof $ !== 'undefined' && $.fn.slick) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-        const scrollContainer = document.getElementById('moodScrollContainer');
-        const leftBtn = document.getElementById('moodScrollLeft');
-        const rightBtn = document.getElementById('moodScrollRight');
+document.addEventListener("DOMContentLoaded", function () {
+    const scrollContainer = document.getElementById('moodScrollContainer');
+    const leftBtn = document.getElementById('moodScrollLeft');
+    const rightBtn = document.getElementById('moodScrollRight');
 
-        if(scrollContainer && leftBtn && rightBtn) {
-            // Kitna scroll karna hai ek click par (desktop par approx 1 card width + gap)
-            const scrollAmount = 300;
+    if (scrollContainer && leftBtn && rightBtn) {
+        // Kitna scroll karna hai ek click par (desktop par approx 1 card width + gap)
+        const scrollAmount = 300;
 
-            leftBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
-                });
+        leftBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
             });
+        });
 
-            rightBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
+        rightBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+    }
+
+    if (typeof $ !== 'undefined' && $.fn.slick) {
+        if ($('#featuredNoberoSlider').length) {
+            $('#featuredNoberoSlider').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                autoplay: false,
+                infinite: false,
+                dots: false,
+                arrows: true,
+                /* Direct HTML injection for safe arrow rendering */
+                prevArrow: '<button type="button" class="slick-prev-nobero"><i class="las la-angle-left text-dark fs-5 fw-bold"></i></button>',
+                nextArrow: '<button type="button" class="slick-next-nobero"><i class="las la-angle-right text-dark fs-5 fw-bold"></i></button>',
+                responsive: [
+                    {
+                        breakpoint: 1200,
+                        settings: { slidesToShow: 3 }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: { slidesToShow: 2, arrows: false }
+                    }
+                ]
             });
         }
-    });
+    }
+});
 
 

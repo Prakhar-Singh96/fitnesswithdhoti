@@ -128,7 +128,7 @@
             </button>
 
             {{-- 2. MAIN MENU --}}
-            <div class="collapse navbar-collapse justify-content-center" id="mainMenu">
+            <div class="collapse navbar-collapse justify-content-left" id="mainMenu">
                 <ul class="navbar-nav mb-2 mb-lg-0 align-items-center gap-2">
 
                     @foreach ($headerCategories as $category)

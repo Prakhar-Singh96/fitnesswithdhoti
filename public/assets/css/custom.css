@@ -18,7 +18,7 @@
     --border-color: #e0e0e0;
 
     /* 🔴 FIX 2: LIGHT BACKGROUND COLOR (CREAM/BEIGE) */
-    --light: #f7f1de;
+    --light: #ffffff;
     --soft-light: #000000;
 
     /* 🔴 FIX 3: WHITE COLOR MUST BE #FFFFFF (For icons and main links) */
@@ -26,6 +26,7 @@
     --white: #ffffff;
     --soft-white: #e8e8e8;
 }
+
 
 /* 1. Global Header Background and Border Fixes */
 header {
@@ -1806,8 +1807,8 @@ main {
 }
 
 .dropdown-item.active {
-background-color: #c19a6b;
-color: #ffffff;
+    background-color: #c19a6b;
+    color: #ffffff;
 }
 
 .dropdown-item i {
@@ -3540,7 +3541,8 @@ html {
     display: block !important;
     background-size: contain;
     cursor: pointer;
-    opacity: 1 !important; /* इसे 1 रखने से आइकॉन हमेशा दिखेगा */
+    opacity: 1 !important;
+    /* इसे 1 रखने से आइकॉन हमेशा दिखेगा */
     /* सुयज्ञ के बैंगनी रंग में आइकॉन बदलने के लिए */
     filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(246deg) brightness(97%) contrast(91%);
     width: 20px;
@@ -3551,20 +3553,22 @@ html {
     background: white;
     border: 1px solid #673ab7;
     border-radius: 0 0 10px 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .list-group-item-action:hover {
-    background-color: #f3e5f5; /* सुयज्ञ का हल्का बैंगनी रंग */
+    background-color: #f3e5f5;
+    /* सुयज्ञ का हल्का बैंगनी रंग */
     color: #673ab7;
 }
 
 @media (max-width: 991px) {
+
     /* मोबाइल पर फिल्टर को कार्ड जैसा लुक दें */
     #mobileFilterCollapse .filter-sidebar {
         background: #fff;
         margin-top: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 100;
     }
@@ -3576,7 +3580,8 @@ html {
     }
 
     /* बटन की ऊंचाई एक जैसी रखें */
-    .btn-outline-dark, .dropdown-toggle {
+    .btn-outline-dark,
+    .dropdown-toggle {
         height: 40px;
         border-color: #dee2e6 !important;
     }
@@ -3592,11 +3597,14 @@ html {
 .see-more-btn {
     transition: all 0.3s ease;
     font-size: 12px;
-    color: #ff6f00 !important; /* आपकी ब्रांड थीम का रंग */
+    color: #ff6f00 !important;
+    /* आपकी ब्रांड थीम का रंग */
 }
+
 .see-more-btn:hover {
     text-decoration: underline !important;
 }
+
 .filter-item {
     transition: opacity 0.3s ease;
 }
@@ -3627,8 +3635,15 @@ html {
 }
 
 @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
@@ -3659,11 +3674,14 @@ html {
 .d-flex.align-items-center.justify-content-start.rating-row.mb-1 {
     gap: 10.5rem;
 }
+
 /* 🔮 फिक्स्ड सिंपल ड्रॉपडाउन मेनू स्टाइल (गैप फिक्स के साथ) */
 .nav-item.dropdown.hover-dropdown.position-relative {
     position: relative !important;
-    padding-bottom: 12px !important; /* 🚀 MAGIC: मेनू के नीचे पैडिंग बढ़ा दी ताकि अदृश्य गैप खत्म हो जाए */
-    margin-bottom: -12px !important; /* मार्जिन को एडजस्ट किया ताकि लेआउट न बिगड़े */
+    padding-bottom: 12px !important;
+    /* 🚀 MAGIC: मेनू के नीचे पैडिंग बढ़ा दी ताकि अदृश्य गैप खत्म हो जाए */
+    margin-bottom: -12px !important;
+    /* मार्जिन को एडजस्ट किया ताकि लेआउट न बिगड़े */
 }
 
 .custom-simple-dropdown {
@@ -3673,7 +3691,8 @@ html {
     right: 0 !important;
     min-width: 220px !important;
     border-radius: 8px !important;
-    margin-top: 0px !important; /* 🚀 गैप को 0 कर दिया ताकि माउस का कनेक्शन न टूटे */
+    margin-top: 0px !important;
+    /* 🚀 गैप को 0 कर दिया ताकि माउस का कनेक्शन न टूटे */
     background-color: #fff !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
     z-index: 1100 !important;
@@ -3693,7 +3712,8 @@ html {
 
 .custom-simple-dropdown .dropdown-item:hover {
     background-color: #f8f9fa !important;
-    color: #7b3f27 !important; /* ब्रांड का थीम कलर */
+    color: #7b3f27 !important;
+    /* ब्रांड का थीम कलर */
     padding-left: 1.25rem !important;
 }
 
@@ -3721,12 +3741,12 @@ html {
 }
 
 .seo-h1 {
-  position: absolute;
-  left: -9999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 
 /* 🎮 EXPLORE FEED SLIDER ARROWS STYLING */
@@ -3742,7 +3762,8 @@ html {
     width: 42px;
     height: 42px;
     background-color: #ffffff;
-    border: 1px solid #7b3f27; /* सुयज्ञ थीम ब्राउन कलर */
+    border: 1px solid #7b3f27;
+    /* सुयज्ञ थीम ब्राउन कलर */
     color: #7b3f27;
     border-radius: 50%;
     display: flex;
@@ -3792,7 +3813,8 @@ html {
     background: #ffffff;
     border-radius: 16px;
     overflow: hidden;
-    height: 440px; /* फिक्स्ड हाइट सिमेट्री */
+    height: 440px;
+    /* फिक्स्ड हाइट सिमेट्री */
     display: flex !important;
     flex-direction: column;
     border: 1px solid #eee8dc;
@@ -3801,12 +3823,13 @@ html {
 
 .premium-review-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* इमेज होल्डर बॉक्स */
 .review-img-box {
-    height: 220px; /* आधी हाइट इमेज को दी */
+    height: 220px;
+    /* आधी हाइट इमेज को दी */
     width: 100%;
     overflow: hidden;
     background-color: #f9f9f9;
@@ -3839,7 +3862,8 @@ html {
     line-height: 1.5;
     margin-bottom: 12px;
     display: -webkit-box;
-    -webkit-line-clamp: 4; /* 4 लाइनों के बाद ऑटो-डॉट (...) */
+    -webkit-line-clamp: 4;
+    /* 4 लाइनों के बाद ऑटो-डॉट (...) */
     -webkit-box-orient: vertical;
     overflow: hidden;
     flex-grow: 1;
@@ -3848,7 +3872,8 @@ html {
 .review-card-author {
     font-size: 11px;
     font-weight: 700;
-    color: #7b3f27; /* सुयज्ञ थीम कलर */
+    color: #7b3f27;
+    /* सुयज्ञ थीम कलर */
     text-transform: uppercase;
     margin-top: auto;
 }
@@ -3871,7 +3896,7 @@ html {
     cursor: pointer;
     z-index: 50;
     transition: all 0.2s;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .review-slider-btn:hover {
@@ -3879,25 +3904,40 @@ html {
     color: #fff;
 }
 
-.r-prev { left: -10px; }
-.r-next { right: -10px; }
+.r-prev {
+    left: -10px;
+}
+
+.r-next {
+    right: -10px;
+}
 
 /* मोबाइल फ्रेंडली रिस्पांसिवनेस */
 @media (max-width: 767px) {
-    .review-slider-btn { display: none !important; }
-    .premium-review-card { height: 390px; }
-    .review-img-box { height: 180px; }
+    .review-slider-btn {
+        display: none !important;
+    }
+
+    .premium-review-card {
+        height: 390px;
+    }
+
+    .review-img-box {
+        height: 180px;
+    }
 }
 
 .btn-view-all-blogs {
     background-color: transparent;
-    border: 2px solid #7b3f27; /* सुयज्ञ थीम का ओरिजिनल ब्राउन कलर */
+    border: 2px solid #7b3f27;
+    /* सुयज्ञ थीम का ओरिजिनल ब्राउन कलर */
     color: #7b3f27 !important;
     font-weight: 700;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-radius: 50px; /* कैप्सूल शेप बटन */
+    border-radius: 50px;
+    /* कैप्सूल शेप बटन */
     transition: all 0.3s ease-in-out;
     display: inline-flex;
     align-items: center;
@@ -3912,47 +3952,50 @@ html {
 }
 
 
-    /* 🚀 टेक्स्ट-ओनली कार्ड का मास्टर स्टाइल */
+/* 🚀 टेक्स्ट-ओनली कार्ड का मास्टर स्टाइल */
+.premium-review-card.text-only-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 240px !important;
+    /* 👈 इमेज हटने के बाद हाइट को घटाकर एकदम परफेक्ट 240px लॉक कर दिया */
+    display: flex !important;
+    flex-direction: column;
+    border: 1px solid #eee8dc;
+    transition: all 0.3s ease;
+}
+
+.premium-review-card.text-only-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(123, 63, 39, 0.1) !important;
+}
+
+.text-only-card .review-body-box {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.text-only-card .review-card-text {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    /* 4 लाइनों के बाद ऑटो (...) आ जाएगा */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
     .premium-review-card.text-only-card {
-        background: #ffffff;
-        border-radius: 12px;
-        overflow: hidden;
-        height: 240px !important; /* 👈 इमेज हटने के बाद हाइट को घटाकर एकदम परफेक्ट 240px लॉक कर दिया */
-        display: flex !important;
-        flex-direction: column;
-        border: 1px solid #eee8dc;
-        transition: all 0.3s ease;
+        height: 220px !important;
+        /* मोबाइल पर थोड़ा और छोटा */
     }
-
-    .premium-review-card.text-only-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(123, 63, 39, 0.1) !important;
-    }
-
-    .text-only-card .review-body-box {
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: space-between;
-    }
-
-    .text-only-card .review-card-text {
-        font-size: 13px;
-        color: #555;
-        line-height: 1.6;
-        margin-bottom: 15px;
-        display: -webkit-box;
-        -webkit-line-clamp: 4; /* 4 लाइनों के बाद ऑटो (...) आ जाएगा */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    @media (max-width: 767px) {
-        .premium-review-card.text-only-card {
-            height: 220px !important; /* मोबाइल पर थोड़ा और छोटा */
-        }
-    }
+}
 
 
 /* 🎫 Coupon Card Premium Styling */
@@ -3998,7 +4041,7 @@ html {
     justify-content: center;
     font-size: 20px;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
 }
 
@@ -4008,12 +4051,19 @@ html {
     border-color: #222f3e;
 }
 
-.mood-scroll-btn.left-btn { left: -15px; }
-.mood-scroll-btn.right-btn { right: -15px; }
+.mood-scroll-btn.left-btn {
+    left: -15px;
+}
+
+.mood-scroll-btn.right-btn {
+    right: -15px;
+}
 
 /* Mobile par buttons chhupane ke liye taaki user swipe kare */
 @media (max-width: 768px) {
-    .mood-scroll-btn { display: none; }
+    .mood-scroll-btn {
+        display: none;
+    }
 }
 
 /* --- HORIZONTAL SCROLL CONTAINER --- */
@@ -4024,25 +4074,32 @@ html {
     gap: 15px;
     padding-bottom: 15px;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth; /* Smooth scroll feature */
+    scroll-behavior: smooth;
+    /* Smooth scroll feature */
 
     /* Scrollbar hide karne ke liye for clean look */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
+
 .mood-scroll-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 /* --- CARDS SIZING (Aapki request ke hisaab se unchanged) --- */
 .mood-scroll-item {
     flex: 0 0 auto;
-    width: 65%; /* Mobile width */
+    width: 65%;
+    /* Mobile width */
 }
 
 @media (min-width: 768px) {
     .mood-scroll-item {
-        width: 23.5%; /* Desktop par 4 cards dikhenge */
+        width: 23.5%;
+        /* Desktop par 4 cards dikhenge */
     }
 }
 
@@ -4080,13 +4137,23 @@ html {
     font-size: 22px;
 }
 
-.mood-category-item:hover .mood-img { transform: scale(1.05); }
-.mood-category-item:hover .mood-overlay { padding-bottom: 20px; }
+.mood-category-item:hover .mood-img {
+    transform: scale(1.05);
+}
+
+.mood-category-item:hover .mood-overlay {
+    padding-bottom: 20px;
+}
 
 /* Mobile Devices Font Adjustments (Height automatically adjust hogi ab) */
 @media (max-width: 768px) {
-    .mood-title { font-size: 18px; }
-    .mood-subtext { font-size: 10px; }
+    .mood-title {
+        font-size: 18px;
+    }
+
+    .mood-subtext {
+        font-size: 10px;
+    }
 }
 
 
@@ -4102,6 +4169,7 @@ html {
 .collection-img-box img {
     transition: transform 0.5s ease;
 }
+
 .collection-link:hover .collection-img-box img {
     transform: scale(1.08);
 }
@@ -4111,7 +4179,8 @@ html {
     width: 22px;
     height: 22px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.9); /* White border */
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    /* White border */
     color: rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
 }
@@ -4128,7 +4197,8 @@ html {
 
 .collection-title {
     letter-spacing: 0.3px;
-    font-family: 'Inter', sans-serif; /* Ya jo aapka theme font ho */
+    font-family: 'Inter', sans-serif;
+    /* Ya jo aapka theme font ho */
 }
 
 /* Mobile Screens (Phones) */
@@ -4136,11 +4206,122 @@ html {
     .collection-title {
         font-size: 11px !important;
     }
+
     .plus-icon-circle {
         width: 18px;
         height: 18px;
     }
+
     .plus-icon-circle i {
         font-size: 10px !important;
+    }
+}
+
+/* =========================================
+   🌟 FEATURED SLIDER (NOBERO FAVOURITE STYLE)
+   ========================================= */
+
+.product-card-nobero {
+    transition: all 0.3s ease;
+}
+
+.product-card-nobero .img-box img {
+    transition: transform 0.6s ease;
+}
+
+.product-card-nobero:hover .img-box img {
+    transform: scale(1.05);
+    /* Smooth image zoom */
+}
+
+/* Custom Floating Arrows */
+.nobero-slider-btn {
+    position: absolute;
+    top: 40%;
+    /* Image ke beech mein */
+    transform: translateY(-50%);
+    width: 36px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.nobero-slider-btn:hover {
+    border-color: #333;
+}
+
+.nobero-slider-btn i {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.n-prev {
+    left: -10px;
+    /* Thoda bahar ki taraf */
+}
+
+.n-next {
+    right: -10px;
+}
+
+@media (max-width: 768px) {
+    .nobero-slider-btn {
+        display: none !important;
+        /* Mobile par swipe chalega, arrows hide */
+    }
+}
+
+/* Embedded CSS to prevent any layout breaking */
+.nobero-featured-card .img-box img {
+    transition: transform 0.5s ease;
+}
+
+.nobero-featured-card:hover .img-box img {
+    transform: scale(1.05);
+    /* Hover par image zoom */
+}
+
+/* Custom Arrows for Slick */
+.slick-prev-nobero,
+.slick-next-nobero {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 40px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.slick-prev-nobero {
+    left: -10px;
+}
+
+.slick-next-nobero {
+    right: -10px;
+}
+
+.slick-prev-nobero:hover,
+.slick-next-nobero:hover {
+    border-color: #333;
+}
+
+@media(max-width: 768px) {
+
+    .slick-prev-nobero,
+    .slick-next-nobero {
+        display: none !important;
     }
 }
