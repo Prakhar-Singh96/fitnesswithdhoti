@@ -56,7 +56,7 @@
     </section>
 
     {{-- 💎 1. MATCH THE MOOD SCROLL SECTION WITH BUTTONS --}}
-    <section class="py-4 bg-white position-relative overflow-hidden">
+    <section class="py-4 bg-white position-relative overflow-hidden" style="background: linear-gradient(180deg, rgba(223, 206, 205, 1), rgb(255, 221, 221) 100%);">
         <div class="container-fluid px-3 px-md-4 position-relative">
 
             {{-- Section Heading --}}
@@ -112,7 +112,7 @@
     </section>
 
     {{-- 🛍️ NEW ARRIVALS (NOBERO SQUARE STYLE) --}}
-    <section class="py-5 bg-white">
+    <section class="py-5 bg-white" style="background: linear-gradient(180deg, rgb(255 221 221), rgba(233, 212, 192, 1) 100%);">
         <div class="container-fluid px-3 px-md-5">
 
             {{-- Section Heading --}}
@@ -130,14 +130,14 @@
                             <div class="collection-item-wrapper text-center">
 
                                 {{-- Light Grey SQUARE Image Box (1:1 Ratio) --}}
-                                <div class="collection-img-box position-relative rounded-3 overflow-hidden mb-2" style="background-color: #f1f2f4; aspect-ratio: 1/1;">
+                                <div class="collection-img-box position-relative rounded-3 overflow-hidden mb-2">
 
                                     {{-- Product Main Image --}}
                                     <img src="{{ asset($product->main_image) }}"
                                          alt="{{ $product->name }}"
                                          class="w-100 h-100 object-fit-cover transition-transform"
-                                         loading="lazy"
-                                         style="mix-blend-mode: multiply; padding: 10px;"> {{-- Padding taki kapde edges se thoda andar rahein --}}
+                                         loading="lazy">
+                                         {{-- style="mix-blend-mode: multiply; padding: 10px;"> Padding taki kapde edges se thoda andar rahein --}}
 
                                     {{-- Top Right Plus Icon (White border, transparent inside) --}}
                                     <div class="position-absolute top-0 end-0 m-2">
@@ -177,7 +177,7 @@
     </section>
 
     {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 bg-white">
+    <section class="py-5 featured-products-section" style="background: linear-gradient(180deg, rgba(233, 212, 192, 1), rgba(255, 255, 255, 1) 92%);">
         <div class="container-fluid px-3 px-md-5">
 
             {{-- Minimal Heading --}}
@@ -264,7 +264,7 @@
     </section>
 
     {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
-    <section class="py-3 featured-products-section" style="background-color: #f7f1de;">
+    <section class="py-3 featured-products-section" style="background-color: #ffffff">
         <div class="container">
 
             {{-- Heading --}}
@@ -382,8 +382,8 @@
                                     @endif
                                 </div>
 
-                                @if ($product->quantity > 0)
-                                    {{-- Add to Cart --}}
+                                {{-- @if ($product->quantity > 0)
+
                                     <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
                                         data-id="{{ $product->id }}" data-name="{{ $product->name }}"
                                         data-price="{{ $product->price }}">
@@ -394,7 +394,7 @@
                                         style="cursor: not-allowed; background: #d60808; border: none;">
                                         Out of Stock
                                     </button>
-                                @endif
+                                @endif --}}
                             </div>
 
                         </div>
@@ -418,153 +418,10 @@
         </div>
     </section>
 
-    {{-- 🛒 3. OUR PRODUCTS (DYNAMIC) --}}
-    {{-- <section class="py-3 featured-products-section" style="background-color: var(--light)">
-        <div class="container">
-
-            <div class="d-flex justify-content-center mb-5">
-                <div class="fancy-heading-box">
-                    <h2 class="m-0">Our Products</h2>
-                </div>
-            </div>
-
-            <div class="row g-4">
-
-                @foreach ($products as $product)
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="product-card-minimal">
-
-                            <div class="img-box">
-                                @if ($product->discount > 0)
-                                    <span class="badge bg-danger text-white position-absolute top-0 start-0 m-2 fw-bold"
-                                        style="z-index: 2;">
-                                        {{ round($product->discount) }}% OFF
-                                    </span>
-                                @endif
-                                <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
-                                    @php
-                                        $isInWishlist =
-                                            Auth::check() &&
-                                            \App\Models\Wishlist::where('user_id', Auth::id())
-                                                ->where('product_id', $product->id)
-                                                ->exists();
-                                    @endphp
-                                    <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart' }} fs-5"></i>
-                                </button>
-                                <a href="{{ route('product.detail', $product->slug) }}">
-                                    <img src="{{ asset($product->main_image) }}"
-                                        alt="{{ $product->main_image_alt ?? $product->name }}" width="600"
-                                        height="600" loading="lazy">
-                                </a>
-
-                                @if ($product->youtube_link)
-                                    <div class="video-overlay-icon position-absolute bottom-0 end-0 m-2"
-                                        style="z-index: 3;">
-                                        <a href="javascript:void(0);" data-bs-toggle="modal"
-                                            data-bs-target="#videoModal{{ $product->id }}"
-                                            class="text-white text-decoration-none shadow-lg d-flex align-items-center justify-content-center"
-                                            style="background: rgba(220, 53, 69, 0.9); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff;">
-                                            <i class="las la-play fs-4"></i>
-                                        </a>
-                                    </div>
-
-
-                                    <div class="modal fade" id="videoModal{{ $product->id }}" tabindex="-1"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
-                                            <div class="modal-content bg-transparent border-0">
-                                                <div class="modal-header border-0 p-0 justify-content-end mb-2">
-                                                    <button type="button" class="btn-close btn-close-white"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body p-0">
-                                                    <div class="ratio"
-                                                        style="--bs-aspect-ratio: 177.77%; background: #000; border-radius: 15px; overflow: hidden;">
-                                                        <iframe src="{{ $product->youtube_link }}" title="Video"
-                                                            allowfullscreen></iframe>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-
-
-                            <div class="product-details text-start">
-                                <a href="{{ route('product.detail', $product->slug) }}"
-                                    class="text-decoration-none text-dark fw-bold text-truncate d-block"
-                                    style="font-family: 'Merriweather', serif;">
-                                    {{ $product->name }}
-                                </a>
-
-                                <div class="d-flex align-items-center rating-row">
-                                    @php
-
-                                        $avgRating = 0;
-                                        $reviewCount = 0;
-
-                                        if ($product->relationLoaded('reviews') && $product->reviews) {
-                                            $avgRating = $product->reviews->avg('rating');
-                                            $reviewCount = $product->reviews->count();
-                                        }
-
-                                        $fullStars = round($avgRating);
-                                    @endphp
-
-                                    <span class="stars text-warning">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= $fullStars)
-                                                <i class="las la-star"></i>
-                                            @else
-                                                <i class="lar la-star"></i>
-                                            @endif
-                                        @endfor
-                                    </span>
-
-                                    <span class="review-count text-muted small ms-1">({{ $reviewCount }})</span>
-                                </div>
-
-                                <div class="price-row">
-                                    <span class="price-current">₹{{ number_format($product->price) }}</span>
-                                    @if ($product->mrp_price > $product->price)
-                                        <span class="price-old">₹{{ number_format($product->mrp_price) }}</span>
-                                    @endif
-                                </div>
-                                @if ($product->quantity > 0)
-                                    <button class="btn btn-earthy" onclick="addToCart({{ $product->id }}, 1, 0, this)"
-                                        data-id="{{ $product->id }}">
-                                        Add to Cart
-                                    </button>
-                                @else
-                                    <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed; background: #d60808; border: none;">
-                                        Out of Stock
-                                    </button>
-                                @endif
-                            </div>
-
-                        </div>
-                    </div>
-                @endforeach
-
-                @if ($products->count() == 0)
-                    <div class="col-12 text-center text-muted">No products found.</div>
-                @endif
-
-            </div>
-
-            <div class="text-center mt-5">
-                <a href="{{ route('products.all_collection') }}" class="btn btn-view-all rounded-pill px-4 py-2">
-                    View all Products
-                </a>
-            </div>
-
-        </div>
-    </section> --}}
 
     {{-- 🛒 4. video-feed-section (Placeholder for next section) --}}
     {{-- 🎥 EXPLORE VIDEO FEED SECTION (WITH SLICK NAVIGATION ARROWS) --}}
-    <section class="py-4 video-feed-section" style="background-color: #f7f1de; position: relative;">
+    <section class="py-4 video-feed-section" style="background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(213, 202, 154, 1) 98%); position: relative;">
         <div class="container-fluid px-4 position-relative">
 
             <div class="d-flex justify-content-center mb-4">
@@ -643,7 +500,7 @@
     </section>
 
 
-    <section class="py-3 favourites-section" style="background: radial-gradient(762px 694px at 99% 5%, rgba(244, 216, 191, .4) 0, rgba(244, 216, 191, .4) 49.57%, rgba(244, 216, 191, 0) 70%), radial-gradient(431px 441px at 0 54%, rgba(244, 216, 191, .4) 0, rgba(244, 216, 191, .4) 49.57%, rgba(244, 216, 191, 0) 70%), #fff;">
+    <section class="py-3 favourites-section" style="background: linear-gradient(180deg, rgba(213, 202, 154, 1), rgba(241, 232, 208, 1) 97%);">
         <div class="container">
 
             {{-- 1. Minimal Heading --}}
@@ -664,11 +521,11 @@
                         {{-- 1. Wide Image (Top Left) - Rudraksha Jap Mala --}}
                         <div class="fav-card wide mb-3">
                             {{-- Using your uploaded image: image_08a5ae.jpg --}}
-                            <img src="{{ asset('uploads/home/fav/rudarask_mala.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/tees.webp') }}" class="img-fluid"
                                 alt="Rudraksh Jap Mala">
                             <div class="fav-content">
-                                <h3>Rudraksh Jap Mala</h3>
-                                <a href="{{ url('category/rudraksh/rudraksh-mala') }}" class="btn btn-fav-shop">Shop
+                                <h3>Tees Collection</h3>
+                                <a href="{{ url('category/rudraksh/tees') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
                         </div>
@@ -679,10 +536,10 @@
                                 {{-- 2. Small Image (Middle Left 1) - Tiger Eye Stone --}}
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_08406c.jpg --}}
-                                    <img src="{{ asset('uploads/home/fav/rashi.webp') }}" class="img-fluid"
+                                    <img src="{{ asset('uploads/home/fav/shorts.webp') }}" class="img-fluid"
                                         alt="Tiger Eye Stone">
                                     <div class="fav-content">
-                                        <h3>Rashi Bracelet</h3>
+                                        <h3>Shorts Collections</h3>
                                         <a href="{{ url('category/rashi-bracelet') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
@@ -692,10 +549,10 @@
                                 {{-- 3. Small Image (Middle Left 2) - Black Stone --}}
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_09214d.jpg --}}
-                                    <img src="{{ asset('uploads/home/fav/ring.webp') }}" class="img-fluid"
+                                    <img src="{{ asset('uploads/home/fav/shirts.jpg') }}" class="img-fluid"
                                         alt="Black Stone">
                                     <div class="fav-content">
-                                        <h3>Spritual Stone Jewellery</h3>
+                                        <h3>Shirts Collections</h3>
                                         <a href="{{ url('category/stone-jewellery') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
@@ -710,10 +567,10 @@
                         {{-- 4. Tall Image (Right Side) - Rashi Bracelet --}}
                         <div class="fav-card tall h-100">
                             {{-- Using your uploaded image: image_aeee28.jpg --}}
-                            <img src="{{ asset('uploads/home/fav/karungali_mala.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/printed-tees.webp') }}" class="img-fluid"
                                 alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
-                                <h3>Karungali Mala</h3>
+                                <h3>Printed-tees Mala</h3>
                                 <a href="{{ url('category/karungali/karungali-mala') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
@@ -730,10 +587,10 @@
                     <div class="col-md-4">
                         <div class="fav-card standard">
                             {{-- Using your uploaded image: image_08a246.png --}}
-                            <img src="{{ asset('uploads/home/fav/ganesh_shankh.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/co-ords.webp') }}" class="img-fluid"
                                 alt="Rose Product">
                             <div class="fav-content">
-                                <h3>Ganesh Shankh Collection</h3>
+                                <h3>Co-ords Collection</h3>
                                 <a href="{{ url('category/pooja-items/shankh') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
@@ -743,10 +600,10 @@
                     <div class="col-md-8">
                         <div class="fav-card wide">
                             {{-- Using your uploaded image: image_390489.jpg (Collage) as a banner --}}
-                            <img src="{{ asset('uploads/home/fav/murti.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/joggers.webp') }}" class="img-fluid"
                                 alt="Suyagya Collection">
                             <div class="fav-content">
-                                <h3>Murti Collection</h3>
+                                <h3>Joggers Collection</h3>
                                 <a href="{{ url('category/spritual-idols') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
@@ -758,57 +615,6 @@
         </div>
     </section>
 
-    <section class="py-3 energy-section" style="background-color: #f7f1de;">
-        <div class="container">
-
-            {{-- 1. Fancy Heading --}}
-            <div class="d-flex justify-content-center mb-5">
-                <div class="fancy-heading-box">
-                    <h2 class="m-0">Choose Energy You Want to Attract</h2>
-                </div>
-            </div>
-
-            {{-- 2. Energy Icons Grid --}}
-            <div class="row g-4 justify-content-center">
-                @php
-                    // Helper array to map DB names to Icons
-                    // Ensure keys match your DB values exactly (case-insensitive usually preferred)
-                    $iconMap = [
-                        'Wealth' => asset('assets/img/icons/wealth.png'),
-                        'Love' => asset('assets/img/icons/love.png'),
-                        'Health' => asset('assets/img/icons/health.png'),
-                        'Luck' => asset('assets/img/icons/luck.png'),
-                        'Protection' => asset('assets/img/icons/protection.png'),
-                        'Peace' => asset('assets/img/icons/peace.png'),
-                        'Courage' => asset('assets/img/icons/courage.png'),
-                        'Balance' => asset('assets/img/icons/balance.png'),
-                        // Add default fallback if needed
-                    ];
-                @endphp
-
-                @foreach ($purposes as $purpose)
-                    @php
-                        // Get icon or default placeholder
-                        $icon = $iconMap[$purpose->value] ?? asset('assets/img/icons/default.png');
-                    @endphp
-
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-custom-8">
-                        {{-- 🔗 Dynamic Link: Sends to Product Listing with ?purpose=Health --}}
-                        <a href="{{ route('products.all_collection') }}?purpose={{ $purpose->value }}"
-                            class="energy-card text-decoration-none d-block text-center">
-
-                            <div class="icon-wrapper mb-3 mx-auto">
-                                <img src="{{ $icon }}" alt="{{ $purpose->value }}" class="img-fluid">
-                            </div>
-
-                            <h5 class="energy-title">{{ $purpose->value }}</h5>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-
-        </div>
-    </section>
     <div class="all-catagorys">
         {{-- ✨ 6. DYNAMIC SUB-CATEGORY SHOWCASE SECTIONS ✨ --}}
         {{-- ✨ DYNAMIC CATEGORY SHOWCASE SECTIONS (Ring, Earring, Pendant) ✨ --}}
@@ -816,7 +622,7 @@
         @if (isset($showcaseSections) && $showcaseSections->count() > 0)
             @foreach ($showcaseSections as $section)
                 @if ($section->products->count() > 0)
-                    <section class="py-3 category-showcase-section" style="background-color: #f7f1de;">
+                    <section class="py-3 category-showcase-section" style="background: linear-gradient(180deg, rgba(241, 232, 208, 1), rgba(255, 248, 230, 1) 100%);">
                         <div class="container-fluid px-4">
 
                             {{-- 1. Heading --}}
@@ -934,13 +740,13 @@
                                                             @endif
                                                         </div>
 
-                                                        <button class="btn btn-earthy w-100 btn-sm"
+                                                        {{-- <button class="btn btn-earthy w-100 btn-sm"
                                                             onclick="addToCart({{ $product->id }}, 1, 0, this)"
                                                             data-id="{{ $product->id }}"
                                                             data-name="{{ $product->name }}"
                                                             data-price="{{ $product->price }}">
                                                             Add to cart
-                                                        </button>
+                                                        </button> --}}
                                                     </div>
 
                                                 </div>
@@ -957,106 +763,8 @@
             @endforeach
         @endif
     </div>
-    {{-- <section class="ratings-bar-section">
-        <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-8">
-
-                    <div class="ratings-content py-4">
-                        <h3 class="text-white fw-bold m-0 mb-2">Join Over 50,000 Happy Customers.</h3>
-
-                        <div class="d-flex justify-content-center align-items-center gap-2">
-                            <div class="stars-row">
-                                <i class="las la-star"></i>
-                                <i class="las la-star"></i>
-                                <i class="las la-star"></i>
-                                <i class="las la-star"></i>
-                                <i class="las la-star-half-alt"></i>
-                            </div>
-
-                            <span class="text-white fw-600 fs-16">Rated 4.7/5 1,500 Reviews</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section> --}}
-
-    {{-- 👥 CUSTOMER REVIEWS SECTION (PREMIUM SLIDER FORMAT) --}}
-    {{-- <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
-        <div class="container position-relative px-md-5">
-
-            <div class="d-flex justify-content-center mb-5">
-                <div class="fancy-heading-box">
-                    <h2 class="m-0">Customer Love</h2>
-                </div>
-            </div>
-
-            <div class="testimonial-slider-container">
-                <div class="testimonial-slider" id="suyagyaCustomerReviewsSlider">
-                    @if (isset($reviews) && $reviews->count() > 0)
-                        @foreach ($reviews as $review)
-                            @php
-                                $hasImage =
-                                    !empty($review->media) && is_array($review->media) && count($review->media) > 0;
-                            @endphp
-
-                            @if ($hasImage)
-                                <div class="testimonial-slide-item">
-                                    <div class="premium-review-card shadow-sm">
-
-                                        <div class="review-img-box">
-                                            <img src="{{ asset($review->media[0]) }}" alt="Customer Review Product"
-                                                class="review-attached-img">
-                                        </div>
-
-                                        <div class="review-body-box">
-                                            <div class="text-warning small mb-2">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <i class="las la-star"></i>
-                                                @endfor
-                                            </div>
-
-                                            @if ($review->title)
-                                                <h6 class="review-card-title text-truncate">{{ $review->title }}</h6>
-                                            @endif
-
-                                            <p class="review-card-text">
-                                                "{{ $review->review }}"
-                                            </p>
-
-                                            <div class="review-card-author">
-                                                - {{ $review->display_name }}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    @else
-                        <div class="text-center w-100 py-4">
-                            <p class="text-muted">No reviews yet.</p>
-                        </div>
-                    @endif
-                </div>
-
-                @if (isset($reviews) && $reviews->count() > 0)
-                    <button class="review-slider-btn r-prev" id="review-slider-prev" aria-label="Previous Reviews">
-                        <i class="las la-angle-left"></i>
-                    </button>
-                    <button class="review-slider-btn r-next" id="review-slider-next" aria-label="Next Reviews">
-                        <i class="las la-angle-right"></i>
-                    </button>
-                @endif
-            </div>
-
-        </div>
-    </section> --}}
-
     {{-- 👥 CUSTOMER REVIEWS SECTION (TEXT-ONLY PREMIUM SLIDER FORMAT) --}}
-    <section class="py-5 testimonial-section" style="background-color: #f7f1de; position: relative;">
+    <section class="py-5 testimonial-section" style="background-color: #fff8e6; position: relative;">
         <div class="container position-relative px-md-5">
 
             <div class="d-flex justify-content-center mb-5">
@@ -1119,14 +827,13 @@
     </section>
 
     {{-- ================= BLOG SECTION WITH VIEW ALL BUTTON ================= --}}
-    <section class="py-5 blog-section" style="background-color: #f7f1de;">
+    <section class="py-5 blog-section" style="background: linear-gradient(180deg, rgba(255, 248, 230, 1) 26%, rgba(225, 247, 254, 1) 100%);">
         <div class="container">
 
             {{-- Heading --}}
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box text-center">
                     <h2 class="m-0 fw-bold" style="font-family: 'Merriweather', serif;">Blogs</h2>
-                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;">
                     </div>
                 </div>
             </div>
@@ -1205,13 +912,13 @@
     @endphp
 
     @if (count($faqs) > 0)
-        <section class="py-3 faq-section" style="background-color: #f7f1de;">
+        <section class="py-5 faq-section" style="background: linear-gradient(180deg, rgba(225, 247, 254, 1), rgba(146, 175, 183, 1) 100%);">
             <div class="container">
 
                 {{-- 1. Fancy Heading --}}
                 <div class="d-flex justify-content-center mb-5">
                     <div class="fancy-heading-box"
-                        style="background-color: #FFFBF2; padding: 10px 30px; border: 1px solid #ddd;">
+                        style="background-color: #4b6b6e1f; border: 1px solid #7a97a5;">
                         <h2 class="m-0 font-heading fw-bold">FAQs</h2>
                     </div>
                 </div>

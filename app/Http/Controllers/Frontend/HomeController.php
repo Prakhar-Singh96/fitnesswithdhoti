@@ -66,11 +66,11 @@ class HomeController extends Controller
 
         // 🟢 NEW LOGIC: Specific Category Showcases
         // 1. Find "Spiritual Jewellery" Category (Adjust slug if different)
-        $spiritualCat = Category::where('slug', 'stone-jewellery')->first();
+        $spiritualCat = Category::where('slug', 'mens-apparel')->first();
         //dd($spiritualCat);
 
         // 2. Define specific sub-categories slugs you want to show
-        $targetSubSlugs = ['ring', 'earring', 'pendant']; // Add your real slugs here
+        $targetSubSlugs = ['tees', 'joggers', 'co-ords']; // Add your real slugs here
 
         $showcaseSections = collect([]);
 

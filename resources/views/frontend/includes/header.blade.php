@@ -112,7 +112,7 @@
 </style>
 
 {{-- 🟢 DESKTOP HEADER (Fully Responsive) --}}
-<header class="sticky-top z-1020 shadow-sm" style="background-color: var(--light); border-bottom: 1px solid #f0f0f0;">
+<header class="sticky-top z-1020 shadow-sm" style="background: var(--light); border-bottom: 1px solid #f0f0f0;">
     <nav class="navbar navbar-expand-lg py-2">
         <div class="container-fluid px-3 px-lg-4">
 
@@ -338,7 +338,7 @@
 </header>
 
 {{-- 📱 MOBILE HEADER --}}
-<div class="Mobile-Header sticky-top" style="background: #fff; z-index: 1020;">
+<div class="Mobile-Header sticky-top" style="background: var(--light); z-index: 1020;">
     <div class="mobileHeader">
         <div class="HeaderLeft">
             <button id="menuButton">
@@ -358,7 +358,7 @@
         <div class="HeaderCenter">
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Suyagya" class="logo-img">
+                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Suyagya" class="logo-img">
                 </div>
             </a>
         </div>

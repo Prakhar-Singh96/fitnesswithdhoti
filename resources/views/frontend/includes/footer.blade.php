@@ -4,11 +4,13 @@
 
     /* 1. Footer Background Color (Universal Dark) */
     .footer-main-section {
-        background-color: #0c0112 !important; /* Deep Dark Grey / Black */
+        /* background-color: #0c0112 !important; Deep Dark Grey / Black */
         color: #FFFFFF;
         padding-top: 60px;
         padding-bottom: 50px;
-        font-family: 'Inter', sans-serif; /* Modern clean font */
+        font-family: 'Inter', sans-serif;
+        /* Modern clean font */
+        background: linear-gradient(180deg, rgba(92, 134, 154, 1), rgba(57, 86, 100, 1) 95%);
     }
 
     /* 2. Heading and Text Colors */
@@ -41,7 +43,8 @@
 
     .footer-list a:hover {
         color: #FFFFFF !important;
-        padding-left: 5px; /* Subtle hover effect */
+        padding-left: 5px;
+        /* Subtle hover effect */
     }
 
     /* 4. Logo/Brand and Contact Info Styling */
@@ -119,23 +122,36 @@
 
     /* 7. Copyright Bar */
     .footer-copyright-bar {
-        background-color: #000000;
+        /* background-color: #000000; */
         color: rgba(255, 255, 255, 0.5);
-        padding: 20px 0;
+        padding: 8px 0;
         font-size: 0.8rem;
         letter-spacing: 0.5px;
+        background: linear-gradient(193deg, rgb(3 31 44), rgb(120 127 131) 95%);
     }
 
     /* Top Trust Banner Styling */
     .trust-banner {
-        background-color: #f9f9f9;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+        /* background-color: #f9f9f9; */
+        /* border-top: 1px solid #eee; */
+        /* border-bottom: 1px solid #eee; */
+        background: linear-gradient(180deg, rgba(146, 175, 183, 1), rgba(92, 134, 154, 1) 100%);
     }
+
     .trust-icon {
         font-size: 2.2rem;
-        color: #222;
+        color: #ffffff;
         margin-bottom: 10px;
+    }
+
+    .trust-banner .text-dark {
+        --bs-text-opacity: 1;
+        color: rgb(235 238 241) !important;
+    }
+
+    .trust-banner .text-muted {
+        --bs-text-opacity: 1;
+        color: rgb(255 255 255 / 75%) !important;
     }
 </style>
 
@@ -188,9 +204,11 @@
                         <h3 class="fw-bolder text-white mb-0" style="letter-spacing: 2px;">VARDHIYAS</h3>
                     </div>
                     <div class="footer-brand-info">
-                        <p class="mb-3">Redefining modern men's fashion with premium quality apparel designed for everyday comfort.</p>
+                        <p class="mb-3">Redefining modern men's fashion with premium quality apparel designed for
+                            everyday comfort.</p>
 
-                        <p class="mb-1"><i class="las la-envelope me-2"></i> <a href="mailto:support@vardhiyas.com" class="text-white text-decoration-none">support@vardhiyas.com</a></p>
+                        <p class="mb-1"><i class="las la-envelope me-2"></i> <a href="mailto:support@vardhiyas.com"
+                                class="text-white text-decoration-none">support@vardhiyas.com</a></p>
                         <p class="mb-1"><i class="las la-phone me-2"></i> +91 XXXXX XXXXX</p>
                         <p class="mt-3 small" style="opacity: 0.6;">Mon - Sat, 10 AM - 6 PM</p>
                     </div>
@@ -223,11 +241,13 @@
             {{-- 4. 💌 Newsletter & Social --}}
             <div class="col-lg-3 col-md-6">
                 <h4 class="footer-heading">Join The Club</h4>
-                <p class="small mb-3" style="color: rgba(255,255,255,0.7);">Sign up for exclusive offers, original stories, events and more.</p>
+                <p class="small mb-3" style="color: rgba(255,255,255,0.7);">Sign up for exclusive offers, original
+                    stories, events and more.</p>
 
                 {{-- Minimalist Newsletter Input --}}
                 <div class="footer-input-group d-flex mb-4">
-                    <input type="email" placeholder="Enter your email" class="form-control bg-transparent text-white border-0 shadow-none px-0">
+                    <input type="email" placeholder="Enter your email"
+                        class="form-control bg-transparent text-white border-0 shadow-none px-0">
                     <button type="submit" class="btn px-2">
                         <i class="las la-arrow-right"></i>
                     </button>
@@ -236,10 +256,18 @@
                 {{-- Social Icons --}}
                 <div class="footer-social-icons d-flex">
                     <a href="#" target="_blank" aria-label="Facebook" class="social-icon-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.12,5.32H17V2.14A26.11,26.11,0,0,0,14.26,2C11.54,2,9.68,3.66,9.68,6.7V9.32H6.61v3.56H9.68V22h3.68V12.88h3.06l.46-3.56H13.36V7.05C13.36,6,13.64,5.32,15.12,5.32Z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path
+                                d="M15.12,5.32H17V2.14A26.11,26.11,0,0,0,14.26,2C11.54,2,9.68,3.66,9.68,6.7V9.32H6.61v3.56H9.68V22h3.68V12.88h3.06l.46-3.56H13.36V7.05C13.36,6,13.64,5.32,15.12,5.32Z">
+                            </path>
+                        </svg>
                     </a>
                     <a href="#" target="_blank" aria-label="Instagram" class="social-icon-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,0,0,2,12a10,10,0,0,0,10,10,10,10,0,0,0,10-10A10,10,0,0,0,12,2Zm3.47,1.86a1.44,1.44,0,1,1-1.44,1.44,1.44,1.44,0,0,1,1.44-1.44ZM12,6.5A5.5,5.5,0,1,1,6.5,12,5.5,5.5,0,0,1,12,6.5ZM12,8.5a3.5,3.5,0,1,0,3.5,3.5A3.5,3.5,0,0,0,12,8.5Z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path
+                                d="M12,2A10,10,0,0,0,2,12a10,10,0,0,0,10,10,10,10,0,0,0,10-10A10,10,0,0,0,12,2Zm3.47,1.86a1.44,1.44,0,1,1-1.44,1.44,1.44,1.44,0,0,1,1.44-1.44ZM12,6.5A5.5,5.5,0,1,1,6.5,12,5.5,5.5,0,0,1,12,6.5ZM12,8.5a3.5,3.5,0,1,0,3.5,3.5A3.5,3.5,0,0,0,12,8.5Z">
+                            </path>
+                        </svg>
                     </a>
                 </div>
             </div>

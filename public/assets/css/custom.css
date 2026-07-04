@@ -18,7 +18,7 @@
     --border-color: #e0e0e0;
 
     /* 🔴 FIX 2: LIGHT BACKGROUND COLOR (CREAM/BEIGE) */
-    --light: #ffffff;
+    --light: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; margin: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; margin: 0!important; border-radius: 0!important;; padding-bottom: px;
     --soft-light: #000000;
 
     /* 🔴 FIX 3: WHITE COLOR MUST BE #FFFFFF (For icons and main links) */
@@ -31,19 +31,19 @@
 /* 1. Global Header Background and Border Fixes */
 header {
     /* Main header background must be light, not maroon */
-    background-color: var(--light) !important;
+    background: var(--light) !important;
     padding: 0;
 }
 
 .top-navbar {
-    background-color: var(--light) !important;
+    background: var(--light) !important;
 }
 
 /* 2. Golden Border Fix (Applied at the very bottom) */
 .navbar {
     /* Ensures the navbar itself doesn't have an unwanted border,
        and that the logo area is clean */
-    background-color: var(--light) !important;
+    background: var(--light) !important;
     padding: 0 !important;
 }
 
@@ -644,7 +644,7 @@ main {
 .fancy-heading-box {
     background-color: #FFF5E6;
     /* Light beige/peach background */
-    border: 1px solid #E0C09C;
+    border: 1px solid #406f91;
     /* Soft brown border */
     border-radius: 15px;
     /* Rounded edges */
@@ -662,14 +662,14 @@ main {
     left: 4px;
     right: 4px;
     bottom: 4px;
-    border: 1px solid #E0C09C;
+    border: 1px solid #406f91;
     border-radius: 12px;
     pointer-events: none;
 }
 
 .fancy-heading-box h2 {
     font-family: 'Merriweather', serif;
-    color: #3E2723;
+    color: #406f91;
     /* Dark brown text */
     font-size: 1.5rem;
     font-weight: 600;
@@ -2877,7 +2877,6 @@ nav .d-none.flex-sm-fill.d-sm-flex {
     display: flex;
     width: 100%;
     border-bottom: 4px solid var(--secondary-base) !important;
-    background: #fff;
     box-shadow: var(--bs-box-shadow-sm) !important;
     align-items: center;
     justify-content: space-between;
