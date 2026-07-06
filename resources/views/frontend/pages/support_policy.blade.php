@@ -123,7 +123,7 @@
 <section class="support-header">
     <div class="container">
         <h1>Support Policy</h1>
-        <p class="text-muted mt-2">We are here to help you on your spiritual journey.</p>
+        <p class="text-muted mt-2">We are here to help you.</p>
     </div>
 </section>
 
@@ -132,7 +132,7 @@
     {{-- Intro --}}
     <div class="text-center mb-5 px-lg-5">
         <p class="lead text-dark">
-            At <strong>Suyagya</strong>, your peace of mind and satisfaction are our top priorities. Our dedicated support team is here to assist you with any queries regarding your orders or experience on our platform.
+            At <strong>Vardhiyas</strong>, your peace of mind and satisfaction are our top priorities. Our dedicated support team is here to assist you with any queries regarding your orders or experience on our platform.
         </p>
     </div>
 
@@ -147,7 +147,7 @@
                 </div>
                 <h5 class="fw-bold mb-2">Email Us</h5>
                 <p class="text-muted small mb-2">For general queries & support</p>
-                <a href="mailto:info@suyagya.com" class="contact-link">info@suyagya.com</a>
+                <a href="mailto:info@suyagya.com" class="contact-link">support@vardhiyas.com</a>
             </div>
         </div>
 
@@ -159,7 +159,7 @@
                 </div>
                 <h5 class="fw-bold mb-2">Call Us</h5>
                 <p class="text-muted small mb-2">Speak to our support team</p>
-                <a href="tel:+917692005006" class="contact-link">+91 7692 005 006</a>
+                <a href="tel:+917692005006" class="contact-link">+91 9870 271 533</a>
             </div>
         </div>
 
@@ -171,7 +171,7 @@
                 </div>
                 <h5 class="fw-bold mb-2">Visit Us</h5>
                 <p class="text-muted small mb-2">Our physical location</p>
-                <span class="text-dark">J-3/356, DDA Flats, Kalkaji,<br>Delhi - 110019</span>
+                <span class="text-dark">K-348/7, Saurabh Vihar, Jaitpur, near Vijay Modern Public School,Badarpur,<br>Delhi - 110044</span>
             </div>
         </div>
     </div>

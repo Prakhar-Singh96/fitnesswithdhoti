@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="text-center mb-5">
         <h1 class="font-heading fw-bold">Aapke Sawaal, Hamare Jawab</h1>
-        <p class="text-muted">Rudraksha se rashi bracelet tak — jo bhi jaanna ho, seedha aur sach jawab yahan milega.</p>
+        <p class="text-muted">Help People</p>
     </div>
 
     <div class="row justify-content-center">
@@ -21,7 +21,7 @@
             {{-- 2. BRAND SPECIFIC FAQS (From Home Settings) --}}
             @if(!empty($homeSettings->faq_content))
                 <div class="mb-5">
-                    <h4 class="fw-bold mb-3 text-dark border-bottom pb-2">About Suyagya Products</h4>
+                    <h4 class="fw-bold mb-3 text-dark border-bottom pb-2">About Vardhiyas Products</h4>
                     @include('frontend.includes.faq_accordion', ['faqs' => $homeSettings->faq_content, 'idSuffix' => 'brand'])
                 </div>
             @endif

@@ -2132,16 +2132,16 @@ main {
 
 /* 2. Left Side (Branding) */
 .login-left-panel {
-    background-color: #3E1B1B;
+    background: linear-gradient(180deg, rgb(239 203 137) 4%, rgb(215 217 121) 61%, rgb(118 178 219) 100%);
     /* Dark Maroon */
-    color: #fff;
+    color: #000000;
     padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+    /* background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); */
     /* Optional texture */
 }
 
@@ -2154,7 +2154,7 @@ main {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 40px;
-    color: #fff;
+    color: #ff3f00;
 }
 
 .feature-box {

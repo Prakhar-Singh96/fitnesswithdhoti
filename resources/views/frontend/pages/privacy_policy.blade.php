@@ -2,108 +2,110 @@
 
 @section('styles')
 <style>
-    /* ✨ Privacy Policy Page Styles */
+    /* ✨ Vardhiyas Privacy Policy Page Styles */
     .privacy-header {
-        background-color: #f7f1de;
-        padding: 60px 0;
+        background-color: #f9f9f9;
+        padding: 50px 0;
         text-align: center;
         margin-bottom: 40px;
-        border-bottom: 4px solid #d4af37;
+        border-bottom: 1px solid #eaeaea;
     }
 
     .privacy-header h1 {
-        font-family: 'Merriweather', serif;
+        font-family: 'Inter', sans-serif;
         font-weight: 700;
-        color: #3e2723;
+        color: #222;
+        font-size: 28px;
+        letter-spacing: 0.5px;
     }
 
-    /* Card Styling */
-    .policy-card {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        transition: transform 0.3s ease;
+    .privacy-content {
+        max-width: 900px;
+        margin: 0 auto;
     }
 
-    .policy-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-        border-color: #d4af37;
-    }
-
-    .card-title {
-        font-family: 'Merriweather', serif;
+    .section-title {
+        font-family: 'Inter', sans-serif;
         font-weight: 700;
+        font-size: 1.1rem;
+        color: #111;
         margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 1.2rem;
-        color: #333;
+        margin-top: 35px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .card-title i {
-        color: #d4af37;
-        font-size: 1.5rem;
+    .policy-text {
+        color: #4a4a4a;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 15px;
     }
 
-    /* List Styles */
-    .data-list {
+    .policy-text strong {
+        color: #222;
+    }
+
+    .custom-list {
         list-style: none;
-        padding: 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 2 Column Auto Grid */
-        gap: 15px;
+        padding-left: 0;
+        margin-bottom: 20px;
     }
 
-    .data-list li {
-        background-color: #f9f9f9;
-        padding: 10px 15px;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        color: #555;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-left: 3px solid #d4af37;
+    .custom-list li {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 10px;
+        color: #4a4a4a;
+        font-size: 14px;
+        line-height: 1.6;
     }
 
-    .data-list li i {
-        font-size: 1.2rem;
-        color: #3e2723;
+    .custom-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #222;
+        font-size: 20px;
+        line-height: 1;
+        top: -2px;
     }
 
-    /* Highlight Box (What We Do) */
-    .highlight-box {
-        background-color: #e3f2fd; /* Light Blue for Info */
-        border: 1px dashed #2196f3;
-        padding: 20px;
-        border-radius: 8px;
-        color: #0d47a1;
+    .link-highlight {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 500;
     }
 
-    /* Security Box */
-    .security-box {
-        background-color: #e8f5e9; /* Light Green */
-        border: 1px solid #c8e6c9;
-        padding: 25px;
-        border-radius: 12px;
-        text-align: center;
+    .link-highlight:hover {
+        text-decoration: underline;
     }
 
+    /* Minimalist Contact Footer */
     .contact-footer {
-        background-color: #3e2723;
+        background-color: #111;
         color: #fff;
         padding: 40px;
-        border-radius: 12px;
+        border-radius: 8px;
         text-align: center;
-        margin-top: 40px;
+        margin-top: 50px;
     }
 
-    .contact-footer a { color: #f7f1de; text-decoration: underline; }
+    .contact-footer a { color: #fff; text-decoration: underline; }
+
+    .last-updated {
+        font-size: 0.85rem;
+        color: #888;
+        margin-bottom: 30px;
+    }
+
+    .grievance-box {
+        background-color: #fcfcfc;
+        border: 1px solid #eaeaea;
+        padding: 20px;
+        border-radius: 6px;
+        margin-top: 15px;
+    }
 </style>
 @endsection
 
@@ -113,162 +115,113 @@
 <section class="privacy-header">
     <div class="container">
         <h1>Privacy Policy</h1>
-        <p class="text-muted mt-2">Your trust and privacy are our sacred responsibility.</p>
     </div>
 </section>
 
 <div class="container pb-5">
 
-    {{-- Last Updated --}}
-    <div class="text-center text-muted small mb-5">
-        Last Updated: {{ date('F d, Y') }}
-    </div>
+    <div class="privacy-content">
 
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <p class="policy-text">
+            Vardhiyas ("we/us/our") respects the privacy of our customers and users of our website ("you"). Our practices and procedures in relation to the collection and use of your data/information have been set out below in this privacy policy. This privacy policy will familiarize you with the manner in which we may collect, use, share, transfer and disclose your data/information.
+        </p>
 
-            {{-- Intro --}}
-            <div class="mb-5 text-center">
-                <p class="lead text-dark">
-                    Welcome to <strong>Suyagya.com</strong> – your trusted online store for spiritual and religious products. This website is managed and operated by <strong>Ram Ram Pandit Ji</strong>, with a commitment to protecting your privacy and personal data.
-                </p>
-            </div>
+        <p class="policy-text">
+            We collect only the information necessary for our business purposes such as to provide you with services, complete your order or to contact you regarding the status of your order.
+        </p>
 
-            {{-- 1. Who We Are --}}
-            <div class="policy-card">
-                <h3 class="card-title"><i class="las la-user-tie"></i> Who We Are</h3>
-                <div class="row">
-                    <div class="col-md-6 mb-2"><strong>Website Name:</strong> Suyagya</div>
-                    <div class="col-md-6 mb-2"><strong>Address:</strong> <a href="https://suyagya.com" class="text-primary">https://suyagya.com</a></div>
-                    <div class="col-md-6 mb-2"><strong>Managed By:</strong> Suyagya Admin</div>
-                    <div class="col-md-6 mb-2"><strong>Email:</strong> <a href="mailto:mysuyagya@gmail.com" class="text-dark">info@suyagya.com</a></div>
-                    <div class="col-12 mt-2">
-                        <strong>Business Address:</strong> J-3/356, DDA Flats, Kalkaji, Delhi, India 110019
-                    </div>
-                </div>
-            </div>
+        <p class="policy-text">
+            For the purpose of this privacy policy, sensitive personal data or information of a person ("SPDI") is as defined under the Information Technology Act 2000 ("IT Act") and the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Information) Rules 2011 ("SPDI Rules"). Please note that usage of the term Personal Information in this Privacy Policy includes Sensitive Personal Data or Information, wherever appropriate and/or mandated under the IT Act and the SPDI Rules.
+        </p>
 
-            {{-- 2. What We Do (Highlighted) --}}
-            <div class="policy-card">
-                <h3 class="card-title"><i class="las la-store"></i> What We Do</h3>
-                <p class="text-muted mb-3">Suyagya.com is an e-commerce platform that sells spiritual and devotional products.</p>
+        <ul class="custom-list">
+            <li>We do not store your credit card or online bank account information.</li>
+            <li>We will not rent or sell your name or personal information.</li>
+            <li>We utilize "cookies" to help recognize you as a repeat visitor and to track traffic patterns on our site. This information is completely anonymous. We use this information only to improve the user-friendliness and functionality of our website.</li>
+        </ul>
 
-                <div class="highlight-box">
-                    <i class="las la-info-circle fs-4 me-2 align-middle"></i>
-                    <strong>Important Note:</strong> This site does not offer any pooja or religious services directly. Those services are exclusively available through our separate platform:
-                    <a href="https://ramrampanditji.com" target="_blank" class="fw-bold text-decoration-underline">ramrampanditji.com</a>
-                </div>
-            </div>
+        <p class="policy-text">
+            By providing your consent to this privacy policy, you agree to the collection, use and transfer of your personal information as set out in this privacy policy. We reserve the right to update this privacy policy at any time. Updates to our privacy policy will be sent to the email address that you have provided us.
+        </p>
 
-            {{-- 3. Information We Collect --}}
-            <div class="policy-card">
-                <h3 class="card-title"><i class="las la-database"></i> Information We Collect</h3>
-                <p class="text-muted mb-3">We may collect the following information when you visit or shop on our website:</p>
-                <ul class="data-list">
-                    <li><i class="las la-user"></i> Full Name</li>
-                    <li><i class="las la-phone"></i> Contact Number</li>
-                    <li><i class="las la-envelope"></i> Email Address</li>
-                    <li><i class="las la-map-marker"></i> Shipping & Billing Address</li>
-                    <li><i class="las la-credit-card"></i> Payment Details (Securely processed)</li>
-                    <li><i class="las la-history"></i> Order History</li>
-                    <li><i class="las la-laptop"></i> Browser & Device Info</li>
-                    <li><i class="las la-cookie"></i> Cookies & Usage Data</li>
-                </ul>
-            </div>
+        <h2 class="section-title">COLLECTION OF PERSONAL INFORMATION</h2>
+        <p class="policy-text">
+            We collect personal information from you when you provide it to us. For example, if you purchase a product from us, we may collect your name, mailing address, telephone number and email address. If you sign up to receive a newsletter, we will collect your email address. If you take advantage of special services offered by us, we may collect other personal information about you. We use your personal information for internal purposes such as processing and keeping you informed of your order. We reserve the right to collect general demographic and other anonymous information that does not personally identify you. This information is not associated with your personally identifiable information and cannot be linked to you personally. The information we collect also includes your shipping address, and billing address.
+        </p>
+        <p class="policy-text">
+            You represent that the personal information you provide from time to time is correct and updated and you have all the rights, permissions and consents to provide the same.
+        </p>
 
-            {{-- 4. How We Use Data --}}
-            <div class="policy-card">
-                <h3 class="card-title"><i class="las la-tasks"></i> How We Use Your Data</h3>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item border-0 ps-0"><i class="las la-check text-success me-2"></i> Process and fulfill your orders efficiently.</li>
-                    <li class="list-group-item border-0 ps-0"><i class="las la-check text-success me-2"></i> Send order confirmations, invoices, and shipping updates.</li>
-                    <li class="list-group-item border-0 ps-0"><i class="las la-check text-success me-2"></i> Provide customer support and resolve queries.</li>
-                    <li class="list-group-item border-0 ps-0"><i class="las la-check text-success me-2"></i> Improve website functionality and user experience.</li>
-                    <li class="list-group-item border-0 ps-0"><i class="las la-check text-success me-2"></i> Share product-related offers and updates (only if you opt-in).</li>
-                </ul>
-            </div>
+        <h2 class="section-title">USE AND PROCESSING OF PERSONAL INFORMATION</h2>
+        <p class="policy-text mb-2">The personal information collected by us may be used for a number of purposes connected with our business operations which may include the following:</p>
+        <ul class="custom-list">
+            <li>To deal with requests, enquiries and complaints, customer services and related activities;</li>
+            <li>To respond to your queries and fulfil your requests for information regarding our products and services;</li>
+            <li>To customize our offerings for you;</li>
+            <li>To analyse user trends and help improve our offerings;</li>
+            <li>To notify you about our new products or services and for sending you important information regarding our products or services;</li>
+            <li>For legitimate business purposes; and</li>
+            <li>To respond to judicial process and for providing information to law enforcement agencies or as permitted by law.</li>
+        </ul>
 
-            {{-- 5. Data Security (Highlighted) --}}
-            <div class="policy-card">
-                <div class="security-box">
-                    <i class="las la-shield-alt text-success display-4 mb-3"></i>
-                    <h4 class="fw-bold text-success">100% Data Security</h4>
-                    <p class="text-dark m-0">
-                        Your data is protected using secure technologies. We <strong>never store your full payment details</strong> (Credit/Debit Card numbers) on our servers. All payments are handled via trusted third-party gateways (like Razorpay) which follow the highest security standards.
-                    </p>
-                </div>
-            </div>
+        <h2 class="section-title">DISCLOSURE OF PERSONAL INFORMATION</h2>
+        <p class="policy-text">
+            Under no circumstances do we rent, trade or share your personal information that we have collected with any other company for their marketing purposes without your consent. We reserve the right to communicate your personal information to any third party that makes a legally compliant request for its disclosure. Otherwise, we will not disclose your name, address and other information which identifies you personally to any third party without your consent. However, in case of a situation wherein we are obliged to comply with law or a statutory obligation or a legal process, we would be compelled to provide information about a customer. We may also disclose or transfer your personal information to another third party as a part of reorganization or a sale of the assets or our business to such third party. Such third party will have the right to continue to use the personal information provided to us. We may also share your personal information with our group companies, affiliates and third parties for the purposes set out under this privacy policy.
+        </p>
 
-            {{-- 6. Cookies & Sharing --}}
+        <ul class="custom-list mt-3">
+            <li><strong>Why are COOKIES important:</strong> We use cookies and other technologies such as pixel tags and clear gifs to store certain types of information each time you visit any page on our website. Cookies enable this website to recognize the information you have consented to give to this website and help us determine what portions of this website are most appropriate for your professional needs. We may also use cookies to serve advertising banners to you. These banners may be served by us or by a third party on our behalf. These cookies will not contain any personal information.</li>
+            <li class="mt-3"><strong>OPT OUT of setting website cookie on users' browsers:</strong> Whether you want your web browser to accept cookies or not is up to you. If you have not changed your computer's settings, most likely your browser already accepts cookies. If you choose to decline cookies, you may not be able to fully experience all features of the website. You can also delete your browser cookies or disable them entirely. But this may significantly impact your experience with our website and may make parts of our website non-functional or inaccessible. We recommend that you leave them turned on.</li>
+            <li class="mt-3"><strong>NPI advertising:</strong> We use third-party service providers to serve ads on our behalf across the internet and sometimes on this site. They may collect anonymous information about your visits to our website, and your interaction with our products and services. They may also use information about your visits to this and other websites to target advertisements for goods and services. This anonymous information is collected through the use of a pixel tag, which is industry standard technology used by most major websites. No personally identifiable information is collected or used in this process. They do not know the name, phone number, address, email address, or any personally identifying information about the user.</li>
+        </ul>
+
+        <h2 class="section-title">INFORMATION PROVIDER'S RIGHTS</h2>
+        <p class="policy-text">
+            You have the right to withdraw your consent for SPDI provided at any time by sending an e-mail to us at <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a>, in accordance with the terms of this privacy policy. However, please note that withdrawal of consent will not be retrospective in nature and shall be applicable prospectively. In case you do not provide your information or consent for usage of SPDI or subsequently withdraw your consent for usage of the SPDI so collected, we reserve the right to discontinue the services for which the said SPDI was sought.
+        </p>
+        <p class="policy-text">
+            You may write to us at <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a> to access, review, modify or correct your SPDI or withdraw your consent to provide SPDI. However, we are not responsible for the authenticity of the SPDI provided by you.
+        </p>
+        <p class="policy-text">
+            You agree and acknowledge that certain data or information may not be corrected or is prohibited to be modified as required under any applicable law, law enforcement requests or under any judicial proceedings. In respect to such data or information, the aforementioned rights will not be available.
+        </p>
+
+        <h2 class="section-title">SECURITY PRACTICES AND PROCEDURES</h2>
+        <p class="policy-text">
+            We use reasonable security measures, to safeguard and protect your SPDI. We may enter into agreements with third parties (in or outside of India) to store your information or data. These third parties may have their own security standards to safeguard your information or data and we will, on a commercial reasonable basis, require such third parties to adopt reasonable security standards to safeguard your information or data. Notwithstanding anything contained in this privacy policy or elsewhere, we shall not be held responsible for any loss, damage or misuse of your data or information, if such loss, damage or misuse is attributable to a Force Majeure Event. A "Force Majeure Event" shall mean any event that is beyond our reasonable control and shall include, without limitation, sabotage, fire, flood, explosion, acts of God, civil commotion, strikes or industrial action of any kind, riots, insurrection, war, acts of government, computer hacking, unauthorized access to computer data and storage device, computer crashes, breach of security and encryption, etc.
+        </p>
+
+        <h2 class="section-title">GRIEVANCE REDRESSAL</h2>
+        <p class="policy-text">
+            Any discrepancies and grievances with respect to processing of SPDI shall be informed to the designated Grievance Officer under the IT Act as mentioned below:
+        </p>
+
+        <div class="grievance-box">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="policy-card h-100">
-                        <h3 class="card-title"><i class="las la-cookie-bite"></i> Use of Cookies</h3>
-                        <p class="text-muted small">Suyagya.com uses cookies to:</p>
-                        <ul class="ps-3 small text-muted">
-                            <li>Remember your cart items.</li>
-                            <li>Keep you logged in securely.</li>
-                            <li>Track website performance and analytics.</li>
-                        </ul>
-                        <p class="small text-muted mt-2">You can disable cookies via your browser settings at any time.</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="policy-card h-100">
-                        <h3 class="card-title"><i class="las la-share-alt"></i> Sharing Information</h3>
-                        <p class="text-muted small">We share data <strong>only</strong> with essential partners:</p>
-                        <ul class="ps-3 small text-muted">
-                            <li>Trusted Delivery Partners (to ship your order).</li>
-                            <li>Payment Gateways (to process payments).</li>
-                            <li>Email Service Providers (for updates).</li>
-                        </ul>
-                        <p class="fw-bold small mt-2 text-dark"><i class="las la-ban text-danger"></i> We NEVER sell or rent your data.</p>
-                    </div>
-                </div>
-            </div>
+                <div class="col-4 col-md-3 fw-bold text-dark">Name</div>
+                <div class="col-8 col-md-9 text-muted">: <span class="text-dark">Support Team</span></div>
 
-            {{-- 7. Your Rights --}}
-            <div class="policy-card">
-                <h3 class="card-title"><i class="las la-user-shield"></i> Your Rights & Retention</h3>
-                <p class="text-muted">We retain your data only as long as necessary to fulfill orders and comply with legal requirements.</p>
-                <p class="fw-bold mt-3">You have the right to:</p>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                    <span class="badge bg-light text-dark border p-2">Access your data</span>
-                    <span class="badge bg-light text-dark border p-2">Correct/Update details</span>
-                    <span class="badge bg-light text-dark border p-2">Request Deletion</span>
-                    <span class="badge bg-light text-dark border p-2">Unsubscribe</span>
-                </div>
-                <p class="mt-3 small">To make any request, contact us at: <a href="mailto:info@suyagya.com" class="fw-bold text-dark">info@suyagya.com</a></p>
-            </div>
+                <div class="col-4 col-md-3 fw-bold text-dark mt-2">Designation</div>
+                <div class="col-8 col-md-9 text-muted mt-2">: <span class="text-dark">Customer Support Head</span></div>
 
-            {{-- 8. Changes to Policy --}}
-            <div class="policy-card bg-light border-0">
-                <h3 class="card-title text-muted" style="font-size: 1rem;"><i class="las la-sync"></i> Changes to This Policy</h3>
-                <p class="small text-muted m-0">We may update this Privacy Policy from time to time. All changes will be posted on this page, and the "Last Updated" date will be modified accordingly.</p>
+                <div class="col-4 col-md-3 fw-bold text-dark mt-2">Email ID</div>
+                <div class="col-8 col-md-9 text-muted mt-2">: <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a></div>
             </div>
-
-            {{-- Contact Footer --}}
-            <div class="contact-footer">
-                <h3 style="font-family: 'Merriweather', serif;">Questions about Privacy?</h3>
-                <p class="mb-4">We are here to help you.</p>
-                <div class="row justify-content-center">
-                    <div class="col-md-5">
-                        <i class="las la-envelope fs-3 mb-2"></i><br>
-                        <a href="mailto:info@suyagya.com" class="fs-5">info@suyagya.com</a>
-                    </div>
-                    <div class="col-md-5">
-                        <i class="las la-map-marker fs-3 mb-2"></i><br>
-                        <span>J-3/356, DDA, Kalkaji, New Delhi - 110019</span>
-                    </div>
-                </div>
-                <div class="mt-4 pt-3 border-top border-secondary small">
-                    Thank you for trusting <strong>Suyagya</strong>
-                </div>
-            </div>
-
         </div>
-    </div>
 
+        {{-- 📞 Contact Footer --}}
+        <div class="contact-footer">
+            <h3 class="fw-bold mb-2" style="font-size: 1.2rem;">Still have questions?</h3>
+            <p class="mb-4" style="color: rgba(255,255,255,0.7);">Our support team is here to help you.</p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <div>
+                    <i class="las la-envelope fs-4 mb-1"></i><br>
+                    <a href="mailto:support@vardhiyas.com">support@vardhiyas.com</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 @endsection

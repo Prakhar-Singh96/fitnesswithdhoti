@@ -209,7 +209,7 @@
 
                         <p class="mb-1"><i class="las la-envelope me-2"></i> <a href="mailto:support@vardhiyas.com"
                                 class="text-white text-decoration-none">support@vardhiyas.com</a></p>
-                        <p class="mb-1"><i class="las la-phone me-2"></i> +91 XXXXX XXXXX</p>
+                        <p class="mb-1"><i class="las la-phone me-2"></i> +91 98702 71533 </p>
                         <p class="mt-3 small" style="opacity: 0.6;">Mon - Sat, 10 AM - 6 PM</p>
                     </div>
                 </div>

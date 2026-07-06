@@ -2,51 +2,43 @@
 
 @section('styles')
 <style>
-    /* ✨ Refund Policy Page Styles */
+    /* ✨ Vardhiyas Policy Page Styles */
     .policy-header {
-        background-color: #f7f1de;
-        padding: 60px 0;
+        background-color: #f9f9f9;
+        padding: 50px 0;
         text-align: center;
         margin-bottom: 40px;
-        border-bottom: 4px solid #d4af37;
+        border-bottom: 1px solid #eaeaea;
     }
 
     .policy-header h1 {
-        font-family: 'Merriweather', serif;
+        font-family: 'Inter', sans-serif;
         font-weight: 700;
-        color: #3e2723;
+        color: #222;
+        font-size: 28px;
+        letter-spacing: 0.5px;
     }
 
-    .policy-card {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 12px;
-        padding: 30px;
-        height: 100%; /* For equal height */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        transition: transform 0.3s ease;
+    .policy-section {
+        margin-bottom: 45px;
     }
 
-    .policy-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-        border-color: #d4af37;
-    }
-
-    .card-title {
-        font-family: 'Merriweather', serif;
+    .policy-title {
+        font-family: 'Inter', sans-serif;
         font-weight: 700;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
+        color: #111;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    /* Green Title for Eligible */
-    .text-success-custom { color: #2e7d32; }
-    /* Red Title for Non-Eligible */
-    .text-danger-custom { color: #c62828; }
+    .policy-text {
+        color: #4a4a4a;
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
 
     .custom-list {
         list-style: none;
@@ -55,63 +47,55 @@
 
     .custom-list li {
         position: relative;
-        padding-left: 30px;
-        margin-bottom: 12px;
-        color: #555;
+        padding-left: 20px;
+        margin-bottom: 10px;
+        color: #4a4a4a;
+        font-size: 15px;
         line-height: 1.6;
     }
 
-    /* Custom Check/Cross Icons */
-    .list-check li::before {
-        content: '\f00c'; /* Check Icon */
-        font-family: 'Line Awesome Free';
-        font-weight: 900;
+    /* Small dark dot for bullets */
+    .custom-list li::before {
+        content: '•';
         position: absolute;
         left: 0;
-        top: 2px;
-        color: #2e7d32;
-        font-size: 18px;
+        color: #222;
+        font-size: 20px;
+        line-height: 1;
+        top: -2px;
     }
 
-    .list-cross li::before {
-        content: '\f00d'; /* Cross Icon */
-        font-family: 'Line Awesome Free';
-        font-weight: 900;
-        position: absolute;
-        left: 0;
-        top: 2px;
-        color: #c62828;
-        font-size: 18px;
+    /* Info Box Note */
+    .note-box {
+        background-color: #fcfcfc;
+        border-left: 4px solid #7b7b7b;
+        padding: 15px 20px;
+        font-size: 14px;
+        color: #555;
+        margin-top: 15px;
+        margin-bottom: 25px;
     }
 
-    .list-arrow li::before {
-        content: '\f105'; /* Arrow Icon */
-        font-family: 'Line Awesome Free';
-        font-weight: 900;
-        position: absolute;
-        left: 0;
-        top: 2px;
-        color: #d4af37;
-        font-size: 18px;
+    .link-highlight {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 500;
     }
 
-    .step-box {
-        background-color: #fffbf2;
-        border: 1px dashed #d4af37;
-        padding: 20px;
-        border-radius: 8px;
+    .link-highlight:hover {
+        text-decoration: underline;
     }
 
+    /* Minimalist Contact Footer */
     .contact-footer {
-        background-color: #3e2723;
+        background-color: #111;
         color: #fff;
         padding: 40px;
-        border-radius: 12px;
+        border-radius: 8px;
         text-align: center;
-        margin-top: 40px;
+        margin-top: 50px;
     }
-
-    .contact-footer a { color: #f7f1de; text-decoration: underline; }
+    .contact-footer a { color: #fff; text-decoration: underline; }
 </style>
 @endsection
 
@@ -120,152 +104,124 @@
 {{-- 📜 Header --}}
 <section class="policy-header">
     <div class="container">
-        <h1>Return & Refund Policy</h1>
-        <p class="text-muted mt-2">Authenticity & Customer Satisfaction is our priority.</p>
+        <h1>Shipping & Returns / Exchanges</h1>
     </div>
 </section>
 
-<div class="container pb-5">
+<div class="container pb-5" style="max-width: 900px;">
 
-    {{-- Intro Text --}}
-    <div class="text-center mb-5 px-lg-5">
-        <p class="lead text-dark">
-            At <strong>Suyagya.com</strong>, we offer spiritual and religious products with care and authenticity. However, if there’s an issue with your order, please review our terms below.
+    <div class="d-flex gap-4 mb-5 text-muted small fw-bold">
+        <a href="#return-exchange" class="text-decoration-none text-dark">RETURN / EXCHANGE</a>
+        <a href="{{ route('track.order') }}" class="text-decoration-none text-dark">TRACK ORDER</a>
+    </div>
+
+    {{-- 7-Days Free Return & Exchanges --}}
+    <div class="policy-section" id="return-exchange">
+        <h3 class="policy-title">7-Days Free Return & Exchanges</h3>
+        <ul class="custom-list">
+            <li>Vardhiyas products are eligible for return / exchange within <strong>7 days of delivery</strong>.</li>
+            <li>There are NO CHARGES to exchange the products. It's on us!</li>
+        </ul>
+        <p class="policy-text mt-3">
+            To initiate Return / Exchange, you can <a href="{{ route('contact') }}" class="link-highlight">raise the request here</a>.
         </p>
     </div>
 
-    {{-- ✅ Eligible vs ❌ Non-Eligible (Side by Side) --}}
-    <div class="row g-4 mb-5">
-        <div class="col-md-6">
-            <div class="policy-card border-top border-success border-4">
-                <h3 class="card-title text-success-custom">
-                    <i class="las la-check-circle fs-2"></i> Eligible Returns
-                </h3>
-                <p class="small text-muted mb-3">You may request a return/replacement ONLY if:</p>
-                <ul class="custom-list list-check">
-                    <li>You received a <strong>damaged, defective, or wrong</strong> product.</li>
-                    <li>The request is raised within <strong>48 hours</strong> of receiving the order.</li>
-                    <li>The item is <strong>unused</strong>, in original condition with tags/packaging intact.</li>
-                    <li><strong>Unboxing video & photos</strong> are provided for verification (Highly Recommended).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="policy-card border-top border-danger border-4">
-                <h3 class="card-title text-danger-custom">
-                    <i class="las la-ban fs-2"></i> Non-Returnable Items
-                </h3>
-                <p class="small text-muted mb-3">The following items cannot be returned:</p>
-                <ul class="custom-list list-cross">
-                    <li>Used or worn spiritual items (due to sanctity reasons).</li>
-                    <li>Opened Rudraksha, Yantras, or energized products.</li>
-                    <li><strong>Custom or personalized orders</strong> (e.g., name-based astrology items).</li>
-                    <li>Free gifts or promotional items.</li>
-                    <li>Products returned without original packaging.</li>
-                </ul>
-            </div>
-        </div>
+    {{-- Offline Store Exchange Policy --}}
+    <div class="policy-section">
+        <h3 class="policy-title">Offline Store Exchange Policy</h3>
+        <ul class="custom-list">
+            <li>Products purchased from Vardhiyas offline stores are eligible for exchange within <strong>15 days of purchase</strong>.</li>
+            <li>No returns or refunds are applicable for offline store purchases.</li>
+        </ul>
     </div>
 
-    {{-- 🔄 Replacement & Refund Process --}}
-    <div class="row g-4 mb-5">
-        <div class="col-lg-4">
-            <div class="policy-card">
-                <h3 class="card-title text-dark"><i class="las la-sync-alt text-warning"></i> Replacement</h3>
-                <p>If your item qualifies for a return, we will offer:</p>
-                <ul class="custom-list list-arrow">
-                    <li>A replacement of the same item (subject to stock).</li>
-                    <li>An exchange with another product of similar value.</li>
-                    <li>Refund to original method (only in rare cases).</li>
-                </ul>
-            </div>
+    {{-- Same-Day Refund / Exchange Process --}}
+    <div class="policy-section">
+        <h3 class="policy-title">Same-Day Refund / Exchange Process</h3>
+        <ul class="custom-list">
+            <li>Once the return / exchange request is verified by our support team, reverse pickup will be initiated within 24 hours.</li>
+            <li>The product will be picked up by our courier partner within the next 1-2 days.</li>
+            <li>As soon as the product is picked up, <strong>the refund / exchange will be initiated on the same day</strong>.</li>
+        </ul>
+
+        <div class="note-box">
+            <strong>Note:</strong> The courier can refuse the pickup if the original tags are not intact OR where it's obvious that the item has been worn, washed, or soiled.
         </div>
 
-        <div class="col-lg-4">
-            <div class="policy-card">
-                <h3 class="card-title text-dark"><i class="las la-wallet text-warning"></i> Refund Process</h3>
-                <ul class="custom-list list-arrow">
-                    <li>Refunds are initiated within <strong>7 working days</strong> of approval.</li>
-                    <li>Amount is credited to the <strong>original payment method</strong>.</li>
-                    <li>For <strong>COD orders</strong>, we may issue store credit or request bank details for transfer.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="policy-card">
-                <h3 class="card-title text-dark"><i class="las la-truck text-warning"></i> Return Pickup</h3>
-                <ul class="custom-list list-arrow">
-                    <li>We arrange pickup via our courier partners in serviceable areas.</li>
-                    <li>If pickup isn't available, you may be asked to <strong>self-ship</strong>.</li>
-                    <li>Shipping costs for valid returns (damaged/wrong items) will be reimbursed.</li>
-                </ul>
-            </div>
-        </div>
+        <p class="policy-text mb-1"><strong>Prepaid Returns:</strong> The entire amount will be refunded back to your original payment mode.</p>
+        <p class="policy-text"><strong>Cash On Delivery:</strong> The refund will be initiated to the bank account that is provided by you at the time of raising the request.</p>
     </div>
 
-    {{-- 📧 How to Request --}}
-    <div class="row justify-content-center mb-5">
-        <div class="col-lg-10">
-            <div class="step-box shadow-sm">
-                <h3 class="text-center fw-bold mb-4 font-heading" style="font-family: 'Merriweather', serif;">
-                    <i class="las la-envelope-open-text text-warning"></i> How to Request a Return?
-                </h3>
-                <div class="row text-center">
-                    <div class="col-md-4 mb-3">
-                        <div class="fw-bold fs-5 mb-1">Step 1</div>
-                        <p class="text-muted">Email us at <a href="mailto:info@suyagya.com" class="fw-bold text-dark">info@suyagya.com</a></p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="fw-bold fs-5 mb-1">Step 2</div>
-                        <p class="text-muted">Include <strong>Order ID</strong> & Attach <strong>Photos/Video</strong> of the issue.</p>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="fw-bold fs-5 mb-1">Step 3</div>
-                        <p class="text-muted">Our team will respond within <strong>2 business days</strong>.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    {{-- Self-Ship Process --}}
+    <div class="policy-section">
+        <h3 class="policy-title">Self-Ship Process</h3>
+        <ul class="custom-list">
+            <li>If the reverse pickup service to your pin code is not available, we would ask you to self-ship the product back to Vardhiyas.</li>
+            <li>Please pack the items securely to prevent any loss or damage during transit. All items must be in unused condition with all original tags attached.</li>
+        </ul>
+        <p class="policy-text mt-3">
+            • Courier the product(s) to the address: <strong>K-348/7, Saurabh Vihar, Jaitpur, near Vijay Modern Public School, Badarpur, DELHI, Delhi, India - 110044.</strong>.
+        </p>
+        <p class="policy-text">
+            Within 48 hours of receiving the product(s), the complete amount + INR 100 (in lieu of courier charges) will be refunded to your bank account.
+        </p>
     </div>
 
-    {{-- 🚫 Cancellation Policy --}}
-    <div class="mb-5">
-        <h3 class="font-heading fw-bold mb-3"><i class="las la-times-circle text-danger"></i> Cancellation Policy</h3>
-        <div class="bg-light p-4 rounded border-start border-danger border-4">
-            <ul class="custom-list list-arrow mb-0">
-                <li>Orders can be cancelled <strong>only before they are shipped</strong>.</li>
-                <li>Once the order is dispatched/shipped, it <strong>cannot be cancelled</strong>.</li>
-                <li>Refunds for cancelled prepaid orders will be processed within <strong>5–7 working days</strong>.</li>
-            </ul>
-        </div>
+    {{-- Exchange For Something Else --}}
+    <div class="policy-section">
+        <h3 class="policy-title">Exchange For Something Else</h3>
+        <p class="policy-text">
+            You can also exchange original product with a different product. If the value of the replacement product exceeds that of the previously purchased product, you can pay just the difference. Else if it's less, the same can be refunded to you as a gift card or to your bank account.
+        </p>
     </div>
 
-    {{-- ⚠️ Disclaimer Note --}}
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
-        <i class="las la-exclamation-triangle fs-1 me-3"></i>
-        <div>
-            <strong>Note:</strong> Suyagya reserves the right to approve or reject any return/refund request at its sole discretion. Since our products are spiritual in nature, we request customers to read product details carefully before purchasing.
-        </div>
+    {{-- Refund Issues --}}
+    <div class="policy-section">
+        <p class="policy-text mb-2">What should I do if I do not receive my refund?</p>
+        <ul class="custom-list">
+            <li>We will update you via email / sms once the refund is initiated.</li>
+            <li>Bank refunds for prepaid orders will take 5-7 business days.</li>
+            <li>If you face any issues, please <a href="{{ route('contact') }}" class="link-highlight">reach us out here</a> and our support team will help you out.</li>
+        </ul>
+    </div>
+
+    <hr class="my-5" style="border-color: #ddd;">
+
+    {{-- SHIPPING POLICY --}}
+    <div class="policy-section">
+        <h3 class="policy-title mb-4" style="font-size: 1.3rem;">SHIPPING</h3>
+
+        <h4 class="fw-bold mb-2" style="font-size: 1rem;">Shipping Rates</h4>
+        <ul class="custom-list mb-4">
+            <li>We offer free shipping across India for all prepaid orders. For COD orders, a nominal charge is applicable depending on the location.</li>
+        </ul>
+
+        <h4 class="fw-bold mb-2" style="font-size: 1rem;">Order Processing</h4>
+        <ul class="custom-list mb-4">
+            <li>We strive to fulfill orders as soon as you place them. In most cases, your order will be expected to be dispatched within 1-2 business days. Our business days are Monday-Saturday.</li>
+        </ul>
+
+        <h4 class="fw-bold mb-2" style="font-size: 1rem;">Shipping Time</h4>
+        <ul class="custom-list mb-4">
+            <li>For most serviceable pin codes, we try to deliver within 5 days. There could be a possible delay of 2-3 business days in delivery. However, you will be able to track your package using a unique tracking link that we will email/SMS you after your order is sent to our delivery partner.</li>
+        </ul>
+
+        <h4 class="fw-bold mb-2" style="font-size: 1rem;">Order Tracking</h4>
+        <ul class="custom-list">
+            <li>You'll receive a tracking number from us in your inbox as soon as it ships! Orders can be tracked in real-time via this link - <a href="{{ route('track.order') }}" class="link-highlight">Track Order</a></li>
+        </ul>
     </div>
 
     {{-- 📞 Contact Footer --}}
     <div class="contact-footer">
-        <h3 style="font-family: 'Merriweather', serif;">Still have questions?</h3>
-        <p class="mb-4">We are here to help you.</p>
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <i class="las la-envelope fs-3 mb-2"></i><br>
-                <a href="mailto:info@suyagya.com" class="fs-5">info@suyagya.com</a>
+        <h3 class="fw-bold mb-2" style="font-size: 1.2rem;">Still have questions?</h3>
+        <p class="mb-4" style="color: rgba(255,255,255,0.7);">Our support team is here to help you.</p>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <div>
+                <i class="las la-envelope fs-4 mb-1"></i><br>
+                <a href="mailto:support@vardhiyas.com">support@vardhiyas.com</a>
             </div>
-            <div class="col-md-5">
-                <i class="las la-map-marker fs-3 mb-2"></i><br>
-                <span>J-3/356, DDA, Kalkaji, New Delhi - 110019</span>
-            </div>
-        </div>
-        <div class="mt-4 pt-3 border-top border-secondary small">
-            Thank you for trusting <strong>Suyagya.com</strong>
         </div>
     </div>
 

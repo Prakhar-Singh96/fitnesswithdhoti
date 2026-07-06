@@ -7,105 +7,85 @@
 
     {{-- Dark Overlay for better text readability --}}
     <div class="position-absolute top-0 start-0 w-100 h-100"
-         style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); z-index: 1;"></div>
+         style="background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)); z-index: 1;"></div>
 
-    {{-- Banner Image --}}
-    {{-- <img src="{{ asset('assets/img/about.webp') }}" alt="About Banner"
-         class="w-100 object-fit-cover"
-         style="height: 600px; object-position: center top;"> --}}
-         {{-- Height 600px mobile/desktop dono ke liye balanced hai --}}
-
+    {{-- 💻 DESKTOP BANNER --}}
     <div class="d-none d-md-block">
-        <img src="{{ asset('assets/img/about.webp') }}" alt="About Banner Desktop" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
+        <img src="{{ asset('assets/img/aboutus.png') }}" alt="Vardhiyas About Banner" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
     </div>
 
-    {{-- 📱 MOBILE BANNER: सिर्फ मोबाइल स्क्रीन पर दिखेगा, डेस्कटॉप पर छिप जाएगा ($600x600 के लिए बेस्ट फिट) --}}
+    {{-- 📱 MOBILE BANNER --}}
     <div class="d-block d-md-none">
-        <img src="{{ asset('assets/img/about-mobile.webp') }}" alt="About Banner Mobile" class="w-100 object-fit-cover" style="height: 400px; object-position: center;">
+        <img src="{{ asset('assets/img/about-mobile.png') }}" alt="Vardhiyas About Mobile" class="w-100 object-fit-cover" style="height: 450px; object-position: center;">
     </div>
 
     {{-- Text Content --}}
     <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3" style="z-index: 2;">
 
-        {{-- Optional: Om Icon or Decoration --}}
-        <div class="mb-3">
-            <i class="las la-om text-warning" style="font-size: 3rem; opacity: 0.8;"></i>
-        </div>
-
-        <h1 class="display-4 fw-bold mb-4" style="font-family: 'Merriweather', serif; text-shadow: 2px 2px 8px rgba(0,0,0,0.6);">
-            A Spiritual Calling: <br>
-            <span style="color: #f8e5b8;">How Suyagya Was Born</span>
-        </h1>
-
-        <div class="mx-auto" style="max-width: 800px;">
-            <p class="lead fs-5" style="line-height: 1.8; font-weight: 300; text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">
-                Behind every journey lies a profound moment of inspiration. For
-                <strong class="fw-bold text-warning" style="letter-spacing: 0.5px;">Mr. Ram Mittal</strong>,
-                that moment came during a visit to the
-                <span class="text-white fw-bold">silent peaks of the Himalayas</span>.
-                It was there, in the lap of nature and ancient divinity, that he felt a deep urge to reconnect the world with its spiritual roots—giving birth to
-                <strong class="text-warning text-uppercase" style="text-decoration: underline; text-decoration-color: #fff;">Suyagya</strong> was born.
-            </p>
-        </div>
-
     </div>
 </div>
 
 {{-- 2. GOLD STRIP --}}
-<div class="py-4 text-center text-white" style="background-color: #c09867;">
+<div class="py-4 text-center text-white" style="background-color: #111111;">
     <div class="container">
-        <h3 class="mb-0 fw-dark" style="letter-spacing: 1px;">Suyagya: A Fusion of Love and Abundance</h3>
-        <small>The name embodies the essence of who we are and what we stand for.</small>
+        <h3 class="mb-1 fw-bold text-uppercase" style="letter-spacing: 2px; color: #c09867;">Vardhiyas: Crafting Confidence</h3>
+        <p class="mb-0" style="font-size: 15px; opacity: 0.8;">A commitment to impeccable fits, premium fabrics, and timeless style.</p>
     </div>
 </div>
 
-{{-- 3. VISION & SHOP IMAGE --}}
-<div class="container py-5">
+{{-- 3. VISION & SHOP/STUDIO IMAGE --}}
+<div class="container py-5 mt-3">
     <div class="row align-items-center g-5">
         <div class="col-lg-6">
-            <h2 class="mb-4" style="color: #333; font-family: 'Merriweather', serif;">A Grand Vision Reimagined</h2>
-            <p class="text-muted" style="line-height: 1.8;">
-                Suyagya is the culmination of many stories, and it all began with a dream. We operate under values that prioritize purity and devotion above all else.
+            <h2 class="mb-4 fw-bold" style="color: #222; font-family: 'Merriweather', serif;">A Vision Woven in Threads</h2>
+            <p class="text-muted" style="line-height: 1.8; font-size: 15px;">
+                Vardhiyas is more than just a clothing brand; it is a celebration of modern masculinity. We operate under values that prioritize exceptional craftsmanship, innovative designs, and strict attention to detail above all else.
             </p>
-            <p class="text-muted" style="line-height: 1.8;">
-                Today, Suyagya stands as a testament to spiritual wellness. The group has ventured into diverse sectors, but our core remains rooted in providing authentic spiritual products like Rudraksha, Gemstones, and Pooja items.
+            <p class="text-muted" style="line-height: 1.8; font-size: 15px;">
+                Today, Vardhiyas stands as a testament to premium everyday wear. Our core remains rooted in providing high-quality essentials, from impeccably tailored shirts and relaxed joggers to durable denim and classic t-shirts.
             </p>
-            <p class="text-muted" style="line-height: 1.8;">
-                We are dedicated to building Suyagya into the most premium and trusted name in the realm of spiritual jewelry and wellness.
+            <p class="text-muted fw-semibold" style="line-height: 1.8; font-size: 15px; color: #444 !important;">
+                We are dedicated to building Vardhiyas into the most trusted name in men's fashion, ensuring every stitch speaks of elegance and longevity.
             </p>
         </div>
         <div class="col-lg-6">
-            {{-- Replace with your Shop/Office Image --}}
-            <img src="{{ asset('assets/img/shopImage.jpg') }}" alt="Our Shop" class="img-fluid rounded shadow-sm w-100 grayscale-img">
+            {{-- Replace with your Boutique/Studio/Fabric Image --}}
+            <div class="position-relative p-2" style="border: 1px solid #eee; border-radius: 8px;">
+                <img src="{{ asset('assets/img/shopImage.png') }}" alt="Vardhiyas Studio" class="img-fluid rounded shadow-sm w-100 grayscale-img">
+            </div>
         </div>
     </div>
 </div>
 
 {{-- 4. TEAM IMAGE --}}
-<div class="container py-4">
+<div class="container py-4 mb-3">
     <div class="row">
         <div class="col-12">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold" style="color: #222; font-family: 'Merriweather', serif;">The Team Behind The Seams</h3>
+                <div class="mx-auto mt-2" style="width: 50px; height: 3px; background-color: #c09867;"></div>
+            </div>
             {{-- Replace with Team Image --}}
-            <img src="{{ asset('assets/img/teamImage.webp') }}" alt="Our Team" class="img-fluid rounded w-100">
+            <img src="{{ asset('assets/img/teamImage.png') }}" alt="The Vardhiyas Team" class="img-fluid rounded shadow w-100">
         </div>
     </div>
 </div>
 
 {{-- 5. VISION & MISSION TEXT --}}
-<div class="container py-5 text-center" style="max-width: 800px;">
-    <div class="mb-5">
-        <h3 class="mb-3" style="color: #333; font-family: 'Merriweather', serif;">Our Vision</h3>
-        <p class="text-muted">
-            We believe that jewelry is more than an accessory; it is a reflection of your innermost beliefs.
-            Our vision is to create exquisite and spiritually inspired jewelry for people from all walks of life.
+<div class="container py-5 text-center mb-4" style="max-width: 800px;">
+    <div class="mb-5 p-4 rounded-3" style="background-color: #f9f9f9; border-top: 3px solid #c09867;">
+        <h3 class="mb-3 fw-bold text-uppercase" style="color: #222; font-family: 'Merriweather', serif; font-size: 22px; letter-spacing: 1px;">Our Vision</h3>
+        <p class="text-muted mb-0" style="line-height: 1.8; font-size: 15px;">
+            We believe that clothing is more than just fabric; it is an expression of your identity and ambition.
+            Our vision is to design premium, accessible, and stylish apparel that empowers modern men to step out with confidence in their everyday journeys.
         </p>
     </div>
 
-    <div class="mb-5">
-        <h3 class="mb-3 text-uppercase" style="color: #333; font-family: 'Merriweather', serif;">Our Mission</h3>
-        <p class="text-muted">
-            At the core of our mission is the dream to shatter the myth that exquisite jewelry is to be reserved for special occasions.
-            We believe every day is special, and your style must reflect that.
+    <div class="p-4 rounded-3" style="background-color: #f9f9f9; border-top: 3px solid #111;">
+        <h3 class="mb-3 fw-bold text-uppercase" style="color: #222; font-family: 'Merriweather', serif; font-size: 22px; letter-spacing: 1px;">Our Mission</h3>
+        <p class="text-muted mb-0" style="line-height: 1.8; font-size: 15px;">
+            At the core of our mission is the desire to redefine wardrobe essentials. We want to shatter the myth that high-quality fashion has to be uncomfortable or overpriced.
+            We believe every day is an opportunity to look your absolute best, and your wardrobe must effortlessly reflect that.
         </p>
     </div>
 </div>
@@ -113,7 +93,7 @@
 <style>
     .grayscale-img {
         filter: grayscale(100%);
-        transition: filter 0.3s;
+        transition: filter 0.5s ease-in-out;
     }
     .grayscale-img:hover {
         filter: grayscale(0%);

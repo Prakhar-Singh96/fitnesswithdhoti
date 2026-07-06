@@ -248,7 +248,7 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="{{ asset('assets/img/suyagyalogomobile.webp') }}" alt="Logo">
+                                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
 
