@@ -119,7 +119,7 @@
             {{-- 1. LOGO --}}
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Suyagya" class="logo-img">
+                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Fitness" class="logo-img">
                 </div>
             </a>
 
@@ -248,7 +248,7 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Logo">
+                                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
 
@@ -358,7 +358,7 @@
         <div class="HeaderCenter">
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/vardhiyaslogo.png') }}" alt="Suyagya" class="logo-img">
+                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Suyagya" class="logo-img">
                 </div>
             </a>
         </div>
