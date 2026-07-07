@@ -21,7 +21,7 @@
             {{-- 2. BRAND SPECIFIC FAQS (From Home Settings) --}}
             @if(!empty($homeSettings->faq_content))
                 <div class="mb-5">
-                    <h4 class="fw-bold mb-3 text-dark border-bottom pb-2">About Vardhiyas Products</h4>
+                    <h4 class="fw-bold mb-3 text-dark border-bottom pb-2">About Fitness With Dhoti Products</h4>
                     @include('frontend.includes.faq_accordion', ['faqs' => $homeSettings->faq_content, 'idSuffix' => 'brand'])
                 </div>
             @endif

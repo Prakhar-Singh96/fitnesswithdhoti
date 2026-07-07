@@ -2,7 +2,7 @@
 
 @section('styles')
 <style>
-    /* ✨ Vardhiyas Terms Page Styles */
+    /* ✨ Fitness With Dhoti Terms Page Styles */
     .terms-header {
         background-color: #f9f9f9;
         padding: 50px 0;
@@ -96,7 +96,7 @@
         </div>
 
         <p class="terms-text">
-            This website is operated by Vardhiyas. Throughout the site, the terms "we", "us" and "our" refer to Vardhiyas. Vardhiyas offers this website, including all information, tools, and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies, and notices stated here.
+            This website is operated by Fitness With Dhoti. Throughout the site, the terms "we", "us" and "our" refer to Fitness With Dhoti. Fitness With Dhoti offers this website, including all information, tools, and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies, and notices stated here.
         </p>
 
         <p class="terms-text">
@@ -178,12 +178,12 @@
 
         <h2 class="section-title">SECTION 13 - DISCLAIMER OF WARRANTIES; LIMITATION OF LIABILITY</h2>
         <p class="terms-text">
-            We do not guarantee, represent or warrant that your use of our service will be uninterrupted, timely, secure or error-free. In no case shall Vardhiyas, our directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers or licensors be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind.
+            We do not guarantee, represent or warrant that your use of our service will be uninterrupted, timely, secure or error-free. In no case shall Fitness With Dhoti, our directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers or licensors be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind.
         </p>
 
         <h2 class="section-title">SECTION 14 - INDEMNIFICATION</h2>
         <p class="terms-text">
-            You agree to indemnify, defend and hold harmless Vardhiyas and our parent, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, interns and employees, harmless from any claim or demand.
+            You agree to indemnify, defend and hold harmless Fitness With Dhoti and our parent, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, interns and employees, harmless from any claim or demand.
         </p>
 
         <h2 class="section-title">SECTION 15 - GOVERNING LAW</h2>
@@ -193,7 +193,7 @@
 
         <h2 class="section-title">SECTION 16 - CONTACT INFORMATION</h2>
         <p class="terms-text">
-            Questions about the Terms of Service should be sent to us at <strong>support@vardhiyas.com</strong>.
+            Questions about the Terms of Service should be sent to us at <strong>support@fitnesswithdhoti.com</strong>.
         </p>
 
         <hr class="my-5" style="border-color: #ddd;">
@@ -205,7 +205,7 @@
             <div class="d-flex justify-content-center gap-4 flex-wrap">
                 <div>
                     <i class="las la-envelope fs-4 mb-1"></i><br>
-                    <a href="mailto:support@vardhiyas.com">support@vardhiyas.com</a>
+                    <a href="mailto:support@fitnesswithdhoti.com">support@fitnesswithdhoti.com</a>
                 </div>
             </div>
         </div>

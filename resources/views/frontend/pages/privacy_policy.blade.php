@@ -2,7 +2,7 @@
 
 @section('styles')
 <style>
-    /* ✨ Vardhiyas Privacy Policy Page Styles */
+    /* ✨ Fitness With Dhoti Privacy Policy Page Styles */
     .privacy-header {
         background-color: #f9f9f9;
         padding: 50px 0;
@@ -123,7 +123,7 @@
     <div class="privacy-content">
 
         <p class="policy-text">
-            Vardhiyas ("we/us/our") respects the privacy of our customers and users of our website ("you"). Our practices and procedures in relation to the collection and use of your data/information have been set out below in this privacy policy. This privacy policy will familiarize you with the manner in which we may collect, use, share, transfer and disclose your data/information.
+            Fitness With Dhoti ("we/us/our") respects the privacy of our customers and users of our website ("you"). Our practices and procedures in relation to the collection and use of your data/information have been set out below in this privacy policy. This privacy policy will familiarize you with the manner in which we may collect, use, share, transfer and disclose your data/information.
         </p>
 
         <p class="policy-text">
@@ -177,10 +177,10 @@
 
         <h2 class="section-title">INFORMATION PROVIDER'S RIGHTS</h2>
         <p class="policy-text">
-            You have the right to withdraw your consent for SPDI provided at any time by sending an e-mail to us at <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a>, in accordance with the terms of this privacy policy. However, please note that withdrawal of consent will not be retrospective in nature and shall be applicable prospectively. In case you do not provide your information or consent for usage of SPDI or subsequently withdraw your consent for usage of the SPDI so collected, we reserve the right to discontinue the services for which the said SPDI was sought.
+            You have the right to withdraw your consent for SPDI provided at any time by sending an e-mail to us at <a href="mailto:support@Fitness With Dhoti.com" class="link-highlight">support@Fitness With Dhoti.com</a>, in accordance with the terms of this privacy policy. However, please note that withdrawal of consent will not be retrospective in nature and shall be applicable prospectively. In case you do not provide your information or consent for usage of SPDI or subsequently withdraw your consent for usage of the SPDI so collected, we reserve the right to discontinue the services for which the said SPDI was sought.
         </p>
         <p class="policy-text">
-            You may write to us at <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a> to access, review, modify or correct your SPDI or withdraw your consent to provide SPDI. However, we are not responsible for the authenticity of the SPDI provided by you.
+            You may write to us at <a href="mailto:support@Fitness With Dhoti.com" class="link-highlight">support@Fitness With Dhoti.com</a> to access, review, modify or correct your SPDI or withdraw your consent to provide SPDI. However, we are not responsible for the authenticity of the SPDI provided by you.
         </p>
         <p class="policy-text">
             You agree and acknowledge that certain data or information may not be corrected or is prohibited to be modified as required under any applicable law, law enforcement requests or under any judicial proceedings. In respect to such data or information, the aforementioned rights will not be available.
@@ -205,7 +205,7 @@
                 <div class="col-8 col-md-9 text-muted mt-2">: <span class="text-dark">Customer Support Head</span></div>
 
                 <div class="col-4 col-md-3 fw-bold text-dark mt-2">Email ID</div>
-                <div class="col-8 col-md-9 text-muted mt-2">: <a href="mailto:support@vardhiyas.com" class="link-highlight">support@vardhiyas.com</a></div>
+                <div class="col-8 col-md-9 text-muted mt-2">: <a href="mailto:support@Fitness With Dhoti.com" class="link-highlight">support@Fitness With Dhoti.com</a></div>
             </div>
         </div>
 
@@ -216,7 +216,7 @@
             <div class="d-flex justify-content-center gap-4 flex-wrap">
                 <div>
                     <i class="las la-envelope fs-4 mb-1"></i><br>
-                    <a href="mailto:support@vardhiyas.com">support@vardhiyas.com</a>
+                    <a href="mailto:support@Fitness With Dhoti.com">support@Fitness With Dhoti.com</a>
                 </div>
             </div>
         </div>

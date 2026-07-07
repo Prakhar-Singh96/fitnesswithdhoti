@@ -2,7 +2,7 @@
 
 @section('styles')
 <style>
-    /* ✨ Vardhiyas Policy Page Styles */
+    /* ✨ Fitness With Dhoti Policy Page Styles */
     .policy-header {
         background-color: #f9f9f9;
         padding: 50px 0;
@@ -119,7 +119,7 @@
     <div class="policy-section" id="return-exchange">
         <h3 class="policy-title">7-Days Free Return & Exchanges</h3>
         <ul class="custom-list">
-            <li>Vardhiyas products are eligible for return / exchange within <strong>7 days of delivery</strong>.</li>
+            <li>Fitness With Dhoti products are eligible for return / exchange within <strong>7 days of delivery</strong>.</li>
             <li>There are NO CHARGES to exchange the products. It's on us!</li>
         </ul>
         <p class="policy-text mt-3">
@@ -131,7 +131,7 @@
     <div class="policy-section">
         <h3 class="policy-title">Offline Store Exchange Policy</h3>
         <ul class="custom-list">
-            <li>Products purchased from Vardhiyas offline stores are eligible for exchange within <strong>15 days of purchase</strong>.</li>
+            <li>Products purchased from Fitness With Dhoti offline stores are eligible for exchange within <strong>15 days of purchase</strong>.</li>
             <li>No returns or refunds are applicable for offline store purchases.</li>
         </ul>
     </div>
@@ -157,7 +157,7 @@
     <div class="policy-section">
         <h3 class="policy-title">Self-Ship Process</h3>
         <ul class="custom-list">
-            <li>If the reverse pickup service to your pin code is not available, we would ask you to self-ship the product back to Vardhiyas.</li>
+            <li>If the reverse pickup service to your pin code is not available, we would ask you to self-ship the product back to Fitness With Dhoti.</li>
             <li>Please pack the items securely to prevent any loss or damage during transit. All items must be in unused condition with all original tags attached.</li>
         </ul>
         <p class="policy-text mt-3">
@@ -220,7 +220,7 @@
         <div class="d-flex justify-content-center gap-4 flex-wrap">
             <div>
                 <i class="las la-envelope fs-4 mb-1"></i><br>
-                <a href="mailto:support@vardhiyas.com">support@vardhiyas.com</a>
+                <a href="mailto:support@fitnesswithdhoti.com">support@fitnesswithdhoti.com</a>
             </div>
         </div>
     </div>

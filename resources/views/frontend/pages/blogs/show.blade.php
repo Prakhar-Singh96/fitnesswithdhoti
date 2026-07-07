@@ -106,12 +106,12 @@
                     <div class="rounded overflow-hidden shadow-sm mt-4 position-relative">
 
                         {{-- Link Wrapper --}}
-                        <a href="{{ route('products.category', 'rudraksh') }}"
+                        <a href="{{ route('products.category', 'Dhoti') }}"
                             class="d-block text-decoration-none text-dark">
 
                             {{-- Image --}}
                             <img src="{{ asset('uploads/categories/icons/1764926950_6932a5e63a67b.webp') }}"
-                                alt="Shop Rudraksha" class="img-fluid w-100 transition-zoom">
+                                alt="Shop Dhoti" class="img-fluid w-100 transition-zoom">
 
                             {{-- 🔥 Shop Now Button Overlay --}}
                             <div class="position-absolute bottom-0 start-0 w-100 p-3 text-center"

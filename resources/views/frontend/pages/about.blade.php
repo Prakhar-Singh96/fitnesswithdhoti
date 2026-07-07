@@ -11,12 +11,12 @@
 
     {{-- 💻 DESKTOP BANNER --}}
     <div class="d-none d-md-block">
-        <img src="{{ asset('assets/img/aboutus.png') }}" alt="Vardhiyas About Banner" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
+        <img src="{{ asset('assets/img/aboutus.png') }}" alt="Fitness With Dhoti About Banner" class="w-100 object-fit-cover" style="height: 600px; object-position: center top;">
     </div>
 
     {{-- 📱 MOBILE BANNER --}}
     <div class="d-block d-md-none">
-        <img src="{{ asset('assets/img/about-mobile.png') }}" alt="Vardhiyas About Mobile" class="w-100 object-fit-cover" style="height: 450px; object-position: center;">
+        <img src="{{ asset('assets/img/about-mobile.png') }}" alt="Fitness With Dhoti About Mobile" class="w-100 object-fit-cover" style="height: 450px; object-position: center;">
     </div>
 
     {{-- Text Content --}}
@@ -28,7 +28,7 @@
 {{-- 2. GOLD STRIP --}}
 <div class="py-4 text-center text-white" style="background-color: #111111;">
     <div class="container">
-        <h3 class="mb-1 fw-bold text-uppercase" style="letter-spacing: 2px; color: #c09867;">Vardhiyas: Crafting Confidence</h3>
+        <h3 class="mb-1 fw-bold text-uppercase" style="letter-spacing: 2px; color: #c09867;">Fitness With Dhoti: Crafting Confidence</h3>
         <p class="mb-0" style="font-size: 15px; opacity: 0.8;">A commitment to impeccable fits, premium fabrics, and timeless style.</p>
     </div>
 </div>
@@ -39,19 +39,19 @@
         <div class="col-lg-6">
             <h2 class="mb-4 fw-bold" style="color: #222; font-family: 'Merriweather', serif;">A Vision Woven in Threads</h2>
             <p class="text-muted" style="line-height: 1.8; font-size: 15px;">
-                Vardhiyas is more than just a clothing brand; it is a celebration of modern masculinity. We operate under values that prioritize exceptional craftsmanship, innovative designs, and strict attention to detail above all else.
+                Fitness With Dhoti is more than just a clothing brand; it is a celebration of modern masculinity. We operate under values that prioritize exceptional craftsmanship, innovative designs, and strict attention to detail above all else.
             </p>
             <p class="text-muted" style="line-height: 1.8; font-size: 15px;">
-                Today, Vardhiyas stands as a testament to premium everyday wear. Our core remains rooted in providing high-quality essentials, from impeccably tailored shirts and relaxed joggers to durable denim and classic t-shirts.
+                Today, Fitness With Dhoti stands as a testament to premium everyday wear. Our core remains rooted in providing high-quality essentials, from impeccably tailored shirts and relaxed joggers to durable denim and classic t-shirts.
             </p>
             <p class="text-muted fw-semibold" style="line-height: 1.8; font-size: 15px; color: #444 !important;">
-                We are dedicated to building Vardhiyas into the most trusted name in men's fashion, ensuring every stitch speaks of elegance and longevity.
+                We are dedicated to building Fitness With Dhoti into the most trusted name in men's fashion, ensuring every stitch speaks of elegance and longevity.
             </p>
         </div>
         <div class="col-lg-6">
             {{-- Replace with your Boutique/Studio/Fabric Image --}}
             <div class="position-relative p-2" style="border: 1px solid #eee; border-radius: 8px;">
-                <img src="{{ asset('assets/img/shopImage.png') }}" alt="Vardhiyas Studio" class="img-fluid rounded shadow-sm w-100 grayscale-img">
+                <img src="{{ asset('assets/img/shopImage.png') }}" alt="Fitness With Dhoti Studio" class="img-fluid rounded shadow-sm w-100 grayscale-img">
             </div>
         </div>
     </div>
@@ -66,7 +66,7 @@
                 <div class="mx-auto mt-2" style="width: 50px; height: 3px; background-color: #c09867;"></div>
             </div>
             {{-- Replace with Team Image --}}
-            <img src="{{ asset('assets/img/teamImage.png') }}" alt="The Vardhiyas Team" class="img-fluid rounded shadow w-100">
+            <img src="{{ asset('assets/img/teamImage.png') }}" alt="The Fitness With Dhoti Team" class="img-fluid rounded shadow w-100">
         </div>
     </div>
 </div>

@@ -209,7 +209,7 @@
                         <p class="mb-3">Redefining modern men's fashion with premium quality apparel designed for
                             everyday comfort.</p>
 
-                        <p class="mb-1"><i class="las la-envelope me-2"></i> <a href="mailto:support@vardhiyas.com"
+                        <p class="mb-1"><i class="las la-envelope me-2"></i> <a href="mailto:support@fitnesswithdhoti.com"
                                 class="text-white text-decoration-none">support@fitnesswithdhoti.com</a></p>
                         <p class="mb-1"><i class="las la-phone me-2"></i> +91 98702 71533 </p>
                         <p class="mt-3 small" style="opacity: 0.6;">Mon - Sat, 10 AM - 6 PM</p>
@@ -282,7 +282,7 @@
 <div class="footer-copyright-bar">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div class="mb-2 mb-md-0">
-            © {{ date('Y') }} Vardhiyas. All Rights Reserved.
+            © {{ date('Y') }} Fitness With Dhoti. All Rights Reserved LaunchX Studio and @prowedby LunchX.
         </div>
         <div>
             {{-- Optional: Payment method icons can go here --}}

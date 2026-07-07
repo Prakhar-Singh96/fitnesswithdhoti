@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <h1 class="seo-h1">Vardhiyas - Premium Mens Clothing | T-Shirts, Jeans & Shirts</h1>
+    <h1 class="seo-h1">Fitness With Dhoti - Premium Mens Clothing | T-Shirts, Jeans & Shirts</h1>
 
 
     {{-- 🖼️ 2. HERO SLIDER SECTION (OPTIMIZED FOR NO-LAYOUT-SHIFT & SPEED) --}}
@@ -182,7 +182,7 @@
 
             {{-- Minimal Heading --}}
             <div class="text-center mb-4 pb-2">
-                <h2 class="fw-bold m-0 text-dark" style="font-size: 22px; font-family: 'Inter', sans-serif;">Vardhiyas Favourite</h2>
+                <h2 class="fw-bold m-0 text-dark" style="font-size: 22px; font-family: 'Inter', sans-serif;"> Feature Product</h2>
                 <p class="text-muted small mt-1">Handpicked for you</p>
             </div>
 
@@ -505,7 +505,7 @@
 
             {{-- 1. Minimal Heading --}}
             <div class="text-center mb-4 pb-2">
-                <h2 class="fw-bold m-0" style="color: #2c3e50; font-size: 24px;">Vardhiyas Favourites</h2>
+                <h2 class="fw-bold m-0" style="color: #2c3e50; font-size: 24px;">Fitness With Dhoti Favourites</h2>
                 <p class="text-muted small mt-1">Our most loved clothing collections</p>
             </div>
 

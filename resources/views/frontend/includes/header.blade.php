@@ -248,15 +248,15 @@
                             {{-- LEFT SIDE: BRANDING --}}
                             <div class="col-md-5 login-left-panel d-none d-md-flex">
                                 <div class="login-logo">
-                                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Logo">
+                                    <img src="{{ asset('assets/img/fitnessfooter.png') }}" alt="Logo">
                                 </div>
                                 <h4 class="login-offer-text">Login Now & avail best offers!</h4>
 
-                                <div class="feature-box">
+                                {{-- <div class="feature-box">
                                     <div class="feature-icon"><i class="las la-star"></i></div>
                                     <div class="feature-title">100% Authentic Products</div>
                                     <div class="feature-desc">Lab certified & verified items</div>
-                                </div>
+                                </div> --}}
 
                                 <div class="feature-box">
                                     <div class="feature-icon"><i class="las la-gift"></i></div>
@@ -358,7 +358,7 @@
         <div class="HeaderCenter">
             <a class="navbar-brand py-2 me-lg-5" href="{{ url('/') }}">
                 <div class="logo-wrap spiritual-logo">
-                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Suyagya" class="logo-img">
+                    <img src="{{ asset('assets/img/fitness.png') }}" alt="Fitness With Dhoti" class="logo-img">
                 </div>
             </a>
         </div>

@@ -25,46 +25,46 @@
 
     {{-- 🔥 DYNAMIC SEO LOGIC START 🔥 --}}
     @php
-        $metaTitle = 'Vardhiyas - Premium Mens Clothing | T-Shirts, Jeans & Shirts';
-        $metaDesc = 'Shop the latest collection of premium t-shirts, jeans, pants, shirts, and wallets at Vardhiyas. High-quality fashion delivered to your doorstep.';
-        $metaKeys = 'mens clothing, t-shirts, jeans, shirts, wallets, fashion brand, Vardhiyas';
+        $metaTitle = 'Fitness With Dhoti - Premium Mens Clothing | T-Shirts, Jeans & Shirts';
+        $metaDesc = 'Shop the latest collection of premium t-shirts, jeans, pants, shirts, and wallets at Fitness With Dhoti. High-quality fashion delivered to your doorstep.';
+        $metaKeys = 'mens clothing, t-shirts, jeans, shirts, wallets, fashion brand, Fitness With Dhoti';
         $ogImage = asset('img/default-og.jpg');
         $currentUrl = url()->current();
 
         if (Route::is('product.detail') && !empty($product)) {
-            $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Vardhiyas';
+            $metaTitle = !empty($product->meta_title) ? $product->meta_title : $product->name . ' | Fitness With Dhoti';
             $metaDesc = !empty($product->meta_description) ? $product->meta_description : Str::limit(strip_tags($product->description), 160);
             $metaKeys = $product->meta_keywords ?? $metaKeys;
             $ogImage = !empty($product->og_image) ? asset($product->og_image) : (!empty($product->product_main_image) ? asset($product->product_main_image) : asset('og-images/default-og.jpg'));
         }
         elseif (Route::is('products.category') && !empty($category)) {
-            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Vardhiyas';
+            $metaTitle = !empty($category->meta_title) ? $category->meta_title : $category->name . ' Collection | Fitness With Dhoti';
             $metaDesc = !empty($category->meta_description) ? $category->meta_description : 'Explore our exclusive collection of ' . $category->name;
             $metaKeys = $category->meta_keywords ?? $metaKeys;
             if ($category->og_image) { $ogImage = asset($category->og_image); }
         }
         elseif (Route::is('products.subcategory') && !empty($subCategory)) {
-            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Vardhiyas';
+            $metaTitle = !empty($subCategory->meta_title) ? $subCategory->meta_title : $subCategory->name . ' | Fitness With Dhoti';
             $metaDesc = !empty($subCategory->meta_description) ? $subCategory->meta_description : 'Best quality ' . $subCategory->name . ' available online.';
             $metaKeys = $subCategory->meta_keywords ?? $metaKeys;
         }
         elseif (Route::is('blogs.index')) {
-            $metaTitle = 'Our Blogs - Fashion Trends & Style Guides | Vardhiyas';
-            $metaDesc = 'Read the latest fashion trends, styling tips, and clothing guides from Vardhiyas experts.';
+            $metaTitle = 'Our Blogs - Fashion Trends & Style Guides | Fitness With Dhoti';
+            $metaDesc = 'Read the latest fashion trends, styling tips, and clothing guides from Fitness With Dhoti experts.';
         } elseif (Route::is('blogs.show') && !empty($blog)) {
-            $metaTitle = !empty($blog->meta_title) ? $blog->meta_title : $blog->title . ' | Vardhiyas';
+            $metaTitle = !empty($blog->meta_title) ? $blog->meta_title : $blog->title . ' | Fitness With Dhoti';
             $metaDesc = !empty($blog->meta_description) ? $blog->meta_description : Str::limit(strip_tags($blog->content), 160);
             $metaKeys = !empty($blog->meta_keywords) ? $blog->meta_keywords : $metaKeys;
             if (!empty($blog->main_image)) { $ogImage = asset($blog->main_image); } elseif (!empty($blog->og_image)) { $ogImage = asset($blog->og_image); }
         }
-        elseif (Route::is('terms.conditions')) { $metaTitle = 'Terms & Conditions | Vardhiyas'; $metaDesc = 'Understand our policies regarding usage, orders, and services.'; }
-        elseif (Route::is('privacy.policy')) { $metaTitle = 'Privacy Policy | Vardhiyas'; $metaDesc = 'Learn how Vardhiyas collects, uses, and protects your personal data.'; }
-        elseif (Route::is('refund.policy')) { $metaTitle = 'Return & Refund Policy | Vardhiyas'; $metaDesc = 'Understand our return and refund process.'; }
-        elseif (Route::is('support.policy')) { $metaTitle = 'Support Policy | Vardhiyas'; $metaDesc = 'Contact Vardhiyas support team for assistance.'; }
-        elseif (Route::is('frontend.faq')) { $metaTitle = 'Size Guide, Shipping & Clothing FAQs | Vardhiyas'; $metaDesc = 'Find answers to all your questions regarding Vardhiyas clothing, fabric care, size guide, shipping, and return policies.'; $metaKeys = 'clothing FAQ, size guide, fabric care, Vardhiyas returns, fashion india'; }
-        elseif (Route::is('about')) { $metaTitle = 'About us | Vardhiyas'; $metaDesc = 'How Vardhiyas Was Born.'; }
-        elseif (Route::is('contact')) { $metaTitle = 'Contact us | Vardhiyas'; $metaDesc = 'For business related bulk orders or queries, please contact us here.'; }
-        elseif (Route::is('track.order')) { $metaTitle = 'Track Order | Vardhiyas'; $metaDesc = 'Track Your Order Here.'; }
+        elseif (Route::is('terms.conditions')) { $metaTitle = 'Terms & Conditions | Fitness With Dhoti'; $metaDesc = 'Understand our policies regarding usage, orders, and services.'; }
+        elseif (Route::is('privacy.policy')) { $metaTitle = 'Privacy Policy | Fitness With Dhoti'; $metaDesc = 'Learn how Fitness With Dhoti collects, uses, and protects your personal data.'; }
+        elseif (Route::is('refund.policy')) { $metaTitle = 'Return & Refund Policy | Fitness With Dhoti'; $metaDesc = 'Understand our return and refund process.'; }
+        elseif (Route::is('support.policy')) { $metaTitle = 'Support Policy | Fitness With Dhoti'; $metaDesc = 'Contact Fitness With Dhoti support team for assistance.'; }
+        elseif (Route::is('frontend.faq')) { $metaTitle = 'Size Guide, Shipping & Clothing FAQs | Fitness With Dhoti'; $metaDesc = 'Find answers to all your questions regarding Fitness With Dhoti clothing, fabric care, size guide, shipping, and return policies.'; $metaKeys = 'clothing FAQ, size guide, fabric care, Fitness With Dhoti returns, fashion india'; }
+        elseif (Route::is('about')) { $metaTitle = 'About us | Fitness With Dhoti'; $metaDesc = 'How Fitness With Dhoti Was Born.'; }
+        elseif (Route::is('contact')) { $metaTitle = 'Contact us | Fitness With Dhoti'; $metaDesc = 'For business related bulk orders or queries, please contact us here.'; }
+        elseif (Route::is('track.order')) { $metaTitle = 'Track Order | Fitness With Dhoti'; $metaDesc = 'Track Your Order Here.'; }
         elseif (Request::path() == '/' || Route::is('home') || Route::is('frontend.home')) {
             if (isset($homeSettings) && !empty($homeSettings)) {
                 $metaTitle = $homeSettings->meta_title ?? $metaTitle;
@@ -79,14 +79,14 @@
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDesc }}">
     <meta name="keywords" content="{{ $metaKeys }}">
-    <meta name="author" content="Vardhiyas">
+    <meta name="author" content="Fitness With Dhoti">
     <link rel="canonical" href="{{ $currentUrl }}{{ request()->has('page') ? '?page=' . request()->page : '' }}" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ $metaTitle }}" />
     <meta property="og:description" content="{{ $metaDesc }}" />
     <meta property="og:url" content="{{ $currentUrl }}" />
-    <meta property="og:site_name" content="Vardhiyas" />
+    <meta property="og:site_name" content="Fitness With Dhoti" />
     <meta property="og:image" content="{{ $ogImage }}" />
     <meta property="og:image:secure_url" content="{{ $ogImage }}" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -197,7 +197,7 @@
     </style>
 
     {{-- ✅ WHATSAPP FLOATING BUTTON --}}
-    <a href="https://wa.me/919870271533?text=Hi%20Vardhiyas%20Team,%20I%20need%20help%20with%20a%20product." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+    <a href="https://wa.me/919870271533?text=Hi%20Fitness With Dhoti%20Team,%20I%20need%20help%20with%20a%20product." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
         <i class="lab la-whatsapp"></i>
     </a>
 

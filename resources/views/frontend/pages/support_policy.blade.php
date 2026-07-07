@@ -132,7 +132,7 @@
     {{-- Intro --}}
     <div class="text-center mb-5 px-lg-5">
         <p class="lead text-dark">
-            At <strong>Vardhiyas</strong>, your peace of mind and satisfaction are our top priorities. Our dedicated support team is here to assist you with any queries regarding your orders or experience on our platform.
+            At <strong>Fitness With Dhoti</strong>, your peace of mind and satisfaction are our top priorities. Our dedicated support team is here to assist you with any queries regarding your orders or experience on our platform.
         </p>
     </div>
 
@@ -147,7 +147,7 @@
                 </div>
                 <h5 class="fw-bold mb-2">Email Us</h5>
                 <p class="text-muted small mb-2">For general queries & support</p>
-                <a href="mailto:info@suyagya.com" class="contact-link">support@vardhiyas.com</a>
+                <a href="mailto:info@suyagya.com" class="contact-link">support@fitnesswithdhoti.com</a>
             </div>
         </div>
 
