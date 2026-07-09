@@ -518,11 +518,11 @@
                         {{-- 1. Wide Image (Top Left) - Rudraksha Jap Mala --}}
                         <div class="fav-card wide mb-3">
                             {{-- Using your uploaded image: image_08a5ae.jpg --}}
-                            <img src="{{ asset('uploads/home/fav/tees.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/t-shirt.webp') }}" class="img-fluid"
                                 alt="Tees">
                             <div class="fav-content">
                                 <h3>Tees Collection</h3>
-                                <a href="{{ url('category/t-shirt') }}" class="btn btn-fav-shop">Shop
+                                <a href="{{ url('category/tees') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
                         </div>
@@ -534,7 +534,7 @@
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_08406c.jpg --}}
                                     <img src="{{ asset('uploads/home/fav/dhotis.webp') }}" class="img-fluid"
-                                        alt="Tiger Eye Stone">
+                                        alt="dhotis">
                                     <div class="fav-content">
                                         <h3>Dhotis Collections</h3>
                                         <a href="{{ url('category/dhoti') }}" class="btn btn-fav-shop">Shop
@@ -547,7 +547,7 @@
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_09214d.jpg --}}
                                     <img src="{{ asset('uploads/home/fav/Kurtas.webp') }}" class="img-fluid"
-                                        alt="Black Stone">
+                                        alt="kurta">
                                     <div class="fav-content">
                                         <h3>Kurtas Collections</h3>
                                         <a href="{{ url('category/kurta') }}" class="btn btn-fav-shop">Shop
@@ -565,7 +565,7 @@
                         <div class="fav-card tall h-100">
                             {{-- Using your uploaded image: image_aeee28.jpg --}}
                             <img src="{{ asset('uploads/home/fav/co-ord.webp') }}" class="img-fluid"
-                                alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
+                                alt="co-sets" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
                                 <h3>Co-ords Collection</h3>
                                 <a href="{{ url('category/co-ords') }}" class="btn btn-fav-shop">Shop
@@ -585,7 +585,7 @@
                         <div class="fav-card standard">
                             {{-- Using your uploaded image: image_08a246.png --}}
                             <img src="{{ asset('uploads/home/fav/pants.webp') }}" class="img-fluid"
-                                alt="Rose Product">
+                                alt="pants">
                             <div class="fav-content">
                                 <h3>Pants Collection</h3>
                                 <a href="{{ url('category/pants') }}" class="btn btn-fav-shop">Shop now</a>
@@ -598,7 +598,7 @@
                         <div class="fav-card wide">
                             {{-- Using your uploaded image: image_390489.jpg (Collage) as a banner --}}
                             <img src="{{ asset('uploads/home/fav/printed-t-shirts.webp') }}" class="img-fluid"
-                                alt="Suyagya Collection">
+                                alt="peinted t-shirt">
                             <div class="fav-content">
                                 <h3>Printed T-shirt Collection</h3>
                                 <a href="{{ url('category/printed-t-shirt') }}" class="btn btn-fav-shop">Shop now</a>
