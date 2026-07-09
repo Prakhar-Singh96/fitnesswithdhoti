@@ -519,10 +519,10 @@
                         <div class="fav-card wide mb-3">
                             {{-- Using your uploaded image: image_08a5ae.jpg --}}
                             <img src="{{ asset('uploads/home/fav/tees.webp') }}" class="img-fluid"
-                                alt="Rudraksh Jap Mala">
+                                alt="Tees">
                             <div class="fav-content">
                                 <h3>Tees Collection</h3>
-                                <a href="{{ url('category/tees') }}" class="btn btn-fav-shop">Shop
+                                <a href="{{ url('category/t-shirt') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
                         </div>
@@ -536,7 +536,7 @@
                                     <img src="{{ asset('uploads/home/fav/dhotis.webp') }}" class="img-fluid"
                                         alt="Tiger Eye Stone">
                                     <div class="fav-content">
-                                        <h3>Shorts Collections</h3>
+                                        <h3>Dhotis Collections</h3>
                                         <a href="{{ url('category/dhoti') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
@@ -549,7 +549,7 @@
                                     <img src="{{ asset('uploads/home/fav/Kurtas.webp') }}" class="img-fluid"
                                         alt="Black Stone">
                                     <div class="fav-content">
-                                        <h3>Shirts Collections</h3>
+                                        <h3>Kurtas Collections</h3>
                                         <a href="{{ url('category/kurta') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
@@ -567,7 +567,7 @@
                             <img src="{{ asset('uploads/home/fav/co-ord.webp') }}" class="img-fluid"
                                 alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
-                                <h3>Printed-tees Mala</h3>
+                                <h3>Co-ords Collection</h3>
                                 <a href="{{ url('category/co-ords') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
@@ -587,7 +587,7 @@
                             <img src="{{ asset('uploads/home/fav/pants.webp') }}" class="img-fluid"
                                 alt="Rose Product">
                             <div class="fav-content">
-                                <h3>Co-ords Collection</h3>
+                                <h3>Pants Collection</h3>
                                 <a href="{{ url('category/pants') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
@@ -600,7 +600,7 @@
                             <img src="{{ asset('uploads/home/fav/printed-t-shirts.webp') }}" class="img-fluid"
                                 alt="Suyagya Collection">
                             <div class="fav-content">
-                                <h3>Joggers Collection</h3>
+                                <h3>Printed T-shirt Collection</h3>
                                 <a href="{{ url('category/printed-t-shirt') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
