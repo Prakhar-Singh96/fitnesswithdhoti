@@ -2854,30 +2854,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (typeof $ !== 'undefined' && $.fn.slick) {
-        if ($('#featuredNoberoSlider').length) {
-            $('#featuredNoberoSlider').slick({
+        if ($('#featuredDhotiSlider').length) {
+            $('#featuredDhotiSlider').slick({
                 slidesToShow: 4,
                 slidesToScroll: 1,
                 autoplay: false,
                 infinite: false,
                 dots: false,
                 arrows: true,
-                /* Direct HTML injection for safe arrow rendering */
-                prevArrow: '<button type="button" class="slick-prev-nobero"><i class="las la-angle-left text-dark fs-5 fw-bold"></i></button>',
-                nextArrow: '<button type="button" class="slick-next-nobero"><i class="las la-angle-right text-dark fs-5 fw-bold"></i></button>',
+                prevArrow: '<button type="button" class="slick-prev-featured"><i class="las la-angle-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next-featured"><i class="las la-angle-right"></i></button>',
                 responsive: [
-                    {
-                        breakpoint: 1200,
-                        settings: { slidesToShow: 3 }
-                    },
-                    {
-                        breakpoint: 768,
-                        settings: { slidesToShow: 2, arrows: false }
-                    }
+                    { breakpoint: 1200, settings: { slidesToShow: 3 } },
+                    { breakpoint: 992, settings: { slidesToShow: 2 } },
+                    { breakpoint: 576, settings: { slidesToShow: 2, arrows: false } }
                 ]
             });
         }
     }
+
 });
 
 

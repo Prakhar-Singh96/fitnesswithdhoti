@@ -177,36 +177,33 @@
     </section>
 
     {{-- 🛒 3. FEATURED PRODUCTS (DYNAMIC) --}}
-    <section class="py-5 featured-products-section" style="background: linear-gradient(180deg, rgba(233, 212, 192, 1), rgba(255, 255, 255, 1) 92%);">
+    <section class="py-5" style="background: linear-gradient(180deg, rgba(233, 212, 192, 1), rgba(255, 255, 255, 1) 92%);">
         <div class="container-fluid px-3 px-md-5">
 
-            {{-- Minimal Heading --}}
+            {{-- Title mimicking the image --}}
             <div class="text-center mb-4 pb-2">
-                <h2 class="fw-bold m-0 text-dark" style="font-size: 22px; font-family: 'Inter', sans-serif;"> Feature Product</h2>
+                <h2 class="fw-bold m-0 text-dark" style="font-size: 22px; font-family: 'Inter', sans-serif;">Feature Product</h2>
                 <p class="text-muted small mt-1">Handpicked for you</p>
             </div>
 
             <div class="position-relative px-md-3">
-                {{-- Products Slider --}}
-                <div class="featured-slider-nobero" id="featuredNoberoSlider">
+                <div class="featured-slider-dhoti" id="featuredDhotiSlider">
+
                     @foreach ($featuredProducts as $product)
-                        <div class="px-2"> {{-- Gap between slides --}}
-                            <div class="nobero-featured-card border-0 bg-transparent">
+                        <div class="px-2 h-100">
+                            <div class="featured-dhoti-card h-100">
 
-                                {{-- Tall Image Area (Aspect Ratio 3:4) --}}
-                                <div class="img-box position-relative overflow-hidden rounded-2" style="background-color: #f1f2f4;">
-
-                                    {{-- Favorite / Heart Button --}}
-                                    <button class="btn-wishlist position-absolute top-0 end-0 m-2 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
-                                            onclick="toggleWishlist({{ $product->id }}, this)"
-                                            style="width: 30px; height: 30px; border: none; z-index: 5;">
+                                {{-- Top Image Box with Padding --}}
+                                <div class="img-box">
+                                    {{-- Heart Icon --}}
+                                    <button class="btn-wishlist" onclick="toggleWishlist({{ $product->id }}, this)">
                                         @php
                                             $isInWishlist = Auth::check() && \App\Models\Wishlist::where('user_id', Auth::id())->where('product_id', $product->id)->exists();
                                         @endphp
                                         <i class="{{ $isInWishlist ? 'las la-heart text-danger' : 'lar la-heart text-muted' }}" style="font-size: 16px;"></i>
                                     </button>
 
-                                    {{-- Rating Badge on Bottom Left --}}
+                                    {{-- Rating Badge --}}
                                     @php
                                         $avgRating = 0;
                                         $reviewCount = 0;
@@ -215,27 +212,26 @@
                                             $reviewCount = $product->reviews->count();
                                         }
                                     @endphp
-                                    <div class="position-absolute bottom-0 start-0 m-2 bg-white px-2 py-1 rounded shadow-sm d-flex align-items-center" style="z-index: 5; font-size: 11px;">
-                                        <i class="las la-star text-warning me-1"></i>
-                                        <span class="fw-bold text-dark me-1">{{ number_format($avgRating, 1) }}</span> <span class="text-muted">| {{ $reviewCount }}</span>
+                                    <div class="rating-tag-featured">
+                                        <i class="las la-star text-warning me-1" style="font-size: 13px;"></i>
+                                        <span class="text-dark">{{ number_format($avgRating, 1) }}</span> <span class="text-muted fw-normal mx-1">|</span> <span class="text-muted fw-normal">{{ $reviewCount }}</span>
                                     </div>
 
-                                    {{-- Product Image (d-block is crucial to remove bottom white space) --}}
+                                    {{-- Image --}}
                                     <a href="{{ route('product.detail', $product->slug) }}" class="d-block w-100">
                                         <img src="{{ asset($product->main_image) }}"
                                              alt="{{ $product->name }}"
-                                             class="w-100 d-block object-fit-cover"
-                                             style="aspect-ratio: 3/4;">
+                                             class="w-100 object-fit-cover">
                                     </a>
                                 </div>
 
-                                {{-- Details Area --}}
-                                <div class="text-start mt-3 px-1">
-                                    <a href="{{ route('product.detail', $product->slug) }}" class="text-decoration-none text-dark d-block text-truncate mb-1" style="font-size: 14px; font-weight: 500;">
+                                {{-- Bottom Text Content --}}
+                                <div class="card-body-custom">
+                                    <a href="{{ route('product.detail', $product->slug) }}" class="text-decoration-none text-dark d-block text-truncate mb-2 fw-semibold" style="font-size: 13px;">
                                         {{ $product->name }}
                                     </a>
 
-                                    <div class="d-flex align-items-baseline flex-wrap gap-2 mb-1">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
                                         <span class="fw-bold text-dark" style="font-size: 15px;">₹{{ number_format($product->price) }}</span>
                                         @if ($product->mrp_price > $product->price)
                                             <span class="text-muted text-decoration-line-through" style="font-size: 12px;">₹{{ number_format($product->mrp_price) }}</span>
@@ -244,17 +240,18 @@
                                         @endif
                                     </div>
 
-                                    <p class="mb-0" style="font-size: 11px; color: #6c5ce7;">Lowest price in last 30 days</p>
+                                    <p class="mb-0 mt-auto" style="font-size: 10px; color: #8c7ae6;">Lowest price in last 30 days</p>
                                 </div>
 
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
 
             {{-- View All Button --}}
-            <div class="text-center mt-4">
+            <div class="text-center mt-5">
                 <a href="{{ route('products.all_collection') }}?type=featured" class="btn btn-outline-dark px-4 py-2 fw-bold" style="border-radius: 4px; font-size: 13px;">
                     Shop All Products
                 </a>
@@ -834,6 +831,7 @@
             <div class="d-flex justify-content-center mb-5">
                 <div class="fancy-heading-box text-center">
                     <h2 class="m-0 fw-bold" style="font-family: 'Merriweather', serif;">Blogs</h2>
+                    <div class="heading-underline mx-auto mt-2" style="width: 60px; height: 3px; background: #c09867;">
                     </div>
                 </div>
             </div>
