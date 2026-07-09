@@ -18,7 +18,47 @@
     --border-color: #e0e0e0;
 
     /* 🔴 FIX 2: LIGHT BACKGROUND COLOR (CREAM/BEIGE) */
-    --light: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; margin: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%); --background: 255 230 203; --text-color: 26 26 26; padding-top: 0!important; padding-left: 0!important; padding-right: 0!important; margin: 0!important; border-radius: 0!important;; padding-bottom: px;
+    --light: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    --gradient: linear-gradient(180deg, rgba(249, 208, 163, 1), rgba(255, 230, 203, 1) 100%);
+    --background: 255 230 203;
+    --text-color: 26 26 26;
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    ;
+    padding-bottom: px;
     --soft-light: #000000;
 
     /* 🔴 FIX 3: WHITE COLOR MUST BE #FFFFFF (For icons and main links) */
@@ -4217,49 +4257,105 @@ html {
 }
 
 /* 🚨 NOBERO TALL STYLE - STRICT OVERRIDES 🚨 */
-     .featured-dhoti-card {
-        background: #ffffff !important;
-        border: 1px solid #eaeaea !important;
-        border-radius: 0px !important;
-        overflow: hidden !important;
-        display: flex;
-        flex-direction: column;
-        height: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+.featured-dhoti-card {
+    background: #ffffff !important;
+    border: 1px solid #eaeaea !important;
+    border-radius: 0px !important;
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
-    .featured-dhoti-card .img-box {
-        position: relative;
-        width: 100% !important;
-        height: 420px !important; /* Fixed height for consistent look */
-        overflow: hidden !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+.featured-dhoti-card .img-box {
+    position: relative;
+    width: 100% !important;
+    height: 420px !important;
+    /* Fixed height for consistent look */
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
-    .featured-dhoti-card .img-box img {
-        width: 100% !important;
-        height: 100% !important;
-        /* COVER use karo taaki gap na bache */
-        object-fit: cover !important;
-        /* Image ko center rakho taaki model ka face na kate */
-        object-position: center top !important;
-        transition: transform 0.6s ease;
-    }
+.featured-dhoti-card .img-box img {
+    width: 100% !important;
+    height: 100% !important;
+    /* COVER use karo taaki gap na bache */
+    object-fit: cover !important;
+    /* Image ko center rakho taaki model ka face na kate */
+    object-position: center top !important;
+    transition: transform 0.6s ease;
+}
 
-    .featured-dhoti-card:hover .img-box img {
-        transform: scale(1.05);
-    }
+.featured-dhoti-card:hover .img-box img {
+    transform: scale(1.05);
+}
 
-    /* Rating Tag position fixed */
-    .rating-tag-featured {
-        position: absolute;
-        bottom: 10px !important;
-        left: 10px !important;
-        background: rgba(255, 255, 255, 0.9) !important;
-        padding: 4px 8px !important;
-        font-size: 11px !important;
-        font-weight: 600 !important;
-        z-index: 5;
-    }
+/* Rating Tag position fixed */
+.rating-tag-featured {
+    position: absolute;
+    bottom: 10px !important;
+    left: 10px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    z-index: 5;
+}
+
+/* 🚨 FIXED ARROW POSITIONING 🚨 */
+.featured-slider-dhoti {
+    position: relative;
+    /* Container ko relative karna zaroori hai */
+}
+
+.slick-prev-featured,
+.slick-next-featured {
+    position: absolute;
+    top: 50% !important;
+    /* Slider ke height ke center mein */
+    transform: translateY(-50%);
+    /* Bilkul center mein lane ke liye */
+    width: 45px;
+    height: 45px;
+    background: #ffffff !important;
+    border: 1px solid #ddd !important;
+    border-radius: 50% !important;
+    /* Round buttons */
+    z-index: 100 !important;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+/* Buttons ki sahi jagah */
+.slick-prev-featured {
+    left: -20px !important;
+}
+
+.slick-next-featured {
+    right: -20px !important;
+}
+
+/* Icon Styling */
+.slick-prev-featured i,
+.slick-next-featured i {
+    color: #222 !important;
+    font-size: 20px !important;
+}
+
+/* Hover effect */
+.slick-prev-featured:hover,
+.slick-next-featured:hover {
+    background: #222 !important;
+}
+
+.slick-prev-featured:hover i,
+.slick-next-featured:hover i {
+    color: #fff !important;
+}
