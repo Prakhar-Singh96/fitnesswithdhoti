@@ -56,7 +56,7 @@
     </section>
 
     {{-- 💎 1. MATCH THE MOOD SCROLL SECTION WITH BUTTONS --}}
-    <section class="py-4 bg-white position-relative overflow-hidden" style="background: linear-gradient(180deg, rgba(223, 206, 205, 1), rgb(255, 221, 221) 100%);">
+    <section class="py-4 bg-white position-relative overflow-hidden" style="background: linear-gradient(180deg, rgb(239 173 169 / 61%), rgb(255 221 221) 100%);">
         <div class="container-fluid px-3 px-md-4 position-relative">
 
             {{-- Section Heading --}}
@@ -227,7 +227,7 @@
 
                                 {{-- Bottom Text Content --}}
                                 <div class="card-body-custom">
-                                    <a href="{{ route('product.detail', $product->slug) }}" class="text-decoration-none text-dark d-block text-truncate mb-2 fw-semibold" style="font-size: 13px;">
+                                    <a href="{{ route('product.detail', $product->slug) }}" class="text-decoration-none text-dark d-block text-truncate mb-2 fw-semibold">
                                         {{ $product->name }}
                                     </a>
 
@@ -240,7 +240,7 @@
                                         @endif
                                     </div>
 
-                                    <p class="mb-0 mt-auto" style="font-size: 10px; color: #8c7ae6;">Lowest price in last 30 days</p>
+                                    <p class="mb-0 mt-auto" style="color: #8c7ae6;">Lowest price in last 30 days</p>
                                 </div>
 
                             </div>
@@ -261,7 +261,7 @@
     </section>
 
     {{-- 🛒 3. Best Selling PRODUCTS (DYNAMIC) --}}
-    <section class="py-3 featured-products-section" style="background-color: #ffffff">
+    <section class="py-3 featured-products-section" style="background: radial-gradient(762px 694px at 99% 5%, rgb(242 231 220 / 40%) 0, rgb(235 174 119 / 40%) 49.57%, rgb(189 101 23 / 0%) 70%), radial-gradient(431px 441px at 0 54%, rgb(230 171 118 / 67%) 0, rgb(222 112 13 / 28%) 49.57%, rgb(255 218 186 / 10%) 70%), #ffffff;">
         <div class="container">
 
             {{-- Heading --}}
@@ -522,7 +522,7 @@
                                 alt="Rudraksh Jap Mala">
                             <div class="fav-content">
                                 <h3>Tees Collection</h3>
-                                <a href="{{ url('category/rudraksh/tees') }}" class="btn btn-fav-shop">Shop
+                                <a href="{{ url('category/tees') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
                         </div>
@@ -533,11 +533,11 @@
                                 {{-- 2. Small Image (Middle Left 1) - Tiger Eye Stone --}}
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_08406c.jpg --}}
-                                    <img src="{{ asset('uploads/home/fav/shorts.webp') }}" class="img-fluid"
+                                    <img src="{{ asset('uploads/home/fav/dhotis.webp') }}" class="img-fluid"
                                         alt="Tiger Eye Stone">
                                     <div class="fav-content">
                                         <h3>Shorts Collections</h3>
-                                        <a href="{{ url('category/rashi-bracelet') }}" class="btn btn-fav-shop">Shop
+                                        <a href="{{ url('category/dhoti') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
                                 </div>
@@ -546,11 +546,11 @@
                                 {{-- 3. Small Image (Middle Left 2) - Black Stone --}}
                                 <div class="fav-card standard">
                                     {{-- Using your uploaded image: image_09214d.jpg --}}
-                                    <img src="{{ asset('uploads/home/fav/shirts.jpg') }}" class="img-fluid"
+                                    <img src="{{ asset('uploads/home/fav/Kurtas.webp') }}" class="img-fluid"
                                         alt="Black Stone">
                                     <div class="fav-content">
                                         <h3>Shirts Collections</h3>
-                                        <a href="{{ url('category/stone-jewellery') }}" class="btn btn-fav-shop">Shop
+                                        <a href="{{ url('category/kurta') }}" class="btn btn-fav-shop">Shop
                                             now</a>
                                     </div>
                                 </div>
@@ -564,11 +564,11 @@
                         {{-- 4. Tall Image (Right Side) - Rashi Bracelet --}}
                         <div class="fav-card tall h-100">
                             {{-- Using your uploaded image: image_aeee28.jpg --}}
-                            <img src="{{ asset('uploads/home/fav/printed-tees.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/co-ord.webp') }}" class="img-fluid"
                                 alt="Rashi Bracelet" style="object-fit: cover; height: 100%;">
                             <div class="fav-content">
                                 <h3>Printed-tees Mala</h3>
-                                <a href="{{ url('category/karungali/karungali-mala') }}" class="btn btn-fav-shop">Shop
+                                <a href="{{ url('category/co-ords') }}" class="btn btn-fav-shop">Shop
                                     now</a>
                             </div>
                         </div>
@@ -584,11 +584,11 @@
                     <div class="col-md-4">
                         <div class="fav-card standard">
                             {{-- Using your uploaded image: image_08a246.png --}}
-                            <img src="{{ asset('uploads/home/fav/co-ords.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/pants.webp') }}" class="img-fluid"
                                 alt="Rose Product">
                             <div class="fav-content">
                                 <h3>Co-ords Collection</h3>
-                                <a href="{{ url('category/pooja-items/shankh') }}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="{{ url('category/pants') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -597,11 +597,11 @@
                     <div class="col-md-8">
                         <div class="fav-card wide">
                             {{-- Using your uploaded image: image_390489.jpg (Collage) as a banner --}}
-                            <img src="{{ asset('uploads/home/fav/joggers.webp') }}" class="img-fluid"
+                            <img src="{{ asset('uploads/home/fav/printed-t-shirts.webp') }}" class="img-fluid"
                                 alt="Suyagya Collection">
                             <div class="fav-content">
                                 <h3>Joggers Collection</h3>
-                                <a href="{{ url('category/spritual-idols') }}" class="btn btn-fav-shop">Shop now</a>
+                                <a href="{{ url('category/printed-t-shirt') }}" class="btn btn-fav-shop">Shop now</a>
                             </div>
                         </div>
                     </div>

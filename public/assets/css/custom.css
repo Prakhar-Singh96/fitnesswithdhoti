@@ -2783,7 +2783,7 @@ nav .d-none.flex-sm-fill.d-sm-flex {
 
 /* मेनू को स्क्रीन के बीच में (Center) लाएं */
 .japam-mega-menu {
-    left: 50% !important;
+    left: 44% !important;
     transform: translateX(-50%) !important;
     width: 1330px !important;
     /* Width fixed rakhein */

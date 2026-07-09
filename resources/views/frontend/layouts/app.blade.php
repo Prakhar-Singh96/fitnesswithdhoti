@@ -111,7 +111,7 @@
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=799436573082052&ev=PageView&noscript=1" /></noscript> --}}
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
 
     {{-- ⚡ SPEED OPTIMIZATION STEP 2: PRELOAD CRITICAL CSS ASSETS TO ELIMINATE RENDERING DELAYS --}}
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style">

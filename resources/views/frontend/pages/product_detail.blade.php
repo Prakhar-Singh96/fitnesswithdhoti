@@ -1369,12 +1369,13 @@
         </div>
     @endif
 
-    <section class="py-5" style="background-color: #D32F2F; color: white;">
+    <section class="py-5" style="background-color: #1a1a1a; color: #ffffff;">
         <div class="container text-center">
-            <h2 class="font-heading fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Made In India</h2>
-            <p class="mx-auto" style="max-width: 800px; font-size: 1.1rem; line-height: 1.6;">
-                All our jewellery is handmade by Indian craftsmen and women - largely from villages. In this way, we are
-                able to play our part in supporting and growing the local Indian economy.
+            <h2 class="fw-bold mb-3" style="font-family: 'Inter', sans-serif; letter-spacing: 1px; text-transform: uppercase; font-size: 24px;">
+                Proudly Made In India
+            </h2>
+            <p class="mx-auto" style="max-width: 800px; font-size: 1.05rem; line-height: 1.8; color: #d1d5db;">
+                Every piece of our clothing is meticulously crafted by skilled Indian artisans. We blend premium, breathable fabrics with modern fits to bring you the ultimate everyday comfort and style. By choosing us, you directly support local craftsmen and the rich Indian textile economy.
             </p>
         </div>
     </section>
@@ -1557,30 +1558,56 @@
         </section>
     @endif
 
-    <section class="py-4 shadow-sm">
-        <div class="container">
+    <section class="py-4 bg-white position-relative overflow-hidden" style="background: linear-gradient(180deg, rgb(239 173 169 / 61%), rgb(255 221 221) 100%);">
+        <div class="container-fluid px-3 px-md-4 position-relative">
 
-            {{-- Slider Container --}}
-            <div id="categoryScroll" class="category-slider" style="opacity: 0; transition: opacity 0.5s;">
-                @foreach ($categories as $category)
-                    <div class="px-2">
-                        <div class="text-center category-item">
-                            <a href="{{ url('category/' . $category['slug']) }}" class="text-decoration-none d-block">
+            {{-- Section Heading --}}
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1" style="color: #222f3e; font-size: 24px;">Match The Mood</h2>
+                <p class="text-muted small mb-0">Everyday Bestsellers</p>
+            </div>
 
-                                {{-- Image Circle (Updated Class) --}}
-                                <div class="category-circle-wrapper">
-                                    <img src="{{ asset($category->icon_image) }}"
-                                        alt="{{ $category['icon_alt'] ?? $category['name'] }}">
-                                </div>
+            {{-- Slider Wrapper for Buttons --}}
+            <div class="mood-slider-wrapper position-relative">
 
-                                {{-- Name --}}
-                                <span class="small fw-bold text-dark d-block">
-                                    {{ $category['name'] }}
-                                </span>
-                            </a>
+                {{-- Left Scroll Button --}}
+                <button class="mood-scroll-btn left-btn" id="moodScrollLeft" aria-label="Scroll Left">
+                    <i class="las la-angle-left"></i> {{-- LineAwesome icon --}}
+                </button>
+
+                {{-- Horizontal Scroll Container --}}
+                <div class="mood-scroll-container" id="moodScrollContainer">
+                    @foreach ($categories as $category)
+                        <div class="mood-scroll-item">
+                            <div class="mood-category-item">
+                                <a href="{{ url('category/' . $category['slug']) }}"
+                                    class="d-block position-relative overflow-hidden text-decoration-none">
+
+                                    {{-- Cover Image --}}
+                                    <img src="{{ asset($category->cover_image) }}" alt="{{ $category['name'] }}"
+                                        class="w-100 object-fit-cover mood-img">
+
+                                    {{-- Dark Gradient Overlay & Text --}}
+                                    <div
+                                        class="mood-overlay position-absolute bottom-0 start-0 w-100 d-flex flex-column justify-content-end text-center pb-3">
+                                        <span class="text-white small text-uppercase fw-semibold mood-subtext">
+                                            Explore
+                                        </span>
+                                        <h3 class="text-white text-uppercase fw-bolder mb-0 mood-title">
+                                            {{ $category['name'] }}
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
+
+                {{-- Right Scroll Button --}}
+                <button class="mood-scroll-btn right-btn" id="moodScrollRight" aria-label="Scroll Right">
+                    <i class="las la-angle-right"></i>
+                </button>
+
             </div>
 
         </div>
