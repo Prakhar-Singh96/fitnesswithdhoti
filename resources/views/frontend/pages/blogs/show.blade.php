@@ -106,11 +106,11 @@
                     <div class="rounded overflow-hidden shadow-sm mt-4 position-relative">
 
                         {{-- Link Wrapper --}}
-                        <a href="{{ route('products.category', 'Dhoti') }}"
+                        <a href="{{ route('products.category', 'CO-ORDS') }}"
                             class="d-block text-decoration-none text-dark">
 
                             {{-- Image --}}
-                            <img src="{{ asset('uploads/categories/icons/1764926950_6932a5e63a67b.webp') }}"
+                            <img src="{{ asset('uploads/categories/icons/icon.png') }}"
                                 alt="Shop Dhoti" class="img-fluid w-100 transition-zoom">
 
                             {{-- 🔥 Shop Now Button Overlay --}}
