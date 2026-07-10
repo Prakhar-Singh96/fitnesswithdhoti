@@ -37,7 +37,7 @@ class HomeController extends Controller
             ->where('is_new_arrival', 1)
             ->with('reviews')
             ->latest()
-            ->take(8)
+            ->take(12)
             ->get();
 
         // 3. Categories

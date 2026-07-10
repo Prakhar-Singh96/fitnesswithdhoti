@@ -50,7 +50,7 @@
     /* 4. Logo/Brand and Contact Info Styling */
     .footer-brand-info p,
     .footer-brand-info address {
-        color: rgba(255, 255, 255, 0.7);
+        /* color: rgba(255, 255, 255, 0.7); */
         font-size: 0.9rem;
         line-height: 1.6;
         margin-bottom: 8px;
