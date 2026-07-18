@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', 'Our Latest Blogs & Insights | Suyagya')
+@section('title', 'Our Latest Blogs & Insights | Fitness with Dhoti')
 
 @section('styles')
 <style>

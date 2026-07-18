@@ -34,7 +34,7 @@
                 {{-- 🎨 हेडर और ब्रांड लोगो --}}
                 <tr>
                     <td class="header">
-                        <img src="https://suyagya.com/assets/img/logo.png" alt="Suyagya Logo" width="130" style="display: block; margin: 0 auto 10px auto; max-width: 130px;">
+                        <img src="https://fitnesswithdhoti.com/assets/img/fitness.png" alt="fitnesswithdhoti Logo" width="130" style="display: block; margin: 0 auto 10px auto; max-width: 130px;">
                         <h2 style="color: #ffffff; font-size: 22px; margin: 0; font-weight: bold;">
                             {{ $isAdmin ? 'New Order Notification' : 'Your Order is Confirmed!' }}
                         </h2>
@@ -49,7 +49,7 @@
                         @if($isAdmin)
                             <p class="info-text" style="font-size:15px; margin-bottom: 20px;">A new order has been successfully captured on the website. Below are the execution and billing details:</p>
                         @else
-                            <p class="info-text" style="font-size:15px; margin-bottom: 20px;">Thank you for your purchase from Suyagya Store! Your spiritual items are now being prepared for safe shipment.</p>
+                            <p class="info-text" style="font-size:15px; margin-bottom: 20px;">Thank you for your purchase from fitnesswithdhoti! Your spiritual items are now being prepared for safe shipment.</p>
                         @endif
 
                         {{-- 📊 ऑर्डर्स की मुख्य जानकारी --}}
@@ -132,7 +132,7 @@
                         {{-- ✍️ सुयज्ञ टीम सिग्नेचर --}}
                         <div style="margin-top: 35px; padding-top: 20px; border-top: 1px solid #f5f0e6; font-size: 14px; color: #555555;">
                             Warm regards,<br>
-                            <span style="font-weight: bold; color: #7b3f27; font-size: 15px; display: block; margin-top: 4px;">Suyagya Support Team</span>
+                            <span style="font-weight: bold; color: #7b3f27; font-size: 15px; display: block; margin-top: 4px;">fitnesswithdhoti Support Team</span>
                         </div>
 
                     </td>
@@ -142,13 +142,13 @@
                 <tr>
                     <td class="footer">
                         <div style="margin-bottom: 12px;">
-                            <a href="https://suyagya.com">Website</a> |
-                            <a href="https://suyagya.com/my-account">Track Order</a> |
-                            <a href="https://suyagya.com/blogs">Blogs</a>
+                            <a href="https://fitnesswithdhoti.com">Website</a> |
+                            <a href="https://fitnesswithdhoti.com/my-account">Track Order</a> |
+                            <a href="https://fitnesswithdhoti.com/blogs">Blogs</a>
                         </div>
                         <p class="footer-note">
-                            &copy; {{ date('Y') }} <b>Suyagya Store</b>. All rights reserved.<br>
-                            For any queries, contact us at <a href="mailto:support@suyagya.com" style="font-weight: normal; margin:0;">support@suyagya.com</a>
+                            &copy; {{ date('Y') }} <b>Fitness With Dhoti</b>. All rights reserved by LaunchX Studio.<br>
+                            For any queries, contact us at <a href="mailto:support@fitnesswithdhoti.com" style="font-weight: normal; margin:0;">support@fitnesswithdhoti.com</a>
                         </p>
                     </td>
                 </tr>

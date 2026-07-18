@@ -1929,7 +1929,7 @@
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
         // --- 🟢 RAZORPAY WIDGET CONFIGURATION ---
-        const rzpKey = "rzp_live_S0zZ2YEhXKBKxb"; // Aapki Live Key
+        const rzpKey = "rzp_live_TEqI9hKXYtPnbV"; // Aapki Live Key
 
         // --- 🟢 WIDGET RENDER FUNCTION (FIXED) ---
         function renderRazorpayWidget(currentPrice) {
@@ -1948,7 +1948,7 @@
             // 3. SHOW / HIDE LOGIC
             // Agar price ₹1000 se kam hai, toh widget chhupa do aur return ho jao
             // (Aap is limit ko 1000 ki jagah 0 ya 3000 kar sakte hain)
-            if (currentPrice < 1200) {
+            if (currentPrice < 1541) {
                 container.style.display = 'none'; // ❌ HIDE
                 console.log("Price low hai, widget hide kiya gaya.");
                 return;

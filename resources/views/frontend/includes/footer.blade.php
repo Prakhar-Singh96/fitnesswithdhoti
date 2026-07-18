@@ -282,7 +282,7 @@
 <div class="footer-copyright-bar">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div class="mb-2 mb-md-0">
-            © {{ date('Y') }} Fitness With Dhoti. All Rights Reserved LaunchX Studio and @prowedby LunchX.
+            © {{ date('Y') }} Fitness With Dhoti. All Rights Reserved LaunchX Studio.
         </div>
         <div>
             {{-- Optional: Payment method icons can go here --}}

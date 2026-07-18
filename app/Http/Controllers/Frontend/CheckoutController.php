@@ -430,9 +430,9 @@ class CheckoutController extends Controller
                 'key' => $paymentSetting->key_id,
                 'amount' => $finalAmountInPaise, // Paises for Frontend JS
                 'currency' => 'INR',
-                'name' => 'Suyagya Store',
+                'name' => 'Fitness With Dhoti',
                 'description' => 'Order #' . $order->order_number,
-                'image' => asset('assets/img/logo.png'),
+                'image' => asset('assets/img/fitness.png'),
                 'order_id' => $order->id,
                 'rzp_order_id' => $rzpOrder['id'],
                 'prefill' => [
